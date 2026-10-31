@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+<title>NEXUS EYE</title>
+<defs>
+ <radialGradient id="bg" cx="50%" cy="46%" r="70%"><stop offset="0" stop-color="#0b1a1f"/><stop offset="0.55" stop-color="#070b10"/><stop offset="1" stop-color="#05070a"/></radialGradient>
+ <linearGradient id="lid" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00ff87"/><stop offset="1" stop-color="#60efff"/></linearGradient>
+ <radialGradient id="iris" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#06343a"/><stop offset="1" stop-color="#031216"/></radialGradient>
+ <linearGradient id="sweep" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#ff0080" stop-opacity="0.25"/><stop offset="1" stop-color="#ff0080" stop-opacity="0.95"/></linearGradient>
+ <clipPath id="eyeClip"><path d="M70 256 Q256 60 442 256 Q256 452 70 256 Z"/></clipPath>
+ <clipPath id="irisClip"><circle cx="256" cy="256" r="86"/></clipPath>
+ 
+</defs>
+<rect width="512" height="512" fill="url(#bg)"/>
+<g transform="translate(256 256) scale(1.18) translate(-256 -256)">
+ <circle cx="256" cy="256" r="196" fill="none" stroke="#60efff" stroke-width="8" stroke-opacity="0.55"/>
+ <rect x="250" y="58" width="12" height="26" rx="4" transform="rotate(0 256 256)" fill="#60efff"/><rect x="250" y="58" width="12" height="26" rx="4" transform="rotate(90 256 256)" fill="#60efff"/><rect x="250" y="58" width="12" height="26" rx="4" transform="rotate(180 256 256)" fill="#60efff"/><rect x="250" y="58" width="12" height="26" rx="4" transform="rotate(270 256 256)" fill="#60efff"/>
+ <g >
+  <path d="M70 256 Q256 60 442 256 Q256 452 70 256 Z" fill="#04090c"/>
+  <g clip-path="url(#eyeClip)">
+   <circle cx="256" cy="256" r="86" fill="url(#iris)"/>
+   <g clip-path="url(#irisClip)">
+    <path d="M256 256 L241.1 171.3 A86 86 0 0 1 336.8 226.6 Z" fill="url(#sweep)"/>
+    <ellipse cx="256" cy="256" rx="40" ry="86" fill="none" stroke="#60efff" stroke-width="7" stroke-opacity="0.8"/>
+    <line x1="170" y1="256" x2="342" y2="256" stroke="#60efff" stroke-width="7" stroke-opacity="0.8"/>
+    <ellipse cx="256" cy="256" rx="86" ry="32" fill="none" stroke="#60efff" stroke-width="5" stroke-opacity="0.45"/>
+    <line x1="256" y1="256" x2="336.8" y2="226.6" stroke="#ff0080" stroke-width="11" stroke-linecap="round"/>
+   </g>
+   <circle cx="256" cy="256" r="86" fill="none" stroke="#60efff" stroke-width="14"/>
+  </g>
+  <path d="M70 256 Q256 60 442 256 Q256 452 70 256 Z" fill="none" stroke="url(#lid)" stroke-width="24" stroke-linejoin="round"/>
+  <circle cx="256" cy="256" r="30" fill="#00ff87"/>
+  <circle cx="256" cy="256" r="11" fill="#05070a"/>
+  <circle cx="306" cy="214" r="13" fill="#ffcc00"/>
+ </g>
+</g>
+</svg>
