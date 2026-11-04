@@ -369,6 +369,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     <button class="rail-btn on" data-layer="haz" type="button">HAZ<span class="k" id="hazRailK">nasa eonet …</span></button>
     <button class="rail-btn on" data-layer="cctv" type="button">CCTV<span class="k">official public cams</span></button>
     <button class="rail-btn" id="btnCctvFilter" type="button" title="CCTV quick-filter: ALL → TX → US → INTL">TX<span class="k">cctv · texas</span></button>
+    <button class="rail-btn" data-panel="cctvLive" type="button">CCTV LIVE<span class="k">verified only</span></button>
     <button class="rail-btn on" data-layer="alerts" type="button">ALERTS<span class="k" id="alertsRailK">nws …</span></button>
     <button class="rail-btn" id="btnAlertsTx" type="button" title="NWS alerts quick-filter: ALL (TX first) ↔ TX only">NWS TX<span class="k">alerts · all …</span></button>
     <button class="rail-btn" id="btnAlertsList" type="button" title="NWS active alerts list · TX first">NWS LIST<span class="k">tx first</span></button>
@@ -434,6 +435,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
         <div class="contact">NEXUS EYE v0.4.1 · ORIGINAL</div>
       </div>
       <p style="margin-top:12px;opacity:.7;font-size:10px">Tip: open HIRE, zoom Earth, tap a CCTV marker, screenshot the HUD.</p>
+    </div>
+  </div>
+
+  <div class="panel pe" id="pCctvLive">
+    <div class="panel-h">CCTV · LIVE VERIFIED <button type="button" data-close="cctvLive">✕</button></div>
+    <div class="panel-b">
+      <p style="opacity:.85">Only cameras verified LIVE in this session, organized TX first, then US, then INTL, by owner, then name. Tap one to open it.</p>
+      <p style="opacity:.7">Honest limit: Eye samples a subset every few minutes (1 per TxDOT district + 2 per provable source), it does NOT check all 8,338 cameras at once. So this list starts small and grows as checks finish — it is not "every live camera in Texas."</p>
+      <div style="margin:8px 0"><button type="button" id="cctvLiveRefresh">VERIFY SAMPLE NOW</button> <span id="cctvLiveCount">…</span></div>
+      <div id="cctvLiveList"></div>
     </div>
   </div>
 
@@ -2268,13 +2279,16 @@ function cctvChooser(list,cx,cy,total,note){
 const cctvDock=document.getElementById('cctvDock');
 const cctvBody=document.getElementById('cctvBody');
 let cctvOpen=null,cctvTimer=null,cctvPaintTimer=null,cctvBusy=false;
-function cctvClose(){cctvDock.classList.remove('open');cctvOpen=null;clearInterval(cctvTimer);clearInterval(cctvPaintTimer);cctvTimer=cctvPaintTimer=null;}
+let cctvHistory=[],cctvSuppressHistory=false;
+function cctvCloseInternal(){cctvDock.classList.remove('open');cctvOpen=null;clearInterval(cctvTimer);clearInterval(cctvPaintTimer);cctvTimer=cctvPaintTimer=null;}
+function cctvClose(){cctvHistory=[];cctvCloseInternal();}
 document.getElementById('cctvClose').onclick=cctvClose;
 const cctvLastGood={}; /* id -> {url, at} — last good frame for opened cams */
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function cctvRefreshSec(cam){return cam.kind==='txdot'?CCTV_TX_RECHECK/1000:Math.max(30,Math.min(300,cam.cad));}
 function cctvRender(cam){
   if(cctvOpen!==cam)return;
+  const cctvPrevBtn=document.getElementById('cctvPrev');if(cctvPrevBtn)cctvPrevBtn.disabled=cctvHistory.length===0;
   const st=cctvState[cam.id]||{},S=cctvStatus(cam);
   const cls=S.s==='LIVE'?'live':((S.s==='STALE'||S.s==='NO NEW FRAME')?'stale':(S.s==='OFFLINE'?'off':'pub'));
   let pill=cctvBody.querySelector('.cpill');
@@ -2283,9 +2297,10 @@ function cctvRender(cam){
       '<div class="cframe"><img alt="" referrerpolicy="no-referrer"/><span class="cpill pub">…<\/span><\/div>'+
       '<div class="meta"><div class="src"><\/div><strong class="cn"><\/strong><br/><span class="cc"><\/span>'+
       '<br/><span class="cx" style="opacity:.65"><\/span><\/div>'+
-      '<div class="actions"><button type="button" id="cctvRefresh">REFRESH<\/button><button type="button" id="cctvNext">NEXT<\/button><button type="button" id="cctvClose2">CLOSE<\/button><\/div>';
+      '<div class="actions"><button type="button" id="cctvRefresh">REFRESH<\/button><button type="button" id="cctvPrev">PREV<\/button><button type="button" id="cctvNext">NEXT<\/button><button type="button" id="cctvClose2">CLOSE<\/button><\/div>';
     pill=cctvBody.querySelector('.cpill');
     document.getElementById('cctvRefresh').onclick=()=>cctvTick(cam,true);
+    document.getElementById('cctvPrev').onclick=()=>cctvPrev();
     document.getElementById('cctvNext').onclick=()=>cctvNext();
     document.getElementById('cctvClose2').onclick=cctvClose;
   }
@@ -2333,8 +2348,10 @@ function openCctv(cam){
   if(!cam||!cam.id)return;
   Object.keys(panels).forEach(k=>panels[k].classList.remove('open'));
   document.querySelectorAll('.rail-btn[data-panel]').forEach(b=>b.classList.remove('on'));
-  cctvClose();
+  const cctvPrevCam=cctvOpen;
+  cctvCloseInternal();
   alertsDockClose();
+  if(cctvPrevCam&&cctvPrevCam!==cam&&!cctvSuppressHistory){cctvHistory.push(cctvPrevCam);if(cctvHistory.length>50)cctvHistory.shift();}
   cctvOpen=cam;cctvDock.classList.add('open');cctvBody.innerHTML='';
   cctvRender(cam);
   cctvTick(cam,true);
@@ -2345,12 +2362,50 @@ function openCctv(cam){
   cctvPaintTimer=setInterval(()=>cctvRender(cam),1000);
 }
 function cctvNext(){
+  if(!cctvOpen)return;
   const pool=CCTV_CAMS.filter(c=>cctvFilter==='ALL'?true:c.region===cctvFilter);
-  /* prefer cams already verified live this session */
-  const live=pool.filter(c=>cctvStatus(c).s==='LIVE'&&c!==cctvOpen);
-  const pickFrom=live.length&&Math.random()<0.6?live:pool;
-  const cam=pickFrom[Math.floor(Math.random()*pickFrom.length)];
-  if(cam){aimAt(cam.lat,cam.lon,Math.min(camDist,2.4),false);openCctv(cam);}
+  let cands=pool.filter(c=>c!==cctvOpen);
+  if(!cands.length)return;
+  const prev=cctvHistory.length?cctvHistory[cctvHistory.length-1]:null;
+  if(prev&&cands.length>2)cands=cands.filter(c=>c!==prev);
+  let best=cands[0],bestD=haversine(cctvOpen.lat,cctvOpen.lon,best.lat,best.lon);
+  for(const c of cands){const d=haversine(cctvOpen.lat,cctvOpen.lon,c.lat,c.lon);if(d<bestD){bestD=d;best=c;}}
+  if(best){aimAt(best.lat,best.lon,Math.min(camDist,2.4),false);openCctv(best);}
+}
+function cctvPrev(){
+  if(!cctvHistory.length)return;
+  const prev=cctvHistory.pop();
+  cctvSuppressHistory=true;
+  aimAt(prev.lat,prev.lon,Math.min(camDist,2.4),false);
+  openCctv(prev);
+  cctvSuppressHistory=false;
+}
+
+let cctvLiveTimer=null;
+function cctvLiveList(){
+  const live=CCTV_CAMS.filter(c=>cctvStatus(c).s==='LIVE');
+  const order={TX:0,US:1,INTL:2};
+  live.sort((a,b)=>(order[a.region]-order[b.region])||a.owner.localeCompare(b.owner)||a.name.localeCompare(b.name));
+  return live;
+}
+function cctvLiveRender(){
+  const el=document.getElementById('cctvLiveList');if(!el)return;
+  const rb=document.getElementById('cctvLiveRefresh');
+  if(rb&&!rb.dataset.wired){rb.dataset.wired='1';rb.onclick=()=>{try{cctvSamplerTick(true);}catch(e){} setTimeout(cctvLiveRender,3000); setTimeout(cctvLiveRender,10000);};}
+  if(!cctvLiveTimer){cctvLiveTimer=setInterval(()=>{const pan=document.getElementById('pCctvLive');if(pan&&pan.classList.contains('open'))cctvLiveRender();else{clearInterval(cctvLiveTimer);cctvLiveTimer=null;}},5000);}
+  const cnt=document.getElementById('cctvLiveCount');
+  if(!cctvReady){if(cnt)cnt.textContent='PACK NOT LOADED YET';el.innerHTML='<p>Turn CCTV on and wait for the pack to load.</p>';return;}
+  const live=cctvLiveList();
+  if(cnt)cnt.textContent=live.length+' LIVE-VERIFIED';
+  if(!live.length){el.innerHTML='<p>No cameras verified LIVE yet this session. Tap VERIFY SAMPLE NOW, or open a camera, then tap it again after a few seconds — verified ones will appear here. This is a sampled list, not all 8,338 cameras checked.</p>';return;}
+  let out='',last='';
+  for(const c of live){
+    const h=c.region+' · '+c.owner;
+    if(h!==last){out+='<h3>'+esc(h)+'</h3>';last=h;}
+    out+='<button type="button" data-id="'+c.id+'" style="display:block;width:100%;text-align:left;margin:2px 0;padding:6px;background:transparent;color:var(--g);border:1px solid var(--chrome);font:inherit;font-size:11px">● LIVE · '+esc(c.name)+' · '+esc(c.city)+'</button>';
+  }
+  el.innerHTML=out;
+  el.querySelectorAll('button[data-id]').forEach(b=>b.onclick=()=>{const cam=cctvById[b.dataset.id];if(cam){aimAt(cam.lat,cam.lon,Math.min(camDist,2.4),false);openCctv(cam);}});
 }
 /* glassfix B1 — background verifier.
    Deterministic per 3-min window: every visitor in the same window samples the SAME cams (seeded by floor(now/180000)),
@@ -2770,7 +2825,7 @@ function setTicker(t,holdMs){
   document.getElementById('ticker').textContent=t;
   if(holdMs){tickerHoldUntil=now+holdMs;tickerHoldAt=now;}else if(now<tickerHoldUntil)tickerHoldUntil=0;
 }
-const panels={ops:document.getElementById('pOps'),antman:document.getElementById('pAntman'),hire:document.getElementById('pHire')};
+const panels={ops:document.getElementById('pOps'),antman:document.getElementById('pAntman'),hire:document.getElementById('pHire'),cctvLive:document.getElementById('pCctvLive')};
 document.querySelectorAll('.rail-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     if(btn.dataset.layer){
@@ -2792,12 +2847,13 @@ document.querySelectorAll('.rail-btn').forEach(btn=>{
       writeDeepLink(true);
     }
     if(btn.dataset.panel){
-      cctvClose();alertsDockClose();
+      if(btn.dataset.panel==='cctvLive'){cctvCloseInternal();}else{cctvClose();}
+      alertsDockClose();
       const id=btn.dataset.panel;
       const open=!panels[id].classList.contains('open');
       Object.keys(panels).forEach(k=>panels[k].classList.remove('open'));
       document.querySelectorAll('.rail-btn[data-panel]').forEach(b=>b.classList.remove('on'));
-      if(open){panels[id].classList.add('open');btn.classList.add('on');}
+      if(open){panels[id].classList.add('open');btn.classList.add('on');if(id==='cctvLive')cctvLiveRender();}
     }
   });
 });
