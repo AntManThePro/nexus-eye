@@ -369,6 +369,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     <button class="rail-btn on" data-layer="haz" type="button">HAZ<span class="k" id="hazRailK">nasa eonet …</span></button>
     <button class="rail-btn on" data-layer="cctv" type="button">CCTV<span class="k">official public cams</span></button>
     <button class="rail-btn" id="btnCctvFilter" type="button" title="CCTV quick-filter: ALL → TX → US → INTL">TX<span class="k">cctv · texas</span></button>
+    <button class="rail-btn" id="btnCctvAustin" type="button" title="CCTV filter: Austin, TX only (913 cams)">AUSTIN<span class="k">cctv · austin</span></button>
+    <button class="rail-btn" id="btnCctvSA" type="button" title="CCTV filter: San Antonio, TX only (297 cams)">SA<span class="k">cctv · san antonio</span></button>
+    <button class="rail-btn" data-panel="cctvCity" type="button">CITY<span class="k">search cctv city</span></button>
     <button class="rail-btn" data-panel="cctvLive" type="button">CCTV LIVE<span class="k">verified only</span></button>
     <button class="rail-btn on" data-layer="alerts" type="button">ALERTS<span class="k" id="alertsRailK">nws …</span></button>
     <button class="rail-btn" id="btnAlertsTx" type="button" title="NWS alerts quick-filter: ALL (TX first) ↔ TX only">NWS TX<span class="k">alerts · all …</span></button>
@@ -445,6 +448,17 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <p style="opacity:.7">Honest limit: Eye samples a subset every few minutes (1 per TxDOT district + 2 per provable source), it does NOT check all 8,338 cameras at once. So this list starts small and grows as checks finish — it is not "every live camera in Texas."</p>
       <div style="margin:8px 0"><button type="button" id="cctvLiveRefresh">VERIFY SAMPLE NOW</button> <span id="cctvLiveCount">…</span></div>
       <div id="cctvLiveList"></div>
+    </div>
+  </div>
+
+  <div class="panel pe" id="pCctvCity">
+    <div class="panel-h">CCTV · CITY <button type="button" data-close="cctvCity">✕</button></div>
+    <div class="panel-b">
+      <p style="opacity:.85">Search a city, pick it, and the globe filters to just that city's cameras. No camera list is dumped — it filters the markers, same as the TX filter.</p>
+      <input type="text" id="cctvCitySearch" placeholder="Search city… e.g. Dallas" style="width:100%;padding:6px;background:transparent;color:var(--g);border:1px solid var(--chrome);font:inherit" />
+      <select id="cctvCitySelect" size="8" style="width:100%;margin-top:6px;background:transparent;color:var(--g);border:1px solid var(--chrome);font:inherit"></select>
+      <div style="margin:8px 0"><button type="button" id="cctvCityApply">SHOW CITY</button> <button type="button" id="cctvCityClear">CLEAR CITY</button> <span id="cctvCityCount">…</span></div>
+      <p style="opacity:.7">Texas cities are listed first in the pack order, then the rest. Counts are from the loaded pack.</p>
     </div>
   </div>
 
@@ -1871,7 +1885,7 @@ function cctvIngest(pack){
 function cctvLoadPack(){
   if(cctvReady||cctvPackP)return cctvPackP;
   cctvPackP=fetch('cctv-pack.json').then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(pack=>{
-    cctvIngest(pack);seedCctv();cctvReady=true;
+    cctvIngest(pack);seedCctv();cctvReady=true;if(typeof cctvCityRenderList==='function')cctvCityRenderList();
     /* R3 #5: a filter chosen before the pack landed (e.g. ?cctv=tx) — re-emit its label + ticker with the real count */
     if(cctvFilterPending){cctvFilterPending=false;cctvApplyFilter(cctvFilter,true);cctvFilterTicker();}
     paintBadgeAge();
@@ -1881,6 +1895,29 @@ function cctvLoadPack(){
 }
 const cctvMeshes=[];          /* kept for API parity — holds the single InstancedMesh */
 let cctvInst=null,cctvFilter='ALL';
+/* City filter: '' = no city filter. Austin/SA tabs and the CITY panel set it; the region button clears it. */
+let cctvCity='';
+function cctvVisible(cam){return (cctvFilter==='ALL'||cam.region===cctvFilter)&&(!cctvCity||cam.city===cctvCity);}
+function cctvCityCount(city){let n=0;for(const c of CCTV_CAMS)if(c.city===city)n++;return n;}
+function cctvCityAim(city){let la=0,lo=0,n=0;for(const c of CCTV_CAMS)if(c.city===city){la+=c.lat;lo+=c.lon;n++;}return n?[la/n,lo/n,2.1]:null;}
+function cctvCityButtons(){const a=document.getElementById('btnCctvAustin'),b=document.getElementById('btnCctvSA');if(a)a.classList.toggle('on',cctvCity==='Austin, TX');if(b)b.classList.toggle('on',cctvCity==='San Antonio, TX');}
+function cctvApplyCity(city,announce){
+  cctvCity=city||'';
+  if(cctvCity){const cam=CCTV_CAMS.find(c=>c.city===cctvCity);if(cam)cctvFilter=cam.region;}
+  cctvApplyFilter(cctvFilter,true);
+  cctvCityButtons();
+  const sel=document.getElementById('cctvCitySelect');if(sel)sel.value=cctvCity;
+  const cnt=document.getElementById('cctvCityCount');if(cnt)cnt.textContent=cctvCity?(cctvCity+' · '+cctvCityCount(cctvCity)+' cams'):'No city filter';
+  if(cctvCity){const aim=cctvCityAim(cctvCity);if(aim)aimAt(aim[0],aim[1],aim[2],false);if(announce!==false)setTicker('CCTV FILTER · '+cctvCity.toUpperCase()+' · '+cctvCityCount(cctvCity)+' official cams',20000);}
+}
+function cctvCityRenderList(){
+  const sel=document.getElementById('cctvCitySelect');if(!sel)return;
+  const q=(document.getElementById('cctvCitySearch')?document.getElementById('cctvCitySearch').value||'':'').toLowerCase();
+  if(!cctvReady){sel.innerHTML='<option>Pack not loaded yet — turn CCTV on and wait</option>';return;}
+  let out='';
+  for(const city of CCTV_CITY){const n=cctvCityCount(city);if(!n)continue;if(q&&city.toLowerCase().indexOf(q)<0)continue;out+='<option value="'+city.replace(/"/g,'&quot;')+'">'+city+' — '+n+'</option>';}
+  sel.innerHTML=out||'<option>No city matches that search</option>';
+}
 const cctvState={};           /* id -> {okAt,failAt,srcTs,frame,hash,same,verified,newAt} — runtime truth, never seeded */
 /* glassfix B2: sources whose freshness the browser can PROVE.
    txdot → /api/cam X-Cam-Timestamp · ca/fi/tfl/hk → CORS fetch with Last-Modified + byte hash.
@@ -2055,7 +2092,7 @@ function cctvApplyFilter(f,silent){
   cctvFilter=CCTV_AIM.hasOwnProperty(f)?f:'ALL';
   const o=new THREE.Object3D();
   if(cctvInst){CCTV_CAMS.forEach((cam,i)=>{
-    const on=cctvFilter==='ALL'||cam.region===cctvFilter;
+    const on=cctvVisible(cam);
     o.position.copy(latLonToVec3(cam.lat,cam.lon,1.007));o.lookAt(0,0,0);
     o.scale.setScalar(on?(cam.region==='TX'&&cctvFilter==='TX'?1.0:1):0.0001);o.updateMatrix();
     cctvInst.setMatrixAt(i,o.matrix);
@@ -2065,7 +2102,7 @@ function cctvApplyFilter(f,silent){
   const btn=document.getElementById('btnCctvFilter');
   if(btn){
     btn.classList.toggle('on',cctvFilter!=='ALL');
-    btn.innerHTML=(cctvFilter==='ALL'?'TX':cctvFilter)+'<span class="k">cctv · '+(cctvFilter==='ALL'?'all '+(CCTV_CAMS.length||'…'):CCTV_REGION_LABEL[cctvFilter].toLowerCase()+' '+(cctvReady?CCTV_COUNTS[cctvFilter]:'…'))+'<\/span>';
+    btn.innerHTML=(cctvCity?cctvCity.split(',')[0].toUpperCase():(cctvFilter==='ALL'?'TX':cctvFilter))+'<span class="k">cctv · '+(cctvCity?cctvCity.toLowerCase()+' '+(cctvReady?cctvCityCount(cctvCity):'…'):(cctvFilter==='ALL'?'all '+(CCTV_CAMS.length||'…'):CCTV_REGION_LABEL[cctvFilter].toLowerCase()+' '+(cctvReady?CCTV_COUNTS[cctvFilter]:'…')))+'<\/span>';
   }
   if(!silent){
     const a=CCTV_AIM[cctvFilter];if(a)aimAt(a[0],a[1],a[2],false);
@@ -2076,8 +2113,8 @@ function cctvApplyFilter(f,silent){
   }
 }
 function cctvFilterTicker(){
-  const n=cctvReady?(cctvFilter==='ALL'?CCTV_CAMS.length:CCTV_COUNTS[cctvFilter]):'…'; /* R3 #5: never print 0 before the pack loads */
-  setTicker('CCTV FILTER · '+(cctvFilter==='ALL'?'ALL '+n+' cams · world view':CCTV_REGION_LABEL[cctvFilter]+' · '+n+' official cams'),20000);
+  const n=cctvReady?(cctvCity?cctvCityCount(cctvCity):(cctvFilter==='ALL'?CCTV_CAMS.length:CCTV_COUNTS[cctvFilter])):'…'; /* R3 #5: never print 0 before the pack loads */
+  setTicker('CCTV FILTER · '+(cctvCity?cctvCity.toUpperCase()+' · '+n+' official cams':(cctvFilter==='ALL'?'ALL '+n+' cams · world view':CCTV_REGION_LABEL[cctvFilter]+' · '+n+' official cams')),20000);
 }
 /* glassfix #2: screen-space nearest-marker picking. Projects every visible, camera-facing marker in the active filter
    and returns those within R px of the tap, nearest first. Far-side markers are ignored. ~8k mults, no raycast. */
@@ -2089,9 +2126,8 @@ function cctvScreenPick(cx,cy,R){
   cctvPM.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);const P=cctvPM.elements;
   const cpx=camera.position.x,cpy=camera.position.y,cpz=camera.position.z;
   const iw=innerWidth,ih=innerHeight,R2=R*R,out=[];
-  const all=cctvFilter==='ALL';
   for(let i=0;i<CCTV_CAMS.length;i++){
-    if(!all&&CCTV_CAMS[i].region!==cctvFilter)continue;
+    if(!cctvVisible(CCTV_CAMS[i]))continue;
     const x=cctvLocal[i*3],y=cctvLocal[i*3+1],z=cctvLocal[i*3+2];
     const wx=W[0]*x+W[4]*y+W[8]*z+W[12],wy=W[1]*x+W[5]*y+W[9]*z+W[13],wz=W[2]*x+W[6]*y+W[10]*z+W[14];
     /* facing: outward normal (sphere centred at origin) · (camera − point) > 0 */
@@ -2151,8 +2187,8 @@ const CCTV_LENS_FIT_K=8,CCTV_LENS_VIEW_MAX=12;
 function cctvLensCount(lat,lon,S,sz,list){const k=Math.max(0.05,Math.cos(lat*DEG)),h=sz/2-4;let n=0;
   for(const o of list){if(Math.abs(o.c.lat-lat)*S<=h&&Math.abs(o.c.lon-lon)*k*S<=h)n++;}return n;}
 function cctvLensFit(lat,lon,sz){
-  const all=cctvFilter==='ALL',k0=Math.max(0.05,Math.cos(lat*DEG)),near=[];
-  for(const c of CCTV_CAMS){if(!all&&c.region!==cctvFilter)continue;const d=Math.max(Math.abs(c.lat-lat),Math.abs(c.lon-lon)*k0);if(d<=2)near.push({c,d});}
+  const k0=Math.max(0.05,Math.cos(lat*DEG)),near=[];
+  for(const c of CCTV_CAMS){if(!cctvVisible(c))continue;const d=Math.max(Math.abs(c.lat-lat),Math.abs(c.lon-lon)*k0);if(d<=2)near.push({c,d});}
   near.sort((p,q)=>p.d-q.d);
   const pad=Math.max(18,Math.round(sz*0.08)),half=sz/2-pad;let best=null;
   /* R5 #3: the lens is centred ON the anchor (the cam nearest the finger), not on the bbox midpoint of its neighbours —
@@ -2172,9 +2208,9 @@ function cctvLensSize(){return Math.max(200,Math.min(340,innerWidth-24,innerHeig
 function cctvLensClose(){cancelAnimationFrame(cctvLensRaf);if(cctvLensEl){cctvLensEl.remove();cctvLensEl=null;cctvLensCv=null;}}
 function cctvLensXY(c){const sz=cctvLensSize(),k=Math.cos(cctvLensC.lat*DEG);
   return {x:sz/2+(c.lon-cctvLensC.lon)*k*cctvLensS,y:sz/2-(c.lat-cctvLensC.lat)*cctvLensS};}
-function cctvLensVisible(){const sz=cctvLensSize(),all=cctvFilter==='ALL',out=[];
+function cctvLensVisible(){const sz=cctvLensSize(),out=[];
   const span=(sz/2+20)/cctvLensS,k=Math.max(0.05,Math.cos(cctvLensC.lat*DEG));
-  for(let i=0;i<CCTV_CAMS.length;i++){const c=CCTV_CAMS[i];if(!all&&c.region!==cctvFilter)continue;
+  for(let i=0;i<CCTV_CAMS.length;i++){const c=CCTV_CAMS[i];if(!cctvVisible(c))continue;
     if(Math.abs(c.lat-cctvLensC.lat)>span||Math.abs(c.lon-cctvLensC.lon)*k>span)continue;out.push(c);}
   return out;}
 function cctvLensDraw(){
@@ -2363,7 +2399,7 @@ function openCctv(cam){
 }
 function cctvNext(){
   if(!cctvOpen)return;
-  const pool=CCTV_CAMS.filter(c=>cctvFilter==='ALL'?true:c.region===cctvFilter);
+  const pool=CCTV_CAMS.filter(c=>cctvVisible(c));
   let cands=pool.filter(c=>c!==cctvOpen);
   if(!cands.length)return;
   const prev=cctvHistory.length?cctvHistory[cctvHistory.length-1]:null;
@@ -2825,7 +2861,7 @@ function setTicker(t,holdMs){
   document.getElementById('ticker').textContent=t;
   if(holdMs){tickerHoldUntil=now+holdMs;tickerHoldAt=now;}else if(now<tickerHoldUntil)tickerHoldUntil=0;
 }
-const panels={ops:document.getElementById('pOps'),antman:document.getElementById('pAntman'),hire:document.getElementById('pHire'),cctvLive:document.getElementById('pCctvLive')};
+const panels={ops:document.getElementById('pOps'),antman:document.getElementById('pAntman'),hire:document.getElementById('pHire'),cctvLive:document.getElementById('pCctvLive'),cctvCity:document.getElementById('pCctvCity')};
 document.querySelectorAll('.rail-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     if(btn.dataset.layer){
@@ -2853,7 +2889,7 @@ document.querySelectorAll('.rail-btn').forEach(btn=>{
       const open=!panels[id].classList.contains('open');
       Object.keys(panels).forEach(k=>panels[k].classList.remove('open'));
       document.querySelectorAll('.rail-btn[data-panel]').forEach(b=>b.classList.remove('on'));
-      if(open){panels[id].classList.add('open');btn.classList.add('on');if(id==='cctvLive')cctvLiveRender();}
+      if(open){panels[id].classList.add('open');btn.classList.add('on');if(id==='cctvLive')cctvLiveRender();if(id==='cctvCity')cctvCityRenderList();}
     }
   });
 });
@@ -2865,10 +2901,23 @@ document.querySelectorAll('[data-close]').forEach(b=>{
 });
 const btnCctvFilter=document.getElementById('btnCctvFilter');
 if(btnCctvFilter)btnCctvFilter.addEventListener('click',()=>{
+  cctvCity='';cctvCityButtons();
   const seq=['ALL','TX','US','INTL'];const nx=seq[(seq.indexOf(cctvFilter)+1)%seq.length];
   cctvApplyFilter(nx);writeDeepLink(true);
   if(nx==='TX')antmanSay('Texas board up — TxDOT districts, Houston TranStar, Austin. Tap any yellow box.');
 });
+const btnCctvAustin=document.getElementById('btnCctvAustin');
+if(btnCctvAustin)btnCctvAustin.addEventListener('click',()=>{cctvApplyCity(cctvCity==='Austin, TX'?'':'Austin, TX');});
+const btnCctvSA=document.getElementById('btnCctvSA');
+if(btnCctvSA)btnCctvSA.addEventListener('click',()=>{cctvApplyCity(cctvCity==='San Antonio, TX'?'':'San Antonio, TX');});
+const cctvCitySearch=document.getElementById('cctvCitySearch');
+if(cctvCitySearch)cctvCitySearch.addEventListener('input',()=>cctvCityRenderList());
+const cctvCitySelect=document.getElementById('cctvCitySelect');
+if(cctvCitySelect)cctvCitySelect.addEventListener('change',()=>{if(cctvCitySelect.value)cctvApplyCity(cctvCitySelect.value);});
+const cctvCityApplyBtn=document.getElementById('cctvCityApply');
+if(cctvCityApplyBtn)cctvCityApplyBtn.addEventListener('click',()=>{if(cctvCitySelect&&cctvCitySelect.value)cctvApplyCity(cctvCitySelect.value);});
+const cctvCityClearBtn=document.getElementById('cctvCityClear');
+if(cctvCityClearBtn)cctvCityClearBtn.addEventListener('click',()=>{cctvApplyCity('');if(cctvCitySearch)cctvCitySearch.value='';cctvCityRenderList();});
 const btnAlertsTx=document.getElementById('btnAlertsTx');
 if(btnAlertsTx)btnAlertsTx.addEventListener('click',()=>{
   alertsApplyFilter(alertsFilter==='TX'?'ALL':'TX');writeDeepLink(true);
