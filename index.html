@@ -4,8 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
 <meta name="theme-color" content="#07070a"/>
-<meta name="description" content="NEXUS EYE v0.4.1 — photoreal field-ops planet console by DoubleA (@AntManThePro)"/>
-<title>NEXUS EYE · v0.4.1</title>
+<meta name="description" content="NEXUS EYE v0.4.5 — photoreal field-ops planet console by DoubleA (@AntManThePro)"/>
+<title>NEXUS EYE · v0.4.5</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32"/>
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180"/>
@@ -226,9 +226,62 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
   .rail{bottom:calc(80px + var(--safe-b))}
   .panel,#cctvDock{bottom:calc(118px + var(--safe-b))}
 }
+/* v0.4.2 R2 SU-1/N1: at ≤640 px the badge row wraps instead of scrolling sideways. The row sits in the pointer-events:none HUD,
+   so a sideways strip could not be swiped and badges past the right edge (SUN, LAUNCH) were unreachable. Now every badge is on
+   screen on a cold load; the non-interactive badges stay pointer-events:none, so drags and taps on them still reach the globe. */
+@media(max-width:640px){.badges{flex-wrap:wrap;overflow:visible;row-gap:3px;padding-bottom:0}}
+/* v0.4.2 R2 SU-2/N5: the SUN badge is a button (tap / click / Enter) that opens the SUN panel */
+#bSun{pointer-events:auto;cursor:pointer}
+#bSun:focus-visible{outline:1px solid var(--c);outline-offset:1px}
+@media(min-width:641px){#pSun{top:max(calc(58px + var(--safe-t)),var(--rail-top,0px))}}
+#pSun .clk{margin-top:8px;padding:6px 8px;border:1px solid var(--y);color:var(--y);font-size:11px;line-height:1.45}
+#pSun .stat span:last-child{text-align:right}
 /* R3 #3: rail controls ≥32px touch targets, ≥11px type at every size (after the media blocks so they win) */
 .rail-btn{min-height:32px;font-size:11px}
+/* v0.4.2 R3 SUR2-3: compact chips. Text stays 11px and is never cut, and the row still wraps as a fallback, so no badge is hidden.
+   1280/1440: one row after the feeds load (headroom ~56px at 1280, ~216px at 1440). 390: 4 rows instead of 5. */
+.badges{gap:3px;row-gap:3px}
+.badge{padding:2px 4px;letter-spacing:-.02em;word-spacing:-3px}
+/* v0.4.2 R3 SUR2-2: >=32px touch targets without making anything look bigger. The hit area grows through an invisible
+   pseudo-element (a pseudo-element hit-tests as its own element). SUN badge: 34px tall. Panel and dock close buttons: 34x34. */
+#bSun{position:relative}
+#bSun::before{content:'';position:absolute;left:0;right:0;top:50%;height:34px;transform:translateY(-50%)}
+.panel-h button{position:relative}
+.panel-h button::after{content:'';position:absolute;left:50%;top:50%;width:34px;height:34px;transform:translate(-50%,-50%)}
+/* v0.4.2 R4 SUR3-1: at <=640px each badge DRAWS a compact label (data-short, set by badgeShort() below) instead of the full text.
+   The element's text stays the full label (screen readers, hooks, tooltip, OPS panel); the "/ ''" alt text keeps the short copy out of
+   the accessible name. The first content line is a fallback for browsers without alt-text syntax. State words always stay. */
+@media(max-width:640px){
+  .badge[data-short]{font-size:0;letter-spacing:0}
+  .badge[data-short]::after{content:attr(data-short);content:attr(data-short) / "";font-size:11px;letter-spacing:-.02em}
+}
+/* v0.4.2 R4 rail: buttons never shrink below their content. Before, the capped-height rail squeezed them to 32px and two-line
+   sub-labels (SATS "celestrak sgp4 · STALE elem 72h old") spilled onto the next button; the rail already scrolls instead. */
+.rail-btn{flex-shrink:0}
+/* v0.4.3 R2 AU-1: 12 badges at 360-374px. The AUR chip moved to right after QUAKE in the markup, so on phones it sits
+   in the first chip row, which has the most room for its longer states (OFFLINE, STALE + age), and below 375px every chip
+   loses 1px of side padding and 1px of gap. Text stays 11px and nothing is cut; the row still wraps as a fallback, so no badge is hidden.
+   Measured with the feeds loaded: 3 rows ending at 95px at 360, 375 and 390. */
+@media(max-width:374px){.badges{gap:2px;row-gap:3px}.badge{padding:2px 3px}}
+#opsBadgesFull{white-space:pre-line;font-size:11px;color:var(--c)}
 /* R4 #2: every line of dock text ≥11px at every size (source line, pill, name, city, coords, errors) */
+/* v0.4.3 R2 AU-2/B1: the AUR badge is a button (tap / click / Enter) that opens the AURORA panel, same pattern as SUN.
+   Its hit area grows to 34px through an invisible pseudo-element; the drawn chip does not change size. */
+#bAur{pointer-events:auto;cursor:pointer;position:relative}
+#bAur:focus-visible{outline:1px solid var(--c);outline-offset:1px}
+#bAur::before{content:'';position:absolute;left:0;right:0;top:50%;height:34px;transform:translateY(-50%)}
+@media(min-width:641px){#pAur{top:max(calc(58px + var(--safe-t)),var(--rail-top,0px))}}
+#pAur .disc{margin:0 0 8px;padding:6px 8px;border:1px solid var(--y);color:var(--y);font-size:11px;line-height:1.45}
+#pAur .stat span:last-child{text-align:right}
+/* v0.4.4 FIRE: badge is a button (tap panel), 34px hit via pseudo; hot-pink accent for thermal detections */
+#bFire{pointer-events:auto;cursor:pointer;position:relative}
+#bFire:focus-visible{outline:1px solid var(--p);outline-offset:1px}
+#bFire::before{content:'';position:absolute;left:0;right:0;top:50%;height:34px;transform:translateY(-50%)}
+@media(min-width:641px){#pFire{top:max(calc(58px + var(--safe-t)),var(--rail-top,0px))}}
+#pFire .disc{margin:0 0 8px;padding:6px 8px;border:1px solid var(--p);color:var(--p);font-size:11px;line-height:1.45}
+#pFire .stat span:last-child{text-align:right}
+#pFire button[data-close]{min-width:32px;min-height:32px}
+.sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 #cctvDock .meta,#cctvDock .meta .src,#cctvDock .meta .cn,#cctvDock .meta .cc,#cctvDock .meta .cx,#cctvDock .err,#cctvDock .cerr,#cctvDock .cerr span,#cctvDock .cpill{font-size:11px}
 #cctvDock .cpill{max-width:calc(100% - 12px);line-height:1.35;letter-spacing:.06em}
 #cctvDock .cframe .cerr.loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:12px;color:var(--c);background:rgba(7,7,10,.55)}
@@ -325,7 +378,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     <circle cx="48" cy="20" r="2" fill="#ffcc00"/>
   </svg>
   <div class="boot-title">NEXUS EYE</div>
-  <div class="boot-sub">SPATIAL INTEL · v0.4.1 · FIELD OPS</div>
+  <div class="boot-sub">SPATIAL INTEL · v0.4.5 · FIELD OPS</div>
   <div class="boot-log" id="bootLog"></div>
   <div class="boot-bar"><i id="bootBar"></i></div>
   <button class="boot-skip pe" id="bootSkip" type="button">SKIP BOOT ▸</button>
@@ -340,25 +393,32 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="#00ff87" stroke-width="1.5"/><circle cx="32" cy="32" r="18" fill="none" stroke="#60efff" stroke-width="1" opacity=".7"/><ellipse cx="32" cy="32" rx="28" ry="10" fill="none" stroke="#ff0080" stroke-width="1" opacity=".8"/><circle cx="32" cy="32" r="6" fill="#00ff87"/><circle cx="32" cy="32" r="2.5" fill="#07070a"/><circle cx="48" cy="20" r="2" fill="#ffcc00"/></svg>
       <div>
         <h1>NEXUS EYE</h1>
-        <div class="ver">v0.4.1 · OPERATOR // DOUBLEA · ANTMAN ASSIST</div>
+        <div class="ver">v0.4.5 · OPERATOR // DOUBLEA · ANTMAN ASSIST</div>
       </div>
     </div>
     <div class="badges">
       <span class="badge off" id="bQuake">QUAKE · …</span>
+      <span class="badge off" id="bAur" role="button" tabindex="0" aria-controls="pAur" aria-describedby="aurSrDisc" title="NOAA SWPC OVATION aurora forecast (about 30 to 90 minutes ahead) and planetary Kp index. Model forecast, not a sighting. Tap for the AURORA panel.">AUR · OFF</span>
       <span class="badge off" id="bIss">ISS · …</span>
       <span class="badge off" id="bSats" title="CelesTrak GP orbital elements · positions computed in-browser by SGP4">SATS · …</span>
       <span class="badge off" id="bLaunch" title="Launch Library 2 (The Space Devs) upcoming launch schedule">LAUNCH · …</span>
       <span class="badge off" id="bWx">WX · …</span>
       <span class="badge off" id="bHaz">HAZ · …</span>
+      <span class="badge off" id="bFire" role="button" tabindex="0" aria-controls="pFire" aria-describedby="fireSrDisc" title="NASA FIRMS MODIS C6.1 active-fire thermal hotspots (24h). Thermal detections, not ground truth. Off unless the link asks for it. Tap for the FIRE panel.">FIRE · OFF</span>
       <span class="badge off" id="bAlerts" title="NOAA / National Weather Service active alerts">ALERTS · …</span>
+      <span class="badge pub" id="bSun" role="button" tabindex="0" aria-controls="pSun" title="Sun position computed in-browser from the device clock (NOAA low-precision solar equations, about 0.1°). Not a data feed. Tap for the SUN panel.">SUN · CALC</span>
       <span class="badge proto" id="bOrbit">ORBIT · KEPLER</span>
       <span class="badge proto" id="bAir">AIR · PROTO</span>
       <span class="badge pub" id="bCctv">CCTV · PUBLIC</span>
     </div>
+    <span class="sr" id="aurSrDisc">Aurora: NOAA SWPC OVATION is a model forecast of the chance of visible aurora about 30 to 90 minutes ahead, not a sighting.</span>
+    <span class="sr" id="fireSrDisc">Fire: NASA FIRMS MODIS thermal detections over about 24 hours. Satellite hotspots, not ground truth.</span>
   </div>
 
   <div class="rail pe">
     <button class="rail-btn on" data-layer="mesh" type="button">MESH<span class="k">blue marble</span></button>
+    <button class="rail-btn on" data-layer="sun" type="button" title="Real-time day/night: sun position computed in-browser from the device clock">SUN<span class="k" id="sunRailK">day / night calc</span></button>
+    <button class="rail-btn toggle-off" data-layer="aur" type="button" title="Aurora oval: NOAA SWPC OVATION forecast probability, keyless. Model forecast, not a sighting. Off unless the link asks for it (?layers=…,aur).">AURORA<span class="k" id="aurRailK">swpc ovation off · model forecast, not a sighting</span></button>
     <button class="rail-btn on" data-layer="quake" type="button">QUAKE<span class="k">usgs live</span></button>
     <button class="rail-btn on" data-layer="iss" type="button">ISS<span class="k">wheretheiss live</span></button>
     <button class="rail-btn on" data-layer="sats" type="button">SATS<span class="k" id="satsRailK">celestrak sgp4 …</span></button>
@@ -367,6 +427,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     <button class="rail-btn on" data-layer="air" type="button">AIR<span class="k">live / proto</span></button>
     <button class="rail-btn on" data-layer="wx" type="button">WX<span class="k">open-meteo</span></button>
     <button class="rail-btn on" data-layer="haz" type="button">HAZ<span class="k" id="hazRailK">nasa eonet …</span></button>
+    <button class="rail-btn toggle-off" data-layer="fire" type="button" title="Active-fire thermal hotspots: NASA FIRMS MODIS C6.1 24h via /api/fire. Thermal detections, not ground truth. Off unless the link asks for it (?layers=…,fire).">FIRE<span class="k" id="fireRailK">firms modis off · thermal detections · not ground truth</span></button>
     <button class="rail-btn on" data-layer="cctv" type="button">CCTV<span class="k">official public cams</span></button>
     <button class="rail-btn" id="btnCctvFilter" type="button" title="CCTV quick-filter: ALL → TX → US → INTL">TX<span class="k">cctv · texas</span></button>
     <button class="rail-btn" id="btnCctvAustin" type="button" title="CCTV filter: Austin, TX only (913 cams)">AUSTIN<span class="k">cctv · austin</span></button>
@@ -389,24 +450,71 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <p>NEXUS EYE is a field-ops planet console — public signals, not a spy toy. Photoreal Earth, live feeds, public CCTV. Situational awareness for operators who ship under fire.</p>
       <h3>LAYERS · LIVE vs PROTO</h3>
       <div class="stat"><span>MESH</span><span>Blue Marble + night + clouds</span></div>
+      <div class="stat"><span>SUN</span><span id="sunOpsV">CALC · real-time day/night terminator · city lights only on the night side · computed from your device clock, no network</span></div>
+      <div class="stat"><span>AURORA</span><span id="aurOpsV">OFF · NOAA SWPC OVATION aurora probability + planetary Kp · model forecast of the chance of visible aurora, not a sighting</span></div>
       <div class="stat"><span>QUAKE</span><span>LIVE · USGS GeoJSON</span></div>
       <div class="stat"><span>ISS</span><span>LIVE · wheretheiss.at</span></div>
       <div class="stat"><span>LAUNCH</span><span id="lnOpsV">… · Launch Library 2 upcoming launches · pads on the globe · tap a pad for its schedule + countdown</span></div>
       <div class="stat"><span>SATS</span><span id="satsOpsV">… · CelesTrak GP elements (stations · brightest · GPS) · SGP4 positions · tap a dot for its next orbit</span></div>
       <div class="stat"><span>WX</span><span>LIVE · Open-Meteo</span></div>
       <div class="stat"><span>HAZ</span><span id="hazOpsV">… · NASA EONET fires / storms / volcanoes</span></div>
+      <div class="stat"><span>FIRE</span><span id="fireOpsV">OFF · NASA FIRMS MODIS C6.1 thermal hotspots (24h) · thermal detections · not ground truth</span></div>
       <div class="stat"><span>ALERTS</span><span id="alertsOpsV">… · NOAA / NWS active alerts · TX first</span></div>
       <div class="stat"><span>CCTV</span><span>8,338-cam official public catalog · LIVE count = source-time verified only · TX TxDOT / TranStar / Austin · US NYC / Caltrans / ODOT · INTL</span></div>
       <div class="stat"><span>ORBIT</span><span>KEPLER · scout craft</span></div>
       <div class="stat"><span>AIR</span><span>LIVE via /api/air · else PROTO</span></div>
       <div class="stat"><span>SHARE</span><span>?lat=&amp;lon=&amp;alt=&amp;layers= · ?layer=alerts · ?alerts=tx</span></div>
       <div class="stat"><span>FRESH</span><span>LIVE / STALE / OFFLINE ages</span></div>
+      <h3>BADGES · FULL TEXT</h3>
+      <p id="opsBadgesFull">…</p>
       <h3>CCTV CREDITS</h3>
       <p id="cctvCredits" style="font-size:10px"></p>
       <h3>ALGO</h3>
       <p>Keplerian LEO (E from M). Haversine nearest-quake. Great-circle slerp routes. True 3D orbit cam + inertia.</p>
       <h3>THESIS</h3>
       <p>Portfolio surface + real public intel. DoubleA · field ops + QA · UNRULY · hardware · direct action. Honest badges with ages — never fake live. AIR goes LIVE only behind the allowlisted function.</p>
+    </div>
+  </div>
+
+  <div class="panel pe" id="pSun" role="dialog" aria-label="Sun position">
+    <div class="panel-h">SUN · CALC <button type="button" data-close="sun" aria-label="Close sun panel">✕</button></div>
+    <div class="panel-b">
+      <div class="stat"><span>SUBSOLAR</span><span id="sunPSub">…</span></div>
+      <div class="stat"><span>COMPUTED</span><span id="sunPAt">…</span></div>
+      <div class="stat"><span>VIEW CENTRE</span><span id="sunPView">…</span></div>
+      <div class="stat"><span>LAYER</span><span id="sunPLayer">…</span></div>
+      <p class="clk" id="sunPClock">CLOCK · computed from this device's clock.</p>
+      <p style="margin-top:8px;opacity:.75">NOAA low-precision solar equations, about 0.1°. Computed in-browser, no network. Not a data feed, so never LIVE.</p>
+    </div>
+  </div>
+
+  <div class="panel pe" id="pAur" role="dialog" aria-label="Aurora forecast">
+    <div class="panel-h">AURORA · OVATION <button type="button" data-close="aur" aria-label="Close aurora panel">✕</button></div>
+    <div class="panel-b">
+      <p class="disc" id="aurPDisc">MODEL FORECAST, NOT A SIGHTING. NOAA SWPC OVATION estimates the chance of visible aurora about 30 to 90 minutes ahead. It does not see the sky.</p>
+      <div class="stat"><span>STATUS</span><span id="aurPSt">…</span></div>
+      <div class="stat"><span>OBSERVED</span><span id="aurPObs">…</span></div>
+      <div class="stat"><span>FORECAST FOR</span><span id="aurPFc">…</span></div>
+      <div class="stat"><span>OVAL</span><span id="aurPOval">…</span></div>
+      <div class="stat"><span>VIEW CENTRE</span><span id="aurPView">…</span></div>
+      <div class="stat"><span>KP</span><span id="aurPKp">…</span></div>
+      <div class="stat"><span>NEXT PULL</span><span id="aurPNext">…</span></div>
+      <p style="margin-top:8px;opacity:.75">Source: NOAA Space Weather Prediction Center public feeds (keyless). Not affiliated with or endorsed by NOAA. LIVE only while the pull is under 25 min old and the model observation is under 60 min old.</p>
+    </div>
+  </div>
+
+  <div class="panel pe" id="pFire" role="dialog" aria-label="Active fire hotspots">
+    <div class="panel-h">FIRE · FIRMS <button type="button" data-close="fire" aria-label="Close fire panel">✕</button></div>
+    <div class="panel-b">
+      <p class="disc" id="firePDisc">THERMAL DETECTIONS · NOT GROUND TRUTH. NASA FIRMS MODIS C6.1 marks satellite-detected heat anomalies over about 24 hours. Dense thermal detections — not the same as HAZ (NASA EONET open events).</p>
+      <div class="stat"><span>STATUS</span><span id="firePSt">…</span></div>
+      <div class="stat"><span>SOURCE</span><span id="firePSrc">…</span></div>
+      <div class="stat"><span>WINDOW</span><span id="firePWin">…</span></div>
+      <div class="stat"><span>COUNT</span><span id="firePCount">…</span></div>
+      <div class="stat"><span>FRP PEAK</span><span id="firePPeak">…</span></div>
+      <div class="stat"><span>PULLED</span><span id="firePAge">…</span></div>
+      <div class="stat"><span>NEXT PULL</span><span id="firePNext">…</span></div>
+      <p style="margin-top:8px;opacity:.75">Source: NASA FIRMS public MODIS C6.1 Global 24h CSV (keyless), mirrored through the NEXUS /api/fire function. Not affiliated with or endorsed by NASA. LIVE only after a successful pull; empty count=0 is still LIVE; never invents points.</p>
     </div>
   </div>
 
@@ -435,7 +543,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
           <li>Netlify-ready · /api/air function · keyless local HTML</li>
           <li>Direct action · verify everything · no fluff</li>
         </ul>
-        <div class="contact">NEXUS EYE v0.4.1 · ORIGINAL</div>
+        <div class="contact">NEXUS EYE v0.4.5 · ORIGINAL</div>
       </div>
       <p style="margin-top:12px;opacity:.7;font-size:10px">Tip: open HIRE, zoom Earth, tap a CCTV marker, screenshot the HUD.</p>
     </div>
@@ -500,18 +608,24 @@ const TEX={
 
 
 /* ---- Freshness (LIVE / STALE / OFFLINE ages) ---- */
-const STALE_MS={alerts:10*60*1000,haz:30*60*1000,quake:8*60*1000,iss:25*1000,wx:15*60*1000,air:45*1000,cctv:3*60*1000,sats:6*60*60*1000,launch:6*60*60*1000};
+const STALE_MS={alerts:10*60*1000,haz:30*60*1000,fire:50*60*1000,quake:8*60*1000,iss:25*1000,wx:15*60*1000,air:45*1000,cctv:3*60*1000,sats:6*60*60*1000,launch:6*60*60*1000,aur:25*60*1000};
 const fresh={
   quake:{okAt:0,failAt:0,label:'QUAKE',count:''},
   iss:{okAt:0,failAt:0,label:'ISS',count:''},
   wx:{okAt:0,failAt:0,label:'WX',count:''},
   haz:{okAt:0,failAt:0,label:'HAZ',count:''},
+  fire:{okAt:0,failAt:0,label:'FIRE',count:''},
   air:{okAt:0,failAt:0,label:'AIR',count:'',mode:'proto'},
   cctv:{okAt:0,failAt:0,label:'CCTV',count:''},
   alerts:{okAt:0,failAt:0,label:'ALERTS',count:''},
   sats:{okAt:0,failAt:0,label:'SATS',count:''},
-  launch:{okAt:0,failAt:0,label:'LAUNCH',count:''}
+  launch:{okAt:0,failAt:0,label:'LAUNCH',count:''},
+  aur:{okAt:0,failAt:0,label:'AUR',count:''}
 };
+/* v0.4.4 FIRE state — declared early (paintBadgeAge runs during init) */
+var fireS={list:[],pts:null,peak:0,err:'',inflight:false,lastTry:0,reqN:0,failN:0,nextAt:0,rl:false,waitMs:0,skipN:0,pullAt:0,source:'',window:'',sel:null};
+/* v0.4.3 AURORA state — declared early (paintBadgeAge runs during init) */
+var aurS={grid:null,obs:0,fc:0,kp:null,kpAt:0,kpErr:'',err:'',inflight:false,lastTry:0,n:0,max:0,pts:null,reqN:0,failN:0,nextAt:0,rl:false,waitMs:0,skipN:0,rows:0,bad:0,pullAt:0};
 /* v0.4.1 LAUNCH state — declared early (paintBadgeAge runs during init) */
 let lnList=[],lnPads=[],lnReady=false,lnErr='',lnInflight=false,lnPulledAt=0,lnFailN=0,lnNextTry=0,lnLastTry=0,lnNetReq=0,lnTryLog=[],lnCardOn=false,lnSel=null,lnPoints=null,lnRings=[],lnLastTap=null,lnDropN=0,lnKickAt=0,lnRateLimited=false,lnSkipN=0;
 /* v0.4.0 SATS state — declared early (paintBadgeAge runs during init) */
@@ -556,6 +670,8 @@ function paintBadgeAge(){
   const now=Date.now();
   paintSatsBadge(now);
   paintLaunchBadge(now);
+  paintAurBadge(now);
+  paintFireBadge(now);
   /* QUAKE */
   (function(){
     const el=document.getElementById('bQuake');const f=fresh.quake;
@@ -686,7 +802,7 @@ setInterval(paintBadgeAge,1000);
 /* ---- Share deep-links ?lat=&lon=&alt=&layers= ---- */
 let shareLat=null,shareLon=null,shareSilent=false;
 function layerList(){
-  return ['mesh','quake','iss','sats','launch','orbit','air','wx','haz','cctv','alerts'].filter(k=>layers[k]).join(',');
+  return ['mesh','sun','aur','quake','iss','sats','launch','orbit','air','wx','haz','fire','cctv','alerts'].filter(k=>layers[k]).join(',');
 }
 function aimAt(lat,lon,alt,snap){
   /* Camera on +Z. three r128 DEFAULT Euler XYZ ≡ Rx∘Ry. Keep order unset.
@@ -703,12 +819,14 @@ function aimAt(lat,lon,alt,snap){
 function applyLayersCSV(csv){
   if(!csv)return;
   const want=new Set(String(csv).split(',').map(s=>s.trim().toLowerCase()).filter(Boolean));
-  ['mesh','quake','iss','sats','launch','orbit','air','wx','haz','cctv','alerts'].forEach(k=>{
+  ['mesh','sun','aur','quake','iss','sats','launch','orbit','air','wx','haz','fire','cctv','alerts'].forEach(k=>{
     const on=want.has(k);
     layers[k]=on;
     const btn=document.querySelector('.rail-btn[data-layer="'+k+'"]');
     if(btn){btn.classList.toggle('on',on);btn.classList.toggle('toggle-off',!on);}
     if(k==='mesh')meshGroup.visible=on;
+    if(k==='sun'&&window.__sunReady)sunApply();
+    if(k==='aur'){gAur.visible=on;if(on&&bootDone)aurLoad('user');}
     if(k==='quake')gQuake.visible=on;
     if(k==='iss')gIss.visible=on;
     if(k==='sats'){gSats.visible=on;if(on)satsLoad('user');else satsCardClose();}
@@ -717,6 +835,7 @@ function applyLayersCSV(csv){
     if(k==='air'){gAir.visible=on;gRoutes.visible=on;}
     if(k==='wx')gWx.visible=on;
     if(k==='haz')gHaz.visible=on;
+    if(k==='fire'){gFire.visible=on;if(on&&bootDone)fireLoad('user');}
     if(k==='cctv'){gCctv.visible=on;if(on&&typeof cctvLoadPack==='function')cctvLoadPack();}
     if(k==='alerts'){gAlerts.visible=on;if(on)alertsMaybeLoad();else alertsDockClose();}
   });
@@ -773,7 +892,9 @@ const bootEl=document.getElementById('boot');
 const bootLog=document.getElementById('bootLog');
 const bootBar=document.getElementById('bootBar');
 const lines=[
-  'NEXUS EYE KERNEL · v0.4.1',
+  'NEXUS EYE KERNEL · v0.4.5',
+  'FEED · NOAA SWPC OVATION AURORA + Kp · STANDBY (rail AURORA or ?layers=…,aur)',
+  'FEED · NASA FIRMS MODIS FIRE · STANDBY (rail FIRE or ?layers=…,fire)',
   'FEED · NOAA / NWS ALERTS api.weather.gov · LIVE ARM · TX FIRST',
   'PALETTE LOCK · #00ff87 #60efff #ff0080 #ffcc00',
   'MESH · BLUE MARBLE + NIGHT + CLOUDS + ATMOS',
@@ -814,6 +935,8 @@ function finishBoot(){
   { const q=new URLSearchParams(location.search); if(q.get('lat')==null||q.get('lon')==null)aimAt(31.0,-98.6,q.get('alt')!=null&&Number.isFinite(+q.get('alt'))?+q.get('alt'):3.8,true); } /* glassfix N7: default view = whole globe centred on Texas */
   parseDeepLink();
   if(layers.cctv)setTimeout(cctvLoadPack,300); /* glassfix N8: fetch cctv-pack.json only after boot, only if CCTV is on */
+  if(layers.aur)aurLoad('boot');
+  if(layers.fire)fireLoad('boot');
   loadQuakes();
   loadIss();
   if(layers.sats)satsLoad('boot');
@@ -951,7 +1074,7 @@ function loadTex(url,onOk,onFail){
 loadTex(TEX.day,t=>{earthMat.map=t;earthMat.needsUpdate=true;setTicker('MESH · Blue Marble locked');});
 loadTex(TEX.night,t=>{earthMat.emissiveMap=t;earthMat.emissive=new THREE.Color(0xffffff);earthMat.emissiveIntensity=0.55;earthMat.needsUpdate=true;});
 loadTex(TEX.topo,t=>{earthMat.bumpMap=t;earthMat.bumpScale=0.045;earthMat.needsUpdate=true;});
-loadTex(TEX.water,t=>{earthMat.specularMap=t;earthMat.specular=new THREE.Color(0x888899);earthMat.shininess=28;earthMat.needsUpdate=true;});
+loadTex(TEX.water,t=>{earthMat.specularMap=t;sunSpec();earthMat.needsUpdate=true;});
 
 /* layers */
 const gQuake=new THREE.Group();root.add(gQuake);
@@ -963,9 +1086,126 @@ const gAir=new THREE.Group();root.add(gAir);
 const gRoutes=new THREE.Group();root.add(gRoutes);
 const gWx=new THREE.Group();root.add(gWx);
 const gHaz=new THREE.Group();root.add(gHaz);
+const gFire=new THREE.Group();gFire.visible=false;root.add(gFire); /* v0.4.4: FIRE off unless the link or the rail turns it on */
 const gCctv=new THREE.Group();root.add(gCctv);
+const gAur=new THREE.Group();gAur.visible=false;root.add(gAur); /* R2 AU-7: AURORA is off unless the link or the rail turns it on */
 
-const layers={mesh:true,quake:true,iss:true,sats:true,launch:true,orbit:true,air:true,wx:true,haz:true,cctv:true,alerts:true};
+const layers={mesh:true,sun:true,aur:false,quake:true,iss:true,sats:true,launch:true,orbit:true,air:true,wx:true,haz:true,fire:false,cctv:true,alerts:true};
+
+/* ==== SUN v0.4.2 — real-time day/night terminator (computed in-browser, no network) ====
+   Subsolar point from NOAA low-precision solar equations (~0.1°). Key light follows the real sun;
+   city lights (emissive night map) fade in only past the terminator. Honest label: SUN · CALC, never LIVE. */
+const sunU={uSunV:{value:new THREE.Vector3(1,0,0)},uSunOn:{value:1}};
+earthMat.onBeforeCompile=sh=>{
+  sh.uniforms.uSunV=sunU.uSunV;sh.uniforms.uSunOn=sunU.uSunOn;
+  sh.fragmentShader='uniform vec3 uSunV;\nuniform float uSunOn;\n'+sh.fragmentShader.replace('#include <emissivemap_fragment>',
+    '#include <emissivemap_fragment>\n  float nxSun=dot(normalize(vNormal),uSunV);\n  totalEmissiveRadiance*=mix(1.0,(1.0-smoothstep(-0.20,0.10,nxSun))*1.4,uSunOn);');
+};
+earthMat.customProgramCacheKey=()=>'nexus-sun-v1';
+function sunSubsolar(d){
+  const n=d.getTime()/86400000+2440587.5-2451545.0;
+  const L=((280.460+0.9856474*n)%360+360)%360,g=(((357.528+0.9856003*n)%360+360)%360)*DEG;
+  const lam=(L+1.915*Math.sin(g)+0.020*Math.sin(2*g))*DEG,eps=(23.439-0.0000004*n)*DEG;
+  const dec=Math.asin(Math.sin(eps)*Math.sin(lam)),ra=Math.atan2(Math.cos(eps)*Math.sin(lam),Math.cos(lam));
+  const gmst=((280.46061837+360.98564736629*n)%360+360)%360;
+  let lon=ra/DEG-gmst;while(lon>180)lon-=360;while(lon<-180)lon+=360;
+  return {lat:dec/DEG,lon};
+}
+const gSun=new THREE.Group();root.add(gSun);
+const sunTermMat=new THREE.LineBasicMaterial({color:COL.y,transparent:true,opacity:0.55,depthWrite:false});
+const sunTwiMat=new THREE.LineBasicMaterial({color:COL.c,transparent:true,opacity:0.22,depthWrite:false});
+let sunTerm=null,sunTwi=null,sunMark=null,sunState={lat:0,lon:0,at:0},sunLastGeo=0,sunLastHud=0;
+const sunLocal=new THREE.Vector3(1,0,0),sunWorld=new THREE.Vector3(),sunView=new THREE.Vector3();
+function sunCircle(n,offDeg,r){ /* small circle at angular distance 90+offDeg from the subsolar point */
+  const s=sunLocal,u=new THREE.Vector3(0,1,0);if(Math.abs(s.y)>0.98)u.set(1,0,0);
+  const a=new THREE.Vector3().crossVectors(s,u).normalize(),b=new THREE.Vector3().crossVectors(s,a).normalize();
+  const th=(90+offDeg)*DEG,c=Math.cos(th)*r,rr=Math.sin(th)*r,pts=[];
+  for(let k=0;k<=n;k++){const t=k/n*Math.PI*2;pts.push(new THREE.Vector3().copy(s).multiplyScalar(c).addScaledVector(a,rr*Math.cos(t)).addScaledVector(b,rr*Math.sin(t)));}
+  return new THREE.BufferGeometry().setFromPoints(pts);
+}
+function sunGeo(){
+  const ss=sunSubsolar(new Date());sunState={lat:ss.lat,lon:ss.lon,at:Date.now()};
+  sunLocal.copy(latLonToVec3(ss.lat,ss.lon,1)).normalize();
+  if(sunTerm){gSun.remove(sunTerm);sunTerm.geometry.dispose();}
+  if(sunTwi){gSun.remove(sunTwi);sunTwi.geometry.dispose();}
+  sunTerm=new THREE.Line(sunCircle(256,0,1.006),sunTermMat);gSun.add(sunTerm);
+  sunTwi=new THREE.Line(sunCircle(256,18,1.005),sunTwiMat);gSun.add(sunTwi); /* astronomical twilight edge (sun 18° below horizon) */
+  if(!sunMark){
+    sunMark=new THREE.Group();
+    const disc=new THREE.Mesh(new THREE.CircleGeometry(0.014,24),new THREE.MeshBasicMaterial({color:COL.y,transparent:true,opacity:0.95,depthWrite:false}));
+    const ring=new THREE.Mesh(new THREE.RingGeometry(0.024,0.03,32),new THREE.MeshBasicMaterial({color:COL.y,transparent:true,opacity:0.6,side:THREE.DoubleSide,depthWrite:false}));
+    sunMark.add(disc);sunMark.add(ring);sunMark.userData.ring=ring;gSun.add(sunMark);
+  }
+  sunMark.position.copy(sunLocal).multiplyScalar(1.012);sunMark.lookAt(new THREE.Vector3().copy(sunLocal).multiplyScalar(3));
+}
+function sunFmt(lat,lon){return Math.abs(lat).toFixed(1)+'°'+(lat>=0?'N':'S')+' '+Math.abs(lon).toFixed(1)+'°'+(lon>=0?'E':'W');}
+function sunElevAt(lat,lon){const p=latLonToVec3(lat,lon,1).normalize();return Math.asin(Math.max(-1,Math.min(1,p.dot(sunLocal))))/DEG;}
+const SUN_TREND_MS=5*60000; /* R2 N4: rising vs setting = elevation now vs elevation 5 min later */
+function sunElevAtT(lat,lon,t){const ss=sunSubsolar(new Date(t)),s=latLonToVec3(ss.lat,ss.lon,1).normalize(),p=latLonToVec3(lat,lon,1).normalize();
+  return Math.asin(Math.max(-1,Math.min(1,p.dot(s))))/DEG;}
+function sunRising(lat,lon,t){t=t==null?Date.now():t;return sunElevAtT(lat,lon,t+SUN_TREND_MS)>sunElevAtT(lat,lon,t);}
+function sunPhase(e,rising){return e>0.8?'DAY':e>-6?(rising?'DAWN':'DUSK'):e>-18?'TWILIGHT':'NIGHT';}
+/* v0.4.2 R3: label hysteresis at -18 deg so TWILIGHT/NIGHT does not flicker when the view sits on the boundary.
+   Presentation only: sunPhase(), phaseAt() and every elevation value are unchanged. */
+const SUN_HYST=0.25;let sunPhLast=null;
+function sunPhaseStep(prev,e,rising){const p=sunPhase(e,rising);
+  if(prev==='TWILIGHT'&&p==='NIGHT'&&e>-18-SUN_HYST)return 'TWILIGHT';
+  if(prev==='NIGHT'&&p==='TWILIGHT'&&e<-18+SUN_HYST)return 'NIGHT';return p;}
+function sunCT(t,sec){return new Date(t).toLocaleTimeString('en-US',{timeZone:'America/Chicago',hour:'numeric',minute:'2-digit',second:sec?'2-digit':undefined})+' CT';}
+function sunUTC(t){return new Date(t).toISOString().slice(11,19)+' UTC';}
+function sunPanelPaint(la,lo,e,rising,ph){
+  const P=document.getElementById('pSun');if(!P||!P.classList.contains('open'))return;
+  const set=(id,t)=>{const x=document.getElementById(id);if(x&&x.textContent!==t)x.textContent=t;};const now=Date.now();
+  set('sunPSub',sunFmt(sunState.lat,sunState.lon));
+  set('sunPAt',sunCT(sunState.at)+' · '+sunUTC(sunState.at).slice(0,5)+' UTC · every 60 s');
+  set('sunPView',sunFmt(la,lo)+' · '+(e>=0?'+':'−')+Math.abs(e).toFixed(1)+'° · '+(ph||sunPhase(e,rising))+' · sun '+(rising?'rising':'setting'));
+  set('sunPLayer',layers.sun?'ON · CALC':'OFF · studio lighting (values still computed)');
+  set('sunPClock','CLOCK · this device reads '+sunCT(now,true)+' ('+sunUTC(now)+'). Everything here comes from that clock: if it is wrong, the sun is wrong, and each hour of error moves the terminator 15°.');
+}
+function sunPanelToggle(force){
+  const P=document.getElementById('pSun');if(!P)return;const open=force!=null?!!force:!P.classList.contains('open');
+  if(open){if(typeof cctvClose==='function')cctvClose();if(typeof alertsDockClose==='function')alertsDockClose();
+    Object.keys(panels).forEach(k=>panels[k].classList.remove('open'));document.querySelectorAll('.rail-btn[data-panel]').forEach(b=>b.classList.remove('on'));
+    P.classList.add('open');sunHud();}
+  else P.classList.remove('open');
+}
+function sunHud(){
+  const b=document.getElementById('bSun'),k=document.getElementById('sunRailK');
+  const la=(shareLat!=null&&Number.isFinite(shareLat))?shareLat:0,lo=(shareLon!=null&&Number.isFinite(shareLon))?shareLon:0;
+  const e=sunElevAt(la,lo),rising=sunRising(la,lo),ph=sunPhLast=sunPhaseStep(sunPhLast,e,rising);
+  sunPanelPaint(la,lo,e,rising,ph);
+  if(!layers.sun){if(b){b.className='badge off';b.textContent='SUN · OFF';b.title='SUN layer off. Tap for the SUN panel.';}if(k)k.textContent='day / night off';return;}
+  if(b){b.className='badge pub';b.textContent='SUN · CALC · VIEW '+ph+' '+(e>=0?'+':'−')+Math.abs(e).toFixed(0)+'°';
+    b.title='Sun position computed in-browser from the device clock (NOAA low-precision solar equations, about 0.1°). Not a data feed. Subsolar '+sunFmt(sunState.lat,sunState.lon)+' at '+sunCT(sunState.at)+'. Sun elevation at view centre '+e.toFixed(1)+'°, '+(rising?'rising':'setting')+'. Tap for the SUN panel.';}
+  if(k)k.textContent='subsolar '+sunFmt(sunState.lat,sunState.lon);
+}
+function sunSpec(){ /* real sun angle → full-strength ocean glint blows out; soften it while SUN is on */
+  earthMat.specular=new THREE.Color(layers.sun?0x23262e:(earthMat.specularMap?0x888899:0x333344));earthMat.shininess=layers.sun?14:(earthMat.specularMap?28:18);}
+function sunApply(user){sunSpec();
+  const on=!!layers.sun;gSun.visible=on;sunU.uSunOn.value=on?1:0;
+  fill.intensity=on?0.1:0.35;rim.intensity=on?0.12:0.18;
+  if(!on)sun.position.set(5,1.2,2.5);
+  sunHud();
+  if(user)setTicker(on?'SUN · day/night terminator on · subsolar '+sunFmt(sunState.lat,sunState.lon):'SUN · off · studio lighting');
+}
+function sunTick(now){
+  if(now-sunLastGeo>60000||!sunLastGeo){sunLastGeo=now;sunGeo();}
+  if(layers.sun){
+    root.updateMatrixWorld(true);camera.updateMatrixWorld();
+    sunWorld.copy(sunLocal).applyQuaternion(root.quaternion).normalize();
+    sun.position.copy(sunWorld).multiplyScalar(5);
+    sunView.copy(sunWorld).transformDirection(camera.matrixWorldInverse);sunU.uSunV.value.copy(sunView);
+    if(sunMark){const u=(now*0.0006)%1,sc=1+0.8*u;sunMark.userData.ring.scale.set(sc,sc,sc);sunMark.userData.ring.material.opacity=0.6*(1-u);}
+  }
+  if(now-sunLastHud>1000){sunLastHud=now;sunHud();}
+}
+window.__nexusSun={state:()=>({on:!!layers.sun,lat:sunState.lat,lon:sunState.lon,at:sunState.at,uOn:sunU.uSunOn.value,
+  view:[sunU.uSunV.value.x,sunU.uSunV.value.y,sunU.uSunV.value.z],badge:(document.getElementById('bSun')||{}).textContent,
+  badgeCls:(document.getElementById('bSun')||{}).className,panelOpen:!!(document.getElementById('pSun')||{classList:{contains:()=>false}}).classList.contains('open'),elevAt:(la,lo)=>sunElevAt(la,lo)}),subsolar:d=>sunSubsolar(d?new Date(d):new Date()),elevAt:(la,lo)=>sunElevAt(la,lo),
+  elevAtT:(la,lo,d)=>sunElevAtT(la,lo,new Date(d).getTime()),phaseAt:(la,lo,d)=>{const t=new Date(d).getTime(),e=sunElevAtT(la,lo,t),r=sunRising(la,lo,t);return {e,rising:r,phase:sunPhase(e,r)};},
+  phaseStep:(prev,e,rising)=>sunPhaseStep(prev,e,rising),lastClose:()=>sunCloseWhy};
+sunGeo();window.__sunReady=true;sunApply(false);
+/* ==== /SUN ==== */
 
 function latLonToVec3(lat,lon,r){
   const phi=(90-lat)*DEG,th=(lon+180)*DEG;
@@ -2523,6 +2763,7 @@ window.__nexusCctv={cams:CCTV_CAMS,src:CCTV_SRC,state:cctvState,status:cctvStatu
   const rows=order.map(h=>'<a href="'+esc(h)+'" target="_blank" rel="noopener noreferrer">'+esc(byHome[h].join(' / '))+'<\/a>');
   el.innerHTML=rows.join(' · ')+'<br/><span style="opacity:.7">Not affiliated with or endorsed by these agencies. Images © their owners, shown as published. LIVE = source timestamp verified + new bytes; FRAME OK = loaded, freshness not verifiable.<\/span>'+
     '<br/>Satellites: orbital elements from <a href="https://celestrak.org/" target="_blank" rel="noopener noreferrer">CelesTrak<\/a> (GP data), originating with NORAD / US Space Force 18th &amp; 19th SDS (space-track.org); positions computed in your browser with SGP4 (satellite.js 5.0.0, MIT). <span style="opacity:.7">Not affiliated with or endorsed by CelesTrak, NORAD or the US Space Force.<\/span>'+
+    '<br/>Day / night: sun position computed in-browser from your device clock (NOAA low-precision solar equations, about 0.1°). No network, not a feed.'+
     '<br/>Launch schedule: <a href="https://thespacedevs.com/llapi" target="_blank" rel="noopener noreferrer">The Space Devs · Launch Library 2<\/a> (published schedule, not telemetry). <span style="opacity:.7">Not affiliated with or endorsed by The Space Devs.<\/span>';
 })();
 
@@ -2861,7 +3102,19 @@ function setTicker(t,holdMs){
   document.getElementById('ticker').textContent=t;
   if(holdMs){tickerHoldUntil=now+holdMs;tickerHoldAt=now;}else if(now<tickerHoldUntil)tickerHoldUntil=0;
 }
-const panels={ops:document.getElementById('pOps'),antman:document.getElementById('pAntman'),hire:document.getElementById('pHire'),cctvLive:document.getElementById('pCctvLive'),cctvCity:document.getElementById('pCctvCity')};
+const panels={ops:document.getElementById('pOps'),antman:document.getElementById('pAntman'),hire:document.getElementById('pHire'),sun:document.getElementById('pSun'),aur:document.getElementById('pAur'),fire:document.getElementById('pFire'),cctvLive:document.getElementById('pCctvLive'),cctvCity:document.getElementById('pCctvCity')};
+/* R2 SU-2/N5: SUN badge → SUN panel (works on touch: no hover needed). The badge is a DOM element above the canvas, so the tap never reaches the globe. */
+(function(){const b=document.getElementById('bSun');if(!b)return;
+  b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();sunPanelToggle();});
+  b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();sunPanelToggle();}});})();
+/* v0.4.3 R2 AU-2: AUR badge → AURORA panel (tap, click, Enter or Space; no hover needed). The panel leads with the disclaimer. */
+(function(){const b=document.getElementById('bAur');if(!b)return;
+  b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();aurPanelToggle();});
+  b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();aurPanelToggle();}});})();
+/* v0.4.4 FIRE: badge → FIRE panel */
+(function(){const b=document.getElementById('bFire');if(!b)return;
+  b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();firePanelToggle();});
+  b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();firePanelToggle();}});})();
 document.querySelectorAll('.rail-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     if(btn.dataset.layer){
@@ -2870,6 +3123,8 @@ document.querySelectorAll('.rail-btn').forEach(btn=>{
       btn.classList.toggle('on',layers[k]);
       btn.classList.toggle('toggle-off',!layers[k]);
       if(k==='mesh')meshGroup.visible=layers.mesh;
+      if(k==='sun')sunApply(true);
+      if(k==='aur'){gAur.visible=layers.aur;if(layers.aur)aurLoad('user');paintBadgeAge();setTicker(layers.aur?'AURORA · on · NOAA SWPC OVATION':'AURORA · off');}
       if(k==='quake')gQuake.visible=layers.quake;
       if(k==='iss')gIss.visible=layers.iss;
       if(k==='sats'){gSats.visible=layers.sats;if(layers.sats)satsLoad('user');else satsCardClose();paintBadgeAge();}
@@ -2878,6 +3133,7 @@ document.querySelectorAll('.rail-btn').forEach(btn=>{
       if(k==='air'){gAir.visible=layers.air;gRoutes.visible=layers.air;}
       if(k==='wx')gWx.visible=layers.wx;
       if(k==='haz'){gHaz.visible=layers.haz;if(!layers.haz&&/^HAZ/.test(tip.textContent||''))tip.style.display='none';}
+      if(k==='fire'){gFire.visible=layers.fire;if(layers.fire)fireLoad('user');else{if(/^FIRE/.test(tip.textContent||''))tip.style.display='none';const pf=document.getElementById('pFire');if(pf)pf.classList.remove('open');}paintBadgeAge();setTicker(layers.fire?'FIRE · on · NASA FIRMS MODIS':'FIRE · off');}
       if(k==='alerts'){gAlerts.visible=layers.alerts;if(layers.alerts){if(!alertsInflight&&Date.now()-alertsLastTry>=ALERTS_EVERY)loadAlerts(true);}else alertsDockClose();paintBadgeAge();}
       if(k==='cctv'){gCctv.visible=layers.cctv;if(!layers.cctv)cctvClose();else cctvLoadPack();paintBadgeAge(); /* R4 N-r3a: badge flips PAUSED/back at once */}
       writeDeepLink(true);
@@ -3060,8 +3316,22 @@ function pickEntity(clientX,clientY,pre){
     tip.style.left=Math.min(innerWidth-250,clientX+12)+'px';
     tip.style.top=Math.min(innerHeight-100,clientY+12)+'px';
     const qf=fresh.quake,qAge=Date.now()-qf.okAt,qSt=!qf.okAt?'OFFLINE':(qAge>STALE_MS.quake||qf.failAt>qf.okAt)?'STALE '+ageStr(qAge):'LIVE';
-    tip.innerHTML='<div class="t">QUAKE · USGS '+qSt+'</div><div>M <span class="v">'+u.mag.toFixed(1)+'</span></div><div>'+(u.props.place||'—')+'</div>';
+    tip.innerHTML='<div class="t">QUAKE · USGS '+qSt+'</div><div>M <span class="v">'+u.mag.toFixed(1)+'</span></div><div>'+esc(u.props.place||'—')+'</div>';
     setTicker('LOCK · M'+u.mag.toFixed(1)+' · '+(u.props.place||''));
+    antmanSay(pick(ANTMAN.click));
+    return;
+  }
+  const firePick=(!pre&&layers.fire)?fireScreenPick(clientX,clientY,8):null;
+  if(firePick){
+    const u=firePick.f;
+    tip.style.display='block';
+    tip.style.left=Math.max(6,Math.min(innerWidth-266,clientX+12))+'px';
+    tip.style.top=Math.max(6,Math.min(innerHeight-130,clientY+12))+'px';
+    const fs=fireStatus(Date.now());
+    tip.innerHTML='<div class="t">FIRE · FIRMS · '+hazEsc(fs.st)+'</div><div>'+u.lat.toFixed(3)+', '+u.lon.toFixed(3)+'</div>'+
+      '<div class="v">FRP '+u.frp.toFixed(1)+' MW · '+hazEsc(fireSatLabel(u.sat))+(u.dn?' · '+(u.dn==='N'?'night':'day'):'')+'</div>'+
+      '<div style="opacity:.7;margin-top:3px">acq '+fireAcq(u)+(u.conf?' · conf '+hazEsc(u.conf):'')+' · '+FIRE_DISC+'</div>';
+    setTicker('LOCK · FIRE · FRP '+Math.round(u.frp)+' MW · '+u.lat.toFixed(2)+','+u.lon.toFixed(2));
     antmanSay(pick(ANTMAN.click));
     return;
   }
@@ -3085,7 +3355,7 @@ function pickEntity(clientX,clientY,pre){
     tip.style.display='block';
     tip.style.left=Math.min(innerWidth-240,clientX+12)+'px';
     tip.style.top=Math.min(innerHeight-80,clientY+12)+'px';
-    tip.innerHTML='<div class="t">WX · OPEN-METEO LIVE</div><div>'+u.city+'</div><div class="v">'+u.temp+' °F</div>';
+    tip.innerHTML='<div class="t">WX · OPEN-METEO LIVE</div><div>'+esc(u.city)+'</div><div class="v">'+esc(u.temp)+' °F</div>';
     setTicker('WX · '+u.city+' · '+u.temp+'°F');
     return;
   }
@@ -3106,10 +3376,10 @@ function pickEntity(clientX,clientY,pre){
     tip.style.left=Math.min(innerWidth-250,clientX+12)+'px';
     tip.style.top=Math.min(innerHeight-80,clientY+12)+'px';
     if(ent.live){
-      tip.innerHTML='<div class="t">AIR · LIVE</div><div>'+ent.call+'</div><div class="v">'+(ent.alt!=null?Math.round(ent.alt)+' m':'—')+' · hdg '+(ent.hdg!=null?Math.round(ent.hdg):'—')+'</div>';
+      tip.innerHTML='<div class="t">AIR · LIVE</div><div>'+esc(ent.call)+'</div><div class="v">'+(ent.alt!=null?Math.round(ent.alt)+' m':'—')+' · hdg '+(ent.hdg!=null?Math.round(ent.hdg):'—')+'</div>';
       setTicker('AIR LIVE · '+ent.call);
     }else{
-      tip.innerHTML='<div class="t">AIR · PROTO</div><div>'+ent.call+'</div><div style="color:#ffcc00">SIMULATED · NOT LIVE ADS-B</div>';
+      tip.innerHTML='<div class="t">AIR · PROTO</div><div>'+esc(ent.call)+'</div><div style="color:#ffcc00">SIMULATED · NOT LIVE ADS-B</div>';
       setTicker('PROTO AIR · '+ent.call+' · waiting /api/air');
     }
     return;
@@ -3155,6 +3425,53 @@ addEventListener('click',e=>{const g=ghostGuard;if(!g)return;
   if(performance.now()-g.t>2500){ghostGuard=null;return;} /* generous: any real press off the canvas clears the guard first, and it is single-use */
   if(e.target===canvas)return;
   if(Math.hypot(e.clientX-g.x,e.clientY-g.y)<=32){ghostGuard=null;e.preventDefault();e.stopPropagation();}},true);
+/* v0.4.2 R3 SUR2-1: the SUN panel closes like the cards do.
+   - Escape closes it. Any open CCTV chooser/lens, sat or launch card, or alerts dock takes that Escape first, so one Escape closes one thing.
+   - A tap on the globe closes it. A tap means one pointer that never travelled 8px or more from where it went down (the same
+     8px as the pick tap). A drag, a pinch or a non-primary mouse button does not count. The panel is closed on touch-up,
+     so the browser's compat click lands on the canvas, which the ghost guard already leaves alone. */
+var sunCloseWhy=null;
+(function(){const P=document.getElementById('pSun');if(!P)return;const isOpen=()=>P.classList.contains('open');
+  addEventListener('keydown',e=>{if((e.key!=='Escape'&&e.key!=='Esc')||e.repeat||!isOpen())return;
+    if(typeof cctvPickEl!=='undefined'&&(cctvPickEl||cctvLensEl))return;
+    if(typeof alertsDockOpenState==='function'&&alertsDockOpenState())return;
+    const inP=P.contains(document.activeElement);sunPanelToggle(false);sunCloseWhy='escape';
+    if(inP){const b=document.getElementById('bSun');if(b)b.focus({preventScroll:true});}});
+  let t=null;
+  canvas.addEventListener('pointerdown',e=>{t=(pointers.size<=1&&e.isPrimary&&!(e.pointerType==='mouse'&&e.button!==0))?{id:e.pointerId,x:e.clientX,y:e.clientY,m:0}:null;});
+  canvas.addEventListener('pointermove',e=>{if(t&&e.pointerId===t.id)t.m=Math.max(t.m,Math.hypot(e.clientX-t.x,e.clientY-t.y));else if(t&&pointers.size>1)t=null;});
+  canvas.addEventListener('pointerup',e=>{const g=t;t=null;if(!g||g.id!==e.pointerId||pointers.size>0)return;
+    if(Math.max(g.m,Math.hypot(e.clientX-g.x,e.clientY-g.y))>=8)return;
+    if(isOpen()){sunPanelToggle(false);sunCloseWhy='globe-tap';}});
+  canvas.addEventListener('pointercancel',()=>{t=null;});})();
+/* v0.4.2 R4 SUR3-1: compact badge labels at <=640px. Display only: the writers, the data and the badge state are unchanged.
+   Rules: separators drop to a space; a LIVE badge drops its age suffix (not LAUNCH: its tail is a countdown) (STALE keeps its age, because the age is the warning, and moves its item count to the full text);
+   RETRY keeps the word and drops its timer; LAUNCH drops the list count and the countdown keeps two units (T−23h 57m, T−2d 4h);
+   SUN drops the word VIEW. The state word (LIVE/STALE/OFFLINE/PROTO/SCHED/CALC/OFF/PROPAGATED/PAUSED/VERIFYING/KEPLER) always stays.
+   The full label stays in the element text, in the tooltip (prefixed) and in OPS → BADGES · FULL TEXT. */
+function badgeShort(id,t){let s=String(t==null?'':t);
+  s=s.replace(/ · RETRY [^·]*$/,' · RETRY');
+  if(id==='bSun')s=s.replace(/^SUN · CALC · VIEW /,'SUN · CALC ');
+  if(id==='bAur')s=s.replace(/ Kp \d+(?:\.\d+)?/,''); /* v0.4.3 R2 AU-1: Kp stays in the full text, tooltip, OPS and AURORA panel */
+  if(id==='bFire')s=s; /* v0.4.4: FIRE compact keeps state word; LIVE age drops via the shared rule */
+  if(id==='bLaunch')s=s.replace(/^(LAUNCH · \S+) \d+(?= · |$)/,'$1')
+    .replace(/(T[−+])(\d+h) (\d+)m \d+s/,(m,a,h,mm)=>a+h+' '+(+mm)+'m').replace(/(T[−+])(\d+d) (\d+)h/,(m,a,d,hh)=>a+d+' '+(+hh)+'h')
+    .replace(' · awaiting LL2 status',' · awaiting');
+  if(id!=='bLaunch')s=s.replace(/^(\S+ · STALE) \d+ (?=(?:<1s|\d+[smhd])$)/,'$1 '); /* STALE keeps its age; its item count moves to the full text */
+  if(id!=='bLaunch'&&/^\S+ · LIVE( |$)/.test(s))s=s.replace(/ (?:<1s|\d+[smhd](?: \d+s)?)$/,'');
+  return s.replace(/ · /g,' ');}
+(function(){const row=document.querySelector('.badges');if(!row||!window.MutationObserver||!window.matchMedia)return;
+  const MQ=matchMedia('(max-width:640px)'),ops=document.getElementById('opsBadgesFull');
+  const one=el=>{const full=el.textContent,pre=el.__r4pre||'';let base=el.getAttribute('title')||'';if(pre&&base.startsWith(pre))base=base.slice(pre.length);
+    if(MQ.matches){const sh=badgeShort(el.id,full);if(el.getAttribute('data-short')!==sh)el.setAttribute('data-short',sh);
+      const p=full+(base?' — ':'');el.__r4pre=p;if(el.getAttribute('title')!==p+base)el.setAttribute('title',p+base);}
+    else{if(el.hasAttribute('data-short'))el.removeAttribute('data-short');el.__r4pre='';if(base&&el.getAttribute('title')!==base)el.setAttribute('title',base);}};
+  const paint=()=>{const bs=[...row.querySelectorAll('.badge')];bs.forEach(one);
+    if(ops){const t=bs.map(e=>e.textContent).join('\n');if(ops.textContent!==t)ops.textContent=t;}};
+  new MutationObserver(paint).observe(row,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['title']});
+  if(MQ.addEventListener)MQ.addEventListener('change',paint);else if(MQ.addListener)MQ.addListener(paint);paint();
+  window.__nexusBadges={short:badgeShort,paint,shown:()=>Object.fromEntries([...row.querySelectorAll('.badge')].map(e=>[e.id,e.getAttribute('data-short')||e.textContent])),
+    full:()=>Object.fromEntries([...row.querySelectorAll('.badge')].map(e=>[e.id,e.textContent]))};})();
 
 addEventListener('resize',()=>{
   camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
@@ -3216,6 +3533,7 @@ function frame(now){
     /* deep-link stick: do not overwrite shareLat/Lon while shareSilent */
     if(!shareSilent){shareLat=lat;shareLon=lon;}
   }
+  sunTick(now);
   limb.quaternion.copy(camera.quaternion);
   renderer.render(scene,camera);
 
@@ -3223,12 +3541,341 @@ function frame(now){
   if(bootDone&&layers.launch&&!lnInflight&&!document.hidden&&lnNextTry&&Date.now()>=lnNextTry)lnLoad('sched'); /* paced: hourly, backoff on error */
   if(bootDone&&layers.sats&&now-satsLastProp>1000)satsPropagate(false);
   if(bootDone&&layers.sats&&!satsInflight&&!document.hidden&&satsNextTry&&Date.now()>=satsNextTry)satsLoad('sched'); /* R2 S1/B1: paced, never per-frame */
+  if(bootDone&&layers.aur&&!aurS.inflight&&!document.hidden&&Date.now()>=aurS.nextAt)aurLoad('sched'); /* R2: nextAt = 10 min after a good pull; 10/20/30 min (cap) after failures; never before a 429 Retry-After */
+  if(bootDone&&layers.fire&&!fireS.inflight&&!document.hidden&&Date.now()>=fireS.nextAt)fireLoad('sched'); /* v0.4.4: ~15 min poll; backoff on failures */
+  if(layers.fire&&fireS.pts)fireS.pts.material.opacity=0.82+0.18*Math.sin(now*0.0013);
+  if(layers.aur&&aurS.pts)aurS.pts.material.opacity=0.78+0.22*Math.sin(now*0.0011);
   if(bootDone&&now-lastIssPoll>8000){lastIssPoll=now;loadIss();}
   if(bootDone&&now-lastWxPoll>10*60*1000){lastWxPoll=now;loadWx();}
   if(bootDone&&now-lastHazPoll>10*60*1000){if(lastHazPoll)loadHaz();lastHazPoll=now;}
   if(bootDone&&now-lastAirPoll>22000){lastAirPoll=now;loadAir();}
   if(bootDone&&now-lastShareWrite>2500){lastShareWrite=now;writeDeepLink(false);}
 }
+/* ==== FIRE v0.4.4 — NASA FIRMS MODIS C6.1 active-fire thermal hotspots (via /api/fire) ====
+   Dense satellite thermal detections (not ground truth, not a duplicate of HAZ/EONET events).
+   Off by default. LIVE only after a successful /api/fire pull (empty count=0 still LIVE).
+   STALE keeps last-good points. OFFLINE draws nothing if never loaded. Never invents points. */
+var FIRE_POLL=15*60e3,FIRE_BACKOFF_CAP=45*60e3;
+var FIRE_DISC='thermal detections · not ground truth';
+/* fireS declared early for paintBadgeAge */
+var fireWorld=new THREE.Vector3(),fireNdc=new THREE.Vector3(),fireRay=new THREE.Vector3();
+function fireTex(){if(fireS._tex)return fireS._tex;const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');
+  const gr=x.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(0.35,'rgba(255,200,80,.85)');gr.addColorStop(0.7,'rgba(255,0,128,.35)');gr.addColorStop(1,'rgba(255,0,128,0)');
+  x.fillStyle=gr;x.fillRect(0,0,64,64);fireS._tex=new THREE.CanvasTexture(c);return fireS._tex;}
+function fireColor(frp){const t=Math.min(1,Math.max(0,Math.log10(1+Math.max(0,frp))/3.6));
+  const y=[1,0.8,0],p=[1,0,0.5],h=[1,0.35,0.15];let a,z,u;
+  if(t<0.45){a=y;z=p;u=t/0.45;}else{a=p;z=h;u=(t-0.45)/0.55;}
+  const b=0.55+0.45*t;return [(a[0]+(z[0]-a[0])*u)*b,(a[1]+(z[1]-a[1])*u)*b,(a[2]+(z[2]-a[2])*u)*b];}
+function fireSize(frp){if(frp>=200)return 0.055;if(frp>=50)return 0.042;if(frp>=15)return 0.032;return 0.024;}
+function fireClearPts(){if(fireS.pts){gFire.remove(fireS.pts);fireS.pts.geometry.dispose();fireS.pts.material.dispose();fireS.pts=null;}}
+function fireBuild(fires){
+  fireClearPts();
+  const list=[];let peak=0;
+  const pos=[],col=[],sizes=[];
+  for(let i=0;i<(fires||[]).length;i++){
+    const f=fires[i];if(!f)continue;
+    const lat=+f.lat,lon=+f.lon;if(!Number.isFinite(lat)||!Number.isFinite(lon))continue;
+    if(Math.abs(lat)>90||Math.abs(lon)>180)continue;
+    const frp=Number.isFinite(+f.frp)?+f.frp:0;if(frp>peak)peak=frp;
+    const P=latLonToVec3(lat,lon,1.012);
+    pos.push(P.x,P.y,P.z);col.push(...fireColor(frp));sizes.push(fireSize(frp));
+    list.push({lat,lon,frp,sat:String(f.sat||''),dn:String(f.dn||''),date:String(f.date||''),time:String(f.time||''),conf:String(f.conf||'')});
+  }
+  if(pos.length){
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+    g.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
+    /* single size material scaled by average FRP bucket — PointsMaterial has one size; use peak-weighted size */
+    const avgSize=sizes.reduce((a,b)=>a+b,0)/sizes.length;
+    const m=new THREE.PointsMaterial({size:avgSize,map:fireTex(),vertexColors:true,transparent:true,opacity:0.92,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true});
+    fireS.pts=new THREE.Points(g,m);fireS.pts.renderOrder=8;fireS.pts.userData={type:'fire'};gFire.add(fireS.pts);
+  }
+  fireS.list=list;fireS.peak=peak;
+}
+function fireVisible(w){const C=camera.position;fireRay.copy(w).sub(C);const L=fireRay.length();if(L<1e-6)return true;fireRay.divideScalar(L);
+  const b=C.dot(fireRay),cc=C.lengthSq()-1,disc=b*b-cc;if(disc<0)return true;const t=-b-Math.sqrt(disc);return !(t>0&&t<L);}
+function fireScreenPick(cx,cy,R){
+  if(!layers.fire||!fireS.list.length)return null;
+  root.updateMatrixWorld(true);let best=null,bd=R==null?8:R;
+  for(let i=0;i<fireS.list.length;i++){
+    const f=fireS.list[i];
+    fireWorld.copy(latLonToVec3(f.lat,f.lon,1.012)).applyMatrix4(root.matrixWorld);
+    if(!fireVisible(fireWorld))continue;
+    fireNdc.copy(fireWorld).project(camera);if(fireNdc.z>1)continue;
+    const x=(fireNdc.x+1)/2*innerWidth,y=(1-fireNdc.y)/2*innerHeight,d=Math.hypot(x-cx,y-cy);
+    if(d<bd){bd=d;best=f;}
+  }
+  return best?{f:best,d:bd}:null;
+}
+function fireAcq(f){if(!f||!f.date)return '—';
+  const t=(f.time||'0000').padStart(4,'0');
+  const iso=f.date+'T'+t.slice(0,2)+':'+t.slice(2,4)+':00Z';
+  const ms=Date.parse(iso);
+  if(!Number.isFinite(ms))return hazEsc(f.date+' '+t+'Z');
+  try{return new Date(ms).toLocaleString('en-US',{timeZone:'America/Chicago',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).replace(',','')+' CT';}
+  catch(e){return hazEsc(f.date+' '+t+'Z');}}
+function fireSatLabel(s){return s==='T'?'Terra':s==='A'?'Aqua':(s||'—');}
+function fireStatus(now){const f=fresh.fire;now=now||Date.now();
+  if(!layers.fire)return {st:'OFF',cls:'off',age:null};
+  if(!f.okAt)return {st:f.failAt?'OFFLINE':'…',cls:'off',age:null};
+  const age=now-f.okAt,stale=age>STALE_MS.fire||f.failAt>f.okAt;
+  return {st:stale?'STALE':'LIVE',cls:stale?'stale':'live',age};}
+function fireLabels(st){
+  const k=document.getElementById('fireRailK');if(k)k.textContent=st==='OFF'?'firms modis off · '+FIRE_DISC:'firms modis · '+st.toLowerCase()+' · '+FIRE_DISC;
+  const o=document.getElementById('fireOpsV');
+  if(o){
+    if(st==='OFF')o.textContent='OFF · NASA FIRMS MODIS C6.1 thermal hotspots (24h) · '+FIRE_DISC;
+    else if(st==='OFFLINE')o.textContent='OFFLINE · /api/fire unreachable · nothing drawn · '+FIRE_DISC;
+    else if(st==='…')o.textContent='… · NASA FIRMS MODIS C6.1 · loading';
+    else o.textContent=st+(fireS.list.length?' · '+fireS.list.length+' hotspots':' · 0 hotspots')+(fireS.peak?' · FRP peak '+fireS.peak.toFixed(0)+' MW':'')+' · NASA FIRMS MODIS C6.1 24h · '+FIRE_DISC;
+  }
+}
+function paintFireBadge(now){
+  const el=document.getElementById('bFire');if(!el)return;
+  const on=!!layers.fire,s=fireStatus(now);
+  if(!on){el.className='badge off';el.textContent='FIRE · OFF';el.title='FIRE layer off. NASA FIRMS MODIS thermal detections, not ground truth. Tap for the FIRE panel.';fireLabels('OFF');firePanelPaint(now,s,false);return;}
+  if(s.st==='…'){el.className='badge off';el.textContent='FIRE · …';el.title='Loading NASA FIRMS via /api/fire. Thermal detections, not ground truth. Tap for the FIRE panel.';fireLabels('…');firePanelPaint(now,s,true);return;}
+  if(s.st==='OFFLINE'){el.className='badge off';el.textContent='FIRE · OFFLINE';el.title='NASA FIRMS /api/fire unreachable · no hotspots drawn ('+fireS.err+'). Thermal detections, not ground truth. Tap for the FIRE panel.';fireLabels('OFFLINE');firePanelPaint(now,s,true);return;}
+  const age=s.age!=null?ageStr(s.age):'';
+  el.className='badge '+s.cls;
+  el.textContent='FIRE · '+s.st+(fireS.list.length?' '+fireS.list.length:'')+(age?' '+age:'');
+  el.title=(s.st==='LIVE'?'NASA FIRMS MODIS C6.1 · ':'Last good FIRMS pull · ')+fireS.list.length+' hotspots'+(fireS.peak?' · FRP peak '+fireS.peak.toFixed(0)+' MW':'')+(age?' · '+age+' ago':'')+'. Thermal detections, not ground truth. Tap for the FIRE panel.';
+  fireLabels(s.st);firePanelPaint(now,s,true);
+}
+function firePanelPaint(now,s,on){
+  const P=document.getElementById('pFire');if(!P||!P.classList.contains('open'))return;
+  const set=(id,t)=>{const e=document.getElementById(id);if(e)e.textContent=t;};
+  set('firePSt',!on?'LAYER OFF':s.st+(s.age!=null?' · pulled '+ageStr(s.age)+' ago':''));
+  set('firePSrc',fireS.source||'firms-modis-c6.1 (via /api/fire)');
+  set('firePWin',fireS.window||'24h');
+  set('firePCount',on?(fireS.list.length+(fresh.fire.okAt?'':'')):'—');
+  set('firePPeak',fireS.peak?fireS.peak.toFixed(1)+' MW':'—');
+  set('firePAge',fresh.fire.okAt?ageStr(now-fresh.fire.okAt)+' ago':(fireS.err||'never'));
+  set('firePNext',!on?'—':(fireS.nextAt?('in '+ageStr(Math.max(0,fireS.nextAt-now))+(fireS.rl?' · rate-limited':'')):'…'));
+}
+function firePanelToggle(force){
+  const P=document.getElementById('pFire');if(!P)return;
+  const open=force!=null?!!force:!P.classList.contains('open');
+  Object.keys(panels).forEach(k=>{if(panels[k]&&k!=='fire')panels[k].classList.remove('open');});
+  document.querySelectorAll('.rail-btn[data-panel]').forEach(b=>b.classList.remove('on'));
+  if(!open){P.classList.remove('open');return;}
+  P.classList.add('open');paintFireBadge(Date.now());
+}
+async function fireLoad(why){
+  if(fireS.inflight)return false;
+  if(why!=='force'&&Date.now()<fireS.nextAt){fireS.skipN++;return false;}
+  if(!layers.fire&&why!=='force')return false;
+  fireS.inflight=true;fireS.lastTry=Date.now();fireS.reqN++;
+  const endpoints=['/api/fire','/.netlify/functions/fire'];
+  let ok=false,lastErr='';
+  try{
+    for(const ep of endpoints){
+      try{
+        const ac=typeof AbortController!=='undefined'?new AbortController():null;const to=setTimeout(()=>ac&&ac.abort(),18000);
+        let res;try{res=await fetch(ep,{cache:'no-store',headers:{Accept:'application/json'},signal:ac?ac.signal:undefined});}finally{clearTimeout(to);}
+        if(res.status===429){const ra=typeof lnRetryAfter==='function'?lnRetryAfter(res):null;
+          const wait=(ra==null||!Number.isFinite(ra))?3600e3:Math.min(2*3600e3,Math.max(60e3,ra));
+          const e=new Error(ra==null?'HTTP 429 rate-limited (Retry-After not readable)':'HTTP 429 rate-limited');e.rl=true;e.wait=wait;throw e;}
+        if(!res.ok){lastErr='HTTP '+res.status;continue;}
+        const j=await res.json();
+        if(!j||j.ok===false||!Array.isArray(j.fires)){lastErr='bad payload';continue;}
+        fireBuild(j.fires);
+        fireS.source=String(j.source||'firms-modis-c6.1');fireS.window=String(j.window||'24h');
+        fireS.err='';fireS.failN=0;fireS.rl=false;fireS.pullAt=Date.now();
+        fireS.waitMs=FIRE_POLL;fireS.nextAt=fireS.pullAt+fireS.waitMs;
+        markFresh('fire',true,fireS.list.length);
+        if(why!=='sched')setTicker('FIRE · FIRMS MODIS LIVE · '+fireS.list.length+' hotspots'+(fireS.peak?' · FRP peak '+Math.round(fireS.peak)+' MW':'')+' · '+FIRE_DISC);
+        ok=true;break;
+      }catch(e){
+        if(e&&e.rl){fireS.err=String(e.message||e);fireS.failN++;fireS.rl=true;fireS.waitMs=Math.max(FIRE_POLL,e.wait||0);fireS.nextAt=Date.now()+fireS.waitMs;markFresh('fire',false);throw e;}
+        lastErr=(e&&e.name==='AbortError')?'timeout':String(e&&e.message||e);
+      }
+    }
+    if(!ok)throw new Error(lastErr||'unreachable');
+  }catch(e){
+    if(!(e&&e.rl)){fireS.err=String(e&&e.message||e);fireS.failN++;
+      const step=Math.min(FIRE_BACKOFF_CAP,FIRE_POLL*Math.max(1,fireS.failN));
+      fireS.waitMs=Math.max(step,(e&&e.wait)||0);fireS.nextAt=Date.now()+fireS.waitMs;fireS.rl=!!(e&&e.rl);
+      markFresh('fire',false);
+      if(!fresh.fire.okAt){fireClearPts();fireS.list=[];fireS.peak=0;}
+      setTicker(fresh.fire.okAt?'FIRE · STALE · FIRMS refresh failed · holding last-good':'FIRE · OFFLINE · /api/fire unreachable · nothing drawn');}
+  }finally{fireS.inflight=false;try{paintBadgeAge();}catch(e){}}
+  return ok;
+}
+(function(){const P=document.getElementById('pFire');if(!P)return;
+  const isOpen=()=>P.classList.contains('open');
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&isOpen()){firePanelToggle(false);}});
+  P.addEventListener('click',e=>{const t=e.target;if(t&&t.getAttribute&&t.getAttribute('data-close')==='fire'){e.preventDefault();firePanelToggle(false);}});
+  let t=null;canvas.addEventListener('pointerdown',e=>{if(!isOpen())return;t={id:e.pointerId,x:e.clientX,y:e.clientY,m:0};});
+  canvas.addEventListener('pointermove',e=>{if(!t||t.id!==e.pointerId)return;t.m=Math.max(t.m,Math.hypot(e.clientX-t.x,e.clientY-t.y));});
+  canvas.addEventListener('pointerup',e=>{const g=t;t=null;if(!g||g.id!==e.pointerId||(window.pointers&&pointers.size>0))return;
+    if(Math.max(g.m,Math.hypot(e.clientX-g.x,e.clientY-g.y))>=8)return;if(isOpen())firePanelToggle(false);});
+  canvas.addEventListener('pointercancel',()=>{t=null;});})();
+window.__nexusFire={
+  state:()=>{const s=fireStatus(Date.now());return{
+    on:!!layers.fire,visible:!!(gFire&&gFire.visible),count:fireS.list.length,peak:fireS.peak,st:s.st,cls:s.cls,
+    badge:(document.getElementById('bFire')||{}).textContent,badgeCls:(document.getElementById('bFire')||{}).className,
+    panelOpen:!!(document.getElementById('pFire')||{classList:{contains:()=>false}}).classList.contains('open'),
+    okAt:fresh.fire.okAt,failAt:fresh.fire.failAt,err:fireS.err,reqN:fireS.reqN,failN:fireS.failN,skipN:fireS.skipN,
+    nextAt:fireS.nextAt,waitMs:fireS.waitMs,rl:fireS.rl,pullAt:fireS.pullAt,source:fireS.source,drawn:!!fireS.pts,
+    list:fireS.list.slice(0,5)};},
+  load:fireLoad,panel:firePanelToggle,pick:fireScreenPick,build:fireBuild,qaVis:function(b){gFire.visible=!!b;},
+  shift:ms=>{if(fresh.fire.okAt)fresh.fire.okAt-=ms;if(fresh.fire.failAt)fresh.fire.failAt-=ms;fireS.pullAt=Math.max(0,fireS.pullAt-ms);fireS.nextAt=Math.max(0,fireS.nextAt-ms);paintBadgeAge();}
+};
+/* ==== /FIRE ==== */
+/* ==== AURORA v0.4.3 — NOAA SWPC OVATION aurora oval + planetary Kp (keyless, CORS-open public feeds) ====
+   Draws OVATION's forecast probability of visible aurora (1° grid, cells >= 6%) as a glowing shell over the poles.
+   Honest: badge is LIVE only while the last pull is fresh (< 25 min) AND the model's own observation time is < 60 min old
+   (and not more than 15 min in the future); else STALE with the real age; OFFLINE if nothing ever loaded.
+   Never invents cells: on failure (including a malformed grid) the last-good oval stays.
+   R2: grid validation, Kp freshness, future-time guard, Retry-After on 429 (LAUNCH helper), real backoff, 10-min cache on toggle,
+   visible "model forecast, not a sighting" disclaimer (OPS line, desktop rail sub-label, AURORA tap panel, screen-reader description). */
+const AUR_URL='https://services.swpc.noaa.gov/json/ovation_aurora_latest.json';
+const KP_URL='https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json';
+const AUR_MIN=6,AUR_OBS_STALE=60*60*1000;
+var AUR_POLL=10*60e3,AUR_BACKOFF_CAP=30*60e3,AUR_FUTURE_TOL=15*60e3; /* healthy poll · failure backoff 10/20/30 min (cap) · clock-skew tolerance */
+var AUR_KP_SPAN=3*3600e3,AUR_KP_STALE=3*3600e3; /* Kp time_tag is the START of a 3-hour interval; Kp is stale when that interval ended > 3 h ago */
+var AUR_GRID_N=360*181,AUR_MIN_ROWS=Math.round(AUR_GRID_N*0.9),AUR_MAX_BAD=0.10; /* real feed: 65,160 rows; need >= 58,644 valid and <= 10% invalid */
+var AUR_DISC_SHORT='model forecast, not a sighting';
+function aurCT(ms){try{return new Date(ms).toLocaleTimeString('en-US',{timeZone:'America/Chicago',hour:'2-digit',minute:'2-digit',hour12:false})+' CT';}catch(e){return new Date(ms).toISOString().slice(11,16)+'Z';}}
+function aurCTD(ms){try{return new Date(ms).toLocaleString('en-US',{timeZone:'America/Chicago',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).replace(',','')+' CT';}catch(e){return new Date(ms).toISOString().slice(0,16).replace('T',' ')+'Z';}}
+function aurIdx(lat,lon){let lo=Math.round(lon);lo=((lo%360)+360)%360;const la=Math.max(-90,Math.min(90,Math.round(lat)));return lo*181+(la+90);}
+function aurProbAt(lat,lon){if(!aurS.grid)return null;const v=aurS.grid[aurIdx(lat,lon)];return Number.isFinite(v)?v:null;}
+function aurColor(v){const t=Math.min(1,Math.max(0,(v-AUR_MIN)/44)),b=0.6+0.4*t;
+  const g=[0,1,0.53],c=[0.376,0.937,1],p=[1,0,0.5];let a,z,u;if(t<0.5){a=g;z=c;u=t/0.5;}else{a=c;z=p;u=(t-0.5)/0.5;}
+  return [(a[0]+(z[0]-a[0])*u)*b,(a[1]+(z[1]-a[1])*u)*b,(a[2]+(z[2]-a[2])*u)*b];}
+let aurSprite=null;
+function aurTex(){if(aurSprite)return aurSprite;const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');
+  const gr=x.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(0.4,'rgba(255,255,255,.45)');gr.addColorStop(1,'rgba(255,255,255,0)');
+  x.fillStyle=gr;x.fillRect(0,0,64,64);aurSprite=new THREE.CanvasTexture(c);return aurSprite;}
+/* R2 B2: a row is valid only if it is [lon, lat, prob] with real numbers in range. The whole grid is rejected (= a failed pull:
+   last-good oval kept, STALE or OFFLINE, never LIVE) when fewer than 90% of the expected 65,160 cells are valid or more than
+   10% of the rows are junk. Validation runs before anything on the globe is touched. */
+function aurValidRow(r){if(!Array.isArray(r)||r.length<3)return false;const lo=r[0],la=r[1],v=r[2];
+  return typeof lo==='number'&&typeof la==='number'&&typeof v==='number'&&Number.isFinite(lo)&&Number.isFinite(la)&&Number.isFinite(v)&&lo>=-180&&lo<=360&&la>=-90&&la<=90&&v>=0&&v<=100;}
+function aurCheck(coords){if(!Array.isArray(coords))throw new Error('bad OVATION payload (no coordinates)');
+  let ok=0;for(const r of coords)if(aurValidRow(r))ok++;const bad=coords.length-ok;
+  if(ok<AUR_MIN_ROWS)throw new Error('malformed grid: '+ok+' valid cells of '+coords.length+' rows (expected about '+AUR_GRID_N+')');
+  if(bad>coords.length*AUR_MAX_BAD)throw new Error('malformed grid: '+bad+' of '+coords.length+' rows invalid');
+  return {ok,bad};}
+function aurBuild(coords){
+  const chk=aurCheck(coords);
+  const grid=new Float32Array(AUR_GRID_N).fill(NaN);const pos=[],col=[];let n=0,max=0;
+  for(const r of coords){if(!aurValidRow(r))continue;const lo=r[0],la=r[1],v=r[2];
+    grid[aurIdx(la,lo)]=v;if(v>max)max=v;if(v<AUR_MIN)continue;
+    const P=latLonToVec3(la,lo>180?lo-360:lo,1.03);pos.push(P.x,P.y,P.z);col.push(...aurColor(v));n++;}
+  if(aurS.pts){gAur.remove(aurS.pts);aurS.pts.geometry.dispose();aurS.pts.material.dispose();aurS.pts=null;}
+  if(n){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
+    const m=new THREE.PointsMaterial({size:0.034,map:aurTex(),vertexColors:true,transparent:true,opacity:0.9,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true});
+    aurS.pts=new THREE.Points(g,m);aurS.pts.userData={type:'aur'};gAur.add(aurS.pts);}
+  aurS.grid=grid;aurS.n=n;aurS.max=max;aurS.rows=chk.ok;aurS.bad=chk.bad;
+}
+/* R2: 429 reuses the LAUNCH layer's Retry-After reader and clamp (60 s .. 2 h; unreadable cross-origin → 1 h) */
+async function aurFetch(url){const ac=typeof AbortController!=='undefined'?new AbortController():null;const to=setTimeout(()=>ac&&ac.abort(),20000);
+  try{const r=await fetch(url,{cache:'no-cache',signal:ac?ac.signal:undefined});
+    if(r.status===429){const ra=lnRetryAfter(r),e=new Error(ra==null?'HTTP 429 rate-limited (Retry-After not readable cross-origin → 1 h)':'HTTP 429 rate-limited');
+      e.rl=true;e.wait=(ra==null||!Number.isFinite(ra))?LN_CACHE_MS:Math.min(LN_RA_MAX,Math.max(LN_RA_MIN,ra));throw e;}
+    if(!r.ok)throw new Error('HTTP '+r.status);return await r.json();}finally{clearTimeout(to);}}
+function aurParseKp(j){if(!Array.isArray(j)||!j.length)return null;
+  for(let i=j.length-1;i>=0;i--){const r=j[i];let kp,t;
+    if(Array.isArray(r)){if(i===0&&isNaN(+r[1]))break;t=r[0];kp=+r[1];}else if(r&&typeof r==='object'){t=r.time_tag;kp=+(r.Kp!=null?r.Kp:r.kp_index);}
+    if(Number.isFinite(kp)){const ms=Date.parse(String(t).replace(' ','T')+(/Z|[+-]\d\d:?\d\d$/.test(String(t))?'':'Z'));return {kp,at:Number.isFinite(ms)?ms:0};}}
+  return null;}
+/* why: 'boot' | 'user' (toggle / deep link) | 'sched' (frame loop) | 'force' (QA only). Every reason except 'force' waits for nextAt,
+   so a toggle within 10 min of a good pull reuses the cached grid, and a toggle never cuts a backoff or Retry-After wait short. */
+async function aurLoad(why){
+  if(aurS.inflight)return false;
+  if(why!=='force'&&Date.now()<aurS.nextAt){aurS.skipN++;return false;}
+  aurS.inflight=true;aurS.lastTry=Date.now();aurS.reqN++;let kpRl=0;
+  const kpP=aurFetch(KP_URL).then(j=>{const k=aurParseKp(j);if(!k)throw new Error('no Kp');aurS.kp=k.kp;aurS.kpAt=k.at;aurS.kpErr='';})
+    .catch(e=>{aurS.kpErr=String(e&&e.message||e);if(e&&e.rl)kpRl=e.wait;});
+  try{
+    const j=await aurFetch(AUR_URL);
+    if(!j||!Array.isArray(j.coordinates))throw new Error('bad OVATION payload');
+    const obs=Date.parse(j['Observation Time']),fc=Date.parse(j['Forecast Time']);
+    aurBuild(j.coordinates); /* throws on a malformed grid before the old oval is touched */
+    aurS.obs=Number.isFinite(obs)?obs:0;aurS.fc=Number.isFinite(fc)?fc:0;aurS.err='';aurS.failN=0;aurS.rl=false;
+    await kpP;
+    aurS.pullAt=Date.now();aurS.waitMs=Math.max(AUR_POLL,kpRl);aurS.nextAt=aurS.pullAt+aurS.waitMs;
+    markFresh('aur',true,aurS.n);
+    if(why!=='sched'){const kp=aurKp(Date.now());setTicker('AURORA · OVATION peak '+Math.round(aurS.max)+'% · '+aurS.n+' cells ≥'+AUR_MIN+'%'+(kp&&!kp.stale?' · Kp '+kp.kp.toFixed(1):'')+' · model forecast, not a sighting');}
+  }catch(e){aurS.err=(e&&e.name==='AbortError')?'timeout':String(e&&e.message||e);aurS.failN++;
+    await kpP;
+    const step=Math.min(AUR_BACKOFF_CAP,AUR_POLL*aurS.failN);aurS.rl=!!(e&&e.rl)||!!kpRl;
+    aurS.waitMs=Math.max(step,(e&&e.rl&&e.wait)||0,kpRl);aurS.nextAt=Date.now()+aurS.waitMs;
+    markFresh('aur',false);
+    setTicker(fresh.aur.okAt?'AURORA · STALE · SWPC refresh failed ('+aurS.err+') · holding last-good oval':'AURORA · OFFLINE · SWPC unreachable or malformed · nothing drawn');}
+  finally{aurS.inflight=false;try{paintBadgeAge();}catch(e){}}
+  return true;
+}
+function aurKp(now){if(aurS.kp==null)return null;const end=aurS.kpAt?aurS.kpAt+AUR_KP_SPAN:0;
+  return {kp:aurS.kp,at:aurS.kpAt,end,stale:!end||now-end>AUR_KP_STALE,age:end?now-end:null};}
+function aurKpText(now){const k=aurKp(now);if(!k)return aurS.kpErr?'Kp unavailable ('+aurS.kpErr+')':'Kp …';
+  return 'Kp '+k.kp.toFixed(2)+(k.stale?' STALE':'')+' (3-hour from '+(k.at?aurCTD(k.at):'?')+(k.stale&&k.age!=null?', ended '+ageStr(k.age)+' ago':'')+')'+(aurS.kpErr?' · Kp refresh failing':'');}
+function aurStatus(now){const f=fresh.aur;
+  if(!f.okAt)return {st:f.failAt?'OFFLINE':'…',cls:'off',age:null};
+  const age=now-f.okAt,oAge=aurS.obs?now-aurS.obs:Infinity,future=!!aurS.obs&&aurS.obs-now>AUR_FUTURE_TOL;
+  const stale=age>STALE_MS.aur||f.failAt>f.okAt||oAge>AUR_OBS_STALE||future;
+  return {st:stale?'STALE':'LIVE',cls:stale?'stale':'live',age:stale?(Number.isFinite(oAge)?Math.max(age,oAge):age):age,oAge,future};}
+function aurWhy(s){if(s.st!=='STALE')return '';
+  if(fresh.aur.failAt>fresh.aur.okAt)return 'refresh failing ('+aurS.err+'), last-good oval kept';
+  if(s.future)return 'model observation time is '+ageStr(-s.oAge)+' ahead of this device clock (clock skew?)';
+  if(!aurS.obs)return 'feed gave no observation time';
+  if(s.oAge>AUR_OBS_STALE)return 'model output '+ageStr(s.oAge)+' old';
+  return 'last pull '+ageStr(Date.now()-fresh.aur.okAt)+' ago';}
+function aurPanelToggle(force){
+  const P=document.getElementById('pAur');if(!P)return;const open=force!=null?!!force:!P.classList.contains('open');
+  if(open){if(typeof cctvClose==='function')cctvClose();if(typeof alertsDockClose==='function')alertsDockClose();
+    Object.keys(panels).forEach(k=>panels[k].classList.remove('open'));document.querySelectorAll('.rail-btn[data-panel]').forEach(b=>b.classList.remove('on'));
+    P.classList.add('open');paintAurBadge(Date.now());}
+  else P.classList.remove('open');
+}
+function aurPanelPaint(now,s,on){
+  const P=document.getElementById('pAur');if(!P||!P.classList.contains('open'))return;
+  const set=(id,t)=>{const x=document.getElementById(id);if(x&&x.textContent!==t)x.textContent=t;};
+  set('aurPSt',!on?'OFF · tap the AURORA rail button to turn it on':s.st==='…'?'LOADING · NOAA SWPC':s.st==='OFFLINE'?'OFFLINE · nothing drawn ('+aurS.err+')':s.st+(s.st==='STALE'?' · '+aurWhy(s):' · pulled '+ageStr(now-fresh.aur.okAt)+' ago'));
+  set('aurPObs',aurS.obs?aurCTD(aurS.obs):'—');set('aurPFc',aurS.fc?aurCTD(aurS.fc):'—');
+  set('aurPOval',fresh.aur.okAt?aurS.n+' cells ≥'+AUR_MIN+'% · peak '+Math.round(aurS.max)+'%':'—');
+  let vc=null;try{vc=(shareLat!=null&&shareLon!=null)?aurProbAt(shareLat,shareLon):null;}catch(e){}
+  set('aurPView',vc!=null?Math.round(vc)+'% chance (model)':'—');set('aurPKp',aurKpText(now));
+  set('aurPNext',!on?'none (layer off)':aurS.inflight?'pulling now':aurS.nextAt?aurCT(aurS.nextAt)+(aurS.rl?' · rate-limited, honoring Retry-After':aurS.failN?' · backoff after '+aurS.failN+' failure'+(aurS.failN>1?'s':''):''):'—');
+}
+function paintAurBadge(now){
+  const el=document.getElementById('bAur'),k=document.getElementById('aurRailK'),o=document.getElementById('aurOpsV');if(!el||AUR_DISC_SHORT===undefined)return; /* called by paintBadgeAge before this module has run */
+  let on=false;try{on=!!layers.aur;}catch(e){}
+  const s=on?aurStatus(now):{st:'OFF'};aurPanelPaint(now,s,on);
+  if(!on){el.className='badge off';el.textContent='AUR · OFF';el.title='AURORA layer off. Model forecast, not a sighting. Tap for the AURORA panel.';if(k)k.textContent='swpc ovation off · '+AUR_DISC_SHORT;if(o)o.textContent='OFF · NOAA SWPC OVATION aurora probability + planetary Kp · model forecast of the chance of visible aurora, not a sighting';return;}
+  const kq=aurKp(now),kp=kq&&!kq.stale?' Kp '+kq.kp.toFixed(1):'';
+  if(s.st==='…'){el.className='badge off';el.textContent='AUR · …';el.title='Loading NOAA SWPC OVATION. Model forecast, not a sighting. Tap for the AURORA panel.';if(k)k.textContent='swpc ovation … · '+AUR_DISC_SHORT;if(o)o.textContent='LOADING · NOAA SWPC OVATION · model forecast of the chance of visible aurora, not a sighting';return;}
+  if(s.st==='OFFLINE'){el.className='badge off';el.textContent='AUR · OFFLINE';el.title='NOAA SWPC unreachable or malformed · no aurora drawn ('+aurS.err+'). Model forecast, not a sighting. Tap for the AURORA panel.';if(k)k.textContent='swpc ovation · OFFLINE · '+AUR_DISC_SHORT;if(o)o.textContent='OFFLINE · SWPC unreachable or malformed ('+aurS.err+') · nothing drawn · model forecast of the chance of visible aurora, not a sighting';return;}
+  el.className='badge '+s.cls;el.textContent='AUR · '+s.st+kp+' '+ageStr(s.age);
+  let vc=null;try{vc=(shareLat!=null&&shareLon!=null)?aurProbAt(shareLat,shareLon):null;}catch(e){}
+  const det='OVATION observed '+(aurS.obs?aurCTD(aurS.obs):'?')+', forecast for '+(aurS.fc?aurCT(aurS.fc):'?')+' · '+aurS.n+' cells ≥'+AUR_MIN+'% · peak '+Math.round(aurS.max)+'%'+(vc!=null?' · view centre '+Math.round(vc)+'%':'')+' · '+aurKpText(now);
+  const why=aurWhy(s);
+  el.title=(s.st==='LIVE'?'Live NOAA SWPC feed. ':'STALE: '+why+'. ')+'OVATION is a model forecast of the chance of visible aurora about 30 to 90 minutes ahead, not a sighting. '+det+'. Tap for the AURORA panel.';
+  if(k)k.textContent='swpc ovation · '+s.st+(kp?' ·'+kp:'')+' · '+AUR_DISC_SHORT;
+  if(o)o.textContent=s.st+(why?' ('+why+')':'')+' · '+det+' · model forecast of the chance of visible aurora, not a sighting';
+}
+/* Esc closes the AURORA panel (an open CCTV chooser / lens or alerts dock takes that Esc first); a tap on the globe (< 8 px travel) closes it too */
+(function(){const P=document.getElementById('pAur');if(!P)return;const isOpen=()=>P.classList.contains('open');
+  addEventListener('keydown',e=>{if((e.key!=='Escape'&&e.key!=='Esc')||e.repeat||!isOpen())return;
+    if(typeof cctvPickEl!=='undefined'&&(cctvPickEl||cctvLensEl))return;
+    if(typeof alertsDockOpenState==='function'&&alertsDockOpenState())return;
+    const inP=P.contains(document.activeElement);aurPanelToggle(false);
+    if(inP){const b=document.getElementById('bAur');if(b)b.focus({preventScroll:true});}});
+  let t=null;
+  canvas.addEventListener('pointerdown',e=>{t=(e.isPrimary&&!(e.pointerType==='mouse'&&e.button!==0))?{id:e.pointerId,x:e.clientX,y:e.clientY,m:0}:null;});
+  canvas.addEventListener('pointermove',e=>{if(t&&e.pointerId===t.id)t.m=Math.max(t.m,Math.hypot(e.clientX-t.x,e.clientY-t.y));});
+  canvas.addEventListener('pointerup',e=>{const g=t;t=null;if(!g||g.id!==e.pointerId)return;
+    if(Math.max(g.m,Math.hypot(e.clientX-g.x,e.clientY-g.y))>=8)return;if(isOpen())aurPanelToggle(false);});
+  canvas.addEventListener('pointercancel',()=>{t=null;});})();
+window.__nexusAur={state:()=>({okAt:fresh.aur.okAt,failAt:fresh.aur.failAt,n:aurS.n,max:aurS.max,obs:aurS.obs,fc:aurS.fc,kp:aurS.kp,kpAt:aurS.kpAt,kpErr:aurS.kpErr,err:aurS.err,reqN:aurS.reqN,failN:aurS.failN,
+  nextAt:aurS.nextAt,waitMs:aurS.waitMs,rl:aurS.rl,skipN:aurS.skipN,rows:aurS.rows,bad:aurS.bad,kpStale:(aurKp(Date.now())||{}).stale,on:!!layers.aur,
+  drawn:!!(aurS.pts&&aurS.pts.geometry.attributes.position.count),visible:gAur.visible,status:aurStatus(Date.now()).st,badge:(document.getElementById('bAur')||{}).textContent,
+  panelOpen:!!(document.getElementById('pAur')||{classList:{contains:()=>false}}).classList.contains('open')}),
+  probAt:aurProbAt,load:aurLoad,qaVis:function(b){gAur.visible=!!b;},parseKp:aurParseKp,color:aurColor,check:aurCheck,panel:aurPanelToggle,esc:esc /* QA: the shared escaper used by the tooltips */};
+/* ==== /AURORA ==== */
+
 requestAnimationFrame(frame);
 setInterval(()=>{if(bootDone)loadQuakes();},5*60*1000);
 
