@@ -9,6 +9,10 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32"/>
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180"/>
+<link rel="icon" href="/icons/favicon.ico" sizes="any"/>
+<link rel="icon" href="/icons/favicon-192.png" type="image/png" sizes="192x192"/>
+<link rel="icon" href="/icons/favicon-512.png" type="image/png" sizes="512x512"/>
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" sizes="180x180"/>
 <link rel="manifest" href="/manifest.webmanifest"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -361,6 +365,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
   #alertsDock .actions{padding:4px 10px 6px}
 }
 @media(max-width:400px){#alertsDock{bottom:calc(118px + var(--safe-b))}}
+/* NEXUS egg: footer fine print only — no JS, no behavior change */
+.egg{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(4px + var(--safe-b));z-index:11;pointer-events:none;font-size:9px;letter-spacing:.04em;color:rgba(0,255,135,.45);text-align:center;max-width:94vw;line-height:1.4}
+.egg small{opacity:.75}
 </style>
 </head>
 <body>
@@ -3881,5 +3888,6 @@ setInterval(()=>{if(bootDone)loadQuakes();},5*60*1000);
 
 })();
 </script>
+<div class="egg">The globe is round. DoubleA checked. Twice. <small>Fine print: no flat-earthers were consulted, the cameras are real public feeds, and if the globe keeps spinning after you let go — that's inertia, not a conspiracy. Not perfect, just real.</small></div>
 </body>
 </html>
