@@ -4,8 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
 <meta name="theme-color" content="#07070a"/>
-<meta name="description" content="NEXUS EYE v0.4.5 — photoreal field-ops planet console by DoubleA (@AntManThePro)"/>
-<title>NEXUS EYE · v0.4.5</title>
+<meta name="description" content="NEXUS EYE v0.4.6 — photoreal field-ops planet console by DoubleA (@AntManThePro)"/>
+<title>NEXUS EYE · v0.4.6</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32"/>
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180"/>
@@ -385,7 +385,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     <circle cx="48" cy="20" r="2" fill="#ffcc00"/>
   </svg>
   <div class="boot-title">NEXUS EYE</div>
-  <div class="boot-sub">SPATIAL INTEL · v0.4.5 · FIELD OPS</div>
+  <div class="boot-sub">SPATIAL INTEL · v0.4.6 · FIELD OPS</div>
   <div class="boot-log" id="bootLog"></div>
   <div class="boot-bar"><i id="bootBar"></i></div>
   <button class="boot-skip pe" id="bootSkip" type="button">SKIP BOOT ▸</button>
@@ -400,7 +400,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="#00ff87" stroke-width="1.5"/><circle cx="32" cy="32" r="18" fill="none" stroke="#60efff" stroke-width="1" opacity=".7"/><ellipse cx="32" cy="32" rx="28" ry="10" fill="none" stroke="#ff0080" stroke-width="1" opacity=".8"/><circle cx="32" cy="32" r="6" fill="#00ff87"/><circle cx="32" cy="32" r="2.5" fill="#07070a"/><circle cx="48" cy="20" r="2" fill="#ffcc00"/></svg>
       <div>
         <h1>NEXUS EYE</h1>
-        <div class="ver">v0.4.5 · OPERATOR // DOUBLEA · ANTMAN ASSIST</div>
+        <div class="ver">v0.4.6 · OPERATOR // DOUBLEA · ANTMAN ASSIST</div>
       </div>
     </div>
     <div class="badges">
@@ -550,7 +550,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
           <li>Netlify-ready · /api/air function · keyless local HTML</li>
           <li>Direct action · verify everything · no fluff</li>
         </ul>
-        <div class="contact">NEXUS EYE v0.4.5 · ORIGINAL</div>
+        <div class="contact">NEXUS EYE v0.4.6 · ORIGINAL</div>
       </div>
       <p style="margin-top:12px;opacity:.7;font-size:10px">Tip: open HIRE, zoom Earth, tap a CCTV marker, screenshot the HUD.</p>
     </div>
@@ -899,7 +899,7 @@ const bootEl=document.getElementById('boot');
 const bootLog=document.getElementById('bootLog');
 const bootBar=document.getElementById('bootBar');
 const lines=[
-  'NEXUS EYE KERNEL · v0.4.5',
+  'NEXUS EYE KERNEL · v0.4.6',
   'FEED · NOAA SWPC OVATION AURORA + Kp · STANDBY (rail AURORA or ?layers=…,aur)',
   'FEED · NASA FIRMS MODIS FIRE · STANDBY (rail FIRE or ?layers=…,fire)',
   'FEED · NOAA / NWS ALERTS api.weather.gov · LIVE ARM · TX FIRST',
@@ -3494,12 +3494,12 @@ function frame(now){
   const t=now-t0;
   if(!dragging){
     targetRotY+=velY;targetRotX=Math.max(-1.35,Math.min(1.35,targetRotX+velX));
-    velY*=0.95;velX*=0.95;
+    velY*=0.80;velX*=0.80; /* v0.4.6: firmer friction — a drag stops promptly instead of carrying on */
     if(Math.abs(velY)<0.00005)velY=0;
     if(Math.abs(velX)<0.00005)velX=0;
   }
-  // idle drift — frozen while shareSilent (deep-link camera stick)
-  if(!shareSilent&&!dragging&&Math.abs(velY)<0.0001&&!cctvDriftFrozen())targetRotY+=0.00035;
+  // v0.4.6: idle drift removed — the globe holds still when untouched (no auto-rotate).
+  // cctvDriftFrozen() stays (exposed via the CCTV debug API) but no longer gates any motion.
   rotY+=(targetRotY-rotY)*0.14;
   rotX+=(targetRotX-rotX)*0.14;
   camDist+=(targetDist-camDist)*0.14;
