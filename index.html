@@ -4428,7 +4428,14 @@ function buoyHistStatus(h,now){
     if(!Number.isFinite(nw))why='no readings';
     else if(oa>BUOY_OBS_LIVE_MS){st='OLD OBS';why='newest reading '+ageStr(oa)+' old (>3h)';}}
   return {st,why,pull};}
+function buoyHistHeadText(h,now){
+  now=now||Date.now();const F=buoyHistStatus(h,now);
+  const pullTxt=Number.isFinite(F.pull)&&F.pull>=0?(now<h.pulledAt?'pulled ≤'+buoyDurUp(BUOY_HIST_SKEW)+' ago (device clock behind server)':'pulled '+ageStr(F.pull)+' ago'):'pull time unproved';
+  return {st:F.st,text:'48 h TREND · '+F.st+' · measured · NDBC realtime2 · '+pullTxt+(F.why?' · '+F.why:'')+(h.retryAt>now&&h.stale?buoyHistWait(h,now):'')};}
 function buoyHHMM(ms){try{return new Date(ms).toLocaleTimeString('en-US',{timeZone:'America/Chicago',hour:'2-digit',minute:'2-digit',hourCycle:'h23'})+' CT';}catch(e){return new Date(ms).toISOString().slice(11,16)+' UTC';}}
+function buoySparkScale(arr,W,H,t0,t1){
+  const vs=arr.map(p=>p[1]);let lo=Math.min(...vs),hi=Math.max(...vs);if(hi-lo<1e-9){lo-=0.5;hi+=0.5;}
+  return {X:t=>((t-t0)/(t1-t0))*(W-4)+2,Y:v=>H-2-((v-lo)/(hi-lo))*(H-4)};}
 function buoySpark(arr,col,W,H,t0,t1){
   const {X,Y}=buoySparkScale(arr,W,H,t0,t1);let d='',dots='';
   for(let i=0;i<arr.length;i++){const [t,v]=arr[i],joinPrev=i>0&&t-arr[i-1][0]<=BUOY_HIST_GAP_MS,joinNext=i<arr.length-1&&arr[i+1][0]-t<=BUOY_HIST_GAP_MS;
@@ -4460,13 +4467,13 @@ function buoyHistHtml(id){
   if(!h||h.st==='loading')return box('<div style="opacity:.6">48 h TREND · loading measured history…</div>');
   if(h.st==='none')return box('<div style="opacity:.6">48 h TREND · NDBC publishes no history file for this station</div>');
   if(h.st==='err')return box('<div style="opacity:.6">48 h TREND · unavailable · '+hazEsc(h.err||'NDBC is not answering')+buoyHistWait(h,now)+' · nothing drawn</div>');
-  const t1=now,t0=now-BUOY_HIST_WIN,F=buoyHistStatus(h,now),rows=[],D={};let drawn=0;buoyHistLastDrawn={id,t0,t1,series:D};
+  const t1=now,t0=now-BUOY_HIST_WIN,rows=[],D={};let drawn=0;buoyHistLastDrawn={id,t0,t1,series:D};
   for(const [k,lab,u,dp,col,,,flat] of BUOY_HIST_SER){
     const a=(h.series[k]||[]).filter(p=>p[0]>=t0&&p[0]<=t1);D[k]=a;if(a.length>=2)drawn++;
     rows.push(buoyHistRow(k,lab,u,dp,col,flat,a,now,t0,t1));}
-  const pullTxt=Number.isFinite(F.pull)&&F.pull>=0?(now<h.pulledAt?'pulled ≤'+buoyDurUp(BUOY_HIST_SKEW)+' ago (device clock behind server)':'pulled '+ageStr(F.pull)+' ago'):'pull time unproved';
+  const H=buoyHistHeadText(h,now);
   const axis='<div class="bhx" style="display:flex;justify-content:space-between;width:100px;margin-left:60px;opacity:.5;font-size:.82em"><span>−48h</span><span>−24h</span><span>now</span></div>';
-  return box('<div class="bhs" data-st="'+hazEsc(F.st)+'" style="opacity:.8">48 h TREND · '+hazEsc(F.st)+' · measured · NDBC realtime2 · '+pullTxt+(F.why?' · '+hazEsc(F.why):'')+(h.retryAt>now&&h.stale?buoyHistWait(h,now):'')+'</div>'+
+  return box('<div class="bhs" data-st="'+hazEsc(H.st)+'" style="opacity:.8">'+hazEsc(H.text)+'</div>'+
     rows.join('')+(drawn?axis:'')+'<div style="opacity:.55;font-size:.9em;margin-top:2px">newest reading per hour · line breaks at gaps >90 min · range = 48 h min–max · times CT</div>');}
 function buoyHistDue(h,now){
   if(!h)return true;if(h.st==='loading'||h.loading)return false;
@@ -4543,7 +4550,8 @@ function buoyPlaceCard(){
    Mouse: hover reads, click pins. Touch: tap pins; the first 8 px of travel decide the axis: sideways scrubs, vertical scrolls the card and picks nothing.
    Keys: ←/→ step, Home/End, Escape clears. Readout, ring and line all come from the readings the card has drawn (never a newer, undrawn pull).
    The marker always snaps to a real reading (its own NDBC time); nothing between readings is ever interpolated, and a gap is jumped, not bridged.
-   Tap the yellow readout to clear it. A repaint never drops the pick while it is still inside the 48 h window. */
+   Tap the yellow readout to clear it. A repaint never drops the pick while it is still inside the 48 h window.
+   While a hold is busy, the .bhs trend header and the card title keep aging and flip LIVE→STALE in place; the readout, ring and line stay on the drawn pick until release. */
 var buoyScrub=null,buoyScrubDown=false,buoyScrubG=null,buoyScrubOpenAt=-1e9;
 function buoyScrubReset(){const g=buoyScrubG;if(g&&g.sk)try{g.sk.releasePointerCapture(g.pid);}catch(_){}buoyScrub=null;buoyScrubDown=false;buoyScrubG=null;}
 function buoyScrubActive(){return !!(buoyScrub||buoyScrubDown)&&tip.style.display==='block';}
@@ -4663,12 +4671,23 @@ function buoyOpenCard(s,x,y){
   buoyHistLoad(s.id);
   tipTickerSelect('buoy',s.id,buoyLockTicker(s),()=>{const v=buoyS.list.find(r=>r.id===s.id);return v?buoyLockTicker(v):null;});}
 function buoyLockTicker(s){const st=buoyStationStatus(s,Date.now());return 'LOCK · BUOY · '+s.id+' · '+st.st+(s.wvht!=null?' · waves '+s.wvht.toFixed(1)+' m':'')+(s.wspd!=null?' · wind '+s.wspd.toFixed(1)+' m/s':'')+buoyReason(st);}
+/* while a scrub or card-scroll is busy, don't rebuild rows — but the trend header and card title must keep aging and flip LIVE→STALE on time */
+function buoyHonestyPaint(card,v,now){
+  now=now||Date.now();if(!card||!v)return;
+  const title=card.querySelector('.t[data-buoy-id]');if(!title)return;
+  const st=buoyStationStatus(v,now),t='BUOY · NDBC · '+st.st+buoyReason(st);
+  if(title.textContent!==t)title.textContent=t;
+  const id=title.getAttribute('data-buoy-id'),h=id&&buoyHist[id],bhs=card.querySelector('.bhs');
+  if(!bhs||!h||h.st!=='ok')return;
+  const H=buoyHistHeadText(h,now);
+  if(bhs.getAttribute('data-st')!==H.st)bhs.setAttribute('data-st',H.st);
+  if(bhs.textContent!==H.text)bhs.textContent=H.text;}
 function buoySurfaces(s){
   const card=document.getElementById('tip'),title=card&&card.querySelector('.t[data-buoy-id]');
   if(card&&card.style.display==='block'&&title){
     const id=title.getAttribute('data-buoy-id'),v=buoyS.list.find(r=>r.id===id);
     if(!v||s.st==='OFF'||s.st==='OFFLINE'){card.style.display='none';card.innerHTML='';}
-    else{buoyHistLoad(id);const h=buoyCardHtml(v,s),drawn=buoyHistLastDrawn;if(card.__buoyHtml!==h&&!buoyCardBusy()){const st=card.scrollTop,fk=buoyScrubFocusKey();card.innerHTML=h;card.__buoyHtml=h;card.__buoyDrawn=drawn;buoyScrubPaint();buoyScrubRefocus(fk);buoyPlaceCard();if(st&&card.scrollTop!==st)card.scrollTop=st;}}}
+    else{buoyHistLoad(id);if(buoyCardBusy())buoyHonestyPaint(card,v);else{const h=buoyCardHtml(v,s),drawn=buoyHistLastDrawn;if(card.__buoyHtml!==h){const st=card.scrollTop,fk=buoyScrubFocusKey();card.innerHTML=h;card.__buoyHtml=h;card.__buoyDrawn=drawn;buoyScrubPaint();buoyScrubRefocus(fk);buoyPlaceCard();if(st&&card.scrollTop!==st)card.scrollTop=st;}}}}
   if(tickerPaintSelection())return;
   const t=document.getElementById('ticker');
   if(t&&/^BUOY · NDBC (LIVE|STALE|OFFLINE|…)/.test(t.textContent))setTicker(buoyTicker());}
