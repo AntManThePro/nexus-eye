@@ -4,8 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
 <meta name="theme-color" content="#07070a"/>
-<meta name="description" content="NEXUS EYE v0.4.7 — photoreal field-ops planet console by DoubleA (@AntManThePro)"/>
-<title>NEXUS EYE · v0.4.7</title>
+<meta name="description" content="NEXUS EYE v0.4.8 — photoreal field-ops planet console by DoubleA (@AntManThePro)"/>
+<title>NEXUS EYE · v0.4.8</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32"/>
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180"/>
@@ -285,6 +285,19 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
 #pFire .disc{margin:0 0 8px;padding:6px 8px;border:1px solid var(--p);color:var(--p);font-size:11px;line-height:1.45}
 #pFire .stat span:last-child{text-align:right}
 #pFire button[data-close]{min-width:32px;min-height:32px}
+/* v0.4.5 VOLC: badge is a button (tap panel), 34px hit via pseudo; level colors from the NEXUS palette */
+#bVolc{pointer-events:auto;cursor:pointer;position:relative}
+#bVolc:focus-visible{outline:1px solid var(--y);outline-offset:1px}
+#bVolc::before{content:'';position:absolute;left:0;right:0;top:50%;height:34px;transform:translateY(-50%)}
+@media(min-width:641px){#pVolc{top:max(calc(58px + var(--safe-t)),var(--rail-top,0px))}}
+#pVolc .disc{margin:0 0 8px;padding:6px 8px;border:1px solid var(--y);color:var(--y);font-size:11px;line-height:1.45}
+#pVolc .stat span:last-child{text-align:right}
+#pVolc button[data-close]{min-width:32px;min-height:32px}
+#pVolc .lvkey{display:flex;flex-wrap:wrap;gap:4px 10px;margin:6px 0 4px;font-size:10px;letter-spacing:.08em}
+#pVolc .lvkey i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:-1px;box-shadow:0 0 6px currentColor;background:currentColor}
+#pVolc .vrow{padding:6px 0;border-top:1px solid var(--chrome);font-size:11px;line-height:1.45;overflow-wrap:anywhere}
+#pVolc .vrow .vn{color:var(--c);letter-spacing:.06em}
+#pVolc .vrow a{color:var(--c);display:inline-flex;align-items:center;min-width:32px;min-height:32px;padding:0 4px;box-sizing:border-box}
 .sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 #cctvDock .meta,#cctvDock .meta .src,#cctvDock .meta .cn,#cctvDock .meta .cc,#cctvDock .meta .cx,#cctvDock .err,#cctvDock .cerr,#cctvDock .cerr span,#cctvDock .cpill{font-size:11px}
 #cctvDock .cpill{max-width:calc(100% - 12px);line-height:1.35;letter-spacing:.06em}
@@ -385,7 +398,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     <circle cx="48" cy="20" r="2" fill="#ffcc00"/>
   </svg>
   <div class="boot-title">NEXUS EYE</div>
-  <div class="boot-sub">SPATIAL INTEL · v0.4.7 · FIELD OPS</div>
+  <div class="boot-sub">SPATIAL INTEL · v0.4.8 · FIELD OPS</div>
   <div class="boot-log" id="bootLog"></div>
   <div class="boot-bar"><i id="bootBar"></i></div>
   <button class="boot-skip pe" id="bootSkip" type="button">SKIP BOOT ▸</button>
@@ -400,7 +413,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="#00ff87" stroke-width="1.5"/><circle cx="32" cy="32" r="18" fill="none" stroke="#60efff" stroke-width="1" opacity=".7"/><ellipse cx="32" cy="32" rx="28" ry="10" fill="none" stroke="#ff0080" stroke-width="1" opacity=".8"/><circle cx="32" cy="32" r="6" fill="#00ff87"/><circle cx="32" cy="32" r="2.5" fill="#07070a"/><circle cx="48" cy="20" r="2" fill="#ffcc00"/></svg>
       <div>
         <h1>NEXUS EYE</h1>
-        <div class="ver">v0.4.7 · OPERATOR // DOUBLEA · ANTMAN ASSIST</div>
+        <div class="ver">v0.4.8 · OPERATOR // DOUBLEA · ANTMAN ASSIST</div>
       </div>
     </div>
     <div class="badges">
@@ -412,6 +425,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <span class="badge off" id="bWx">WX · …</span>
       <span class="badge off" id="bHaz">HAZ · …</span>
       <span class="badge off" id="bFire" role="button" tabindex="0" aria-controls="pFire" aria-describedby="fireSrDisc" title="NASA FIRMS MODIS C6.1 active-fire thermal hotspots (24h). Thermal detections, not ground truth. Off unless the link asks for it. Tap for the FIRE panel.">FIRE · OFF</span>
+      <span class="badge off" id="bVolc" role="button" tabindex="0" aria-controls="pVolc" aria-describedby="volcSrDisc" title="USGS volcano alert levels and aviation color codes for monitored US volcanoes. Off unless the link asks for it. Tap for the VOLC panel.">VOLC · OFF</span>
       <span class="badge off" id="bAlerts" title="NOAA / National Weather Service active alerts">ALERTS · …</span>
       <span class="badge pub" id="bSun" role="button" tabindex="0" aria-controls="pSun" title="Sun position computed in-browser from the device clock (NOAA low-precision solar equations, about 0.1°). Not a data feed. Tap for the SUN panel.">SUN · CALC</span>
       <span class="badge proto" id="bOrbit">ORBIT · KEPLER</span>
@@ -420,6 +434,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     </div>
     <span class="sr" id="aurSrDisc">Aurora: NOAA SWPC OVATION is a model forecast of the chance of visible aurora about 30 to 90 minutes ahead, not a sighting.</span>
     <span class="sr" id="fireSrDisc">Fire: NASA FIRMS MODIS thermal detections over about 24 hours. Satellite hotspots, not ground truth.</span>
+    <span class="sr" id="volcSrDisc">Volcano: official USGS alert levels and aviation color codes for monitored US volcanoes. Not a forecast. Catalog points are static context, not live activity.</span>
   </div>
 
   <div class="rail pe">
@@ -435,6 +450,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     <button class="rail-btn on" data-layer="wx" type="button">WX<span class="k">open-meteo</span></button>
     <button class="rail-btn on" data-layer="haz" type="button">HAZ<span class="k" id="hazRailK">nasa eonet …</span></button>
     <button class="rail-btn toggle-off" data-layer="fire" type="button" title="Active-fire thermal hotspots: NASA FIRMS MODIS C6.1 24h via /api/fire. Thermal detections, not ground truth. Off unless the link asks for it (?layers=…,fire).">FIRE<span class="k" id="fireRailK">firms modis off · thermal detections · not ground truth</span></button>
+    <button class="rail-btn toggle-off" data-layer="volc" type="button" title="Volcano watch: USGS alert levels + aviation color codes via /api/volc, Smithsonian GVP Holocene catalog as dim static context. Off unless the link asks for it (?layers=…,volc).">VOLC<span class="k" id="volcRailK">usgs volcano off · official alert levels</span></button>
     <button class="rail-btn on" data-layer="cctv" type="button">CCTV<span class="k">official public cams</span></button>
     <button class="rail-btn" id="btnCctvFilter" type="button" title="CCTV quick-filter: ALL → TX → US → INTL">TX<span class="k">cctv · texas</span></button>
     <button class="rail-btn" id="btnCctvAustin" type="button" title="CCTV filter: Austin, TX only (913 cams)">AUSTIN<span class="k">cctv · austin</span></button>
@@ -466,6 +482,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <div class="stat"><span>WX</span><span>LIVE · Open-Meteo</span></div>
       <div class="stat"><span>HAZ</span><span id="hazOpsV">… · NASA EONET fires / storms / volcanoes</span></div>
       <div class="stat"><span>FIRE</span><span id="fireOpsV">OFF · NASA FIRMS MODIS C6.1 thermal hotspots (24h) · thermal detections · not ground truth</span></div>
+      <div class="stat"><span>VOLC</span><span id="volcOpsV">OFF · USGS volcano alert levels + aviation color codes · official USGS alert levels · US-monitored volcanoes · not a forecast</span></div>
       <div class="stat"><span>ALERTS</span><span id="alertsOpsV">… · NOAA / NWS active alerts · TX first</span></div>
       <div class="stat"><span>CCTV</span><span>8,338-cam official public catalog · LIVE count = source-time verified only · TX TxDOT / TranStar / Austin · US NYC / Caltrans / ODOT · INTL</span></div>
       <div class="stat"><span>ORBIT</span><span>KEPLER · scout craft</span></div>
@@ -525,6 +542,26 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     </div>
   </div>
 
+  <div class="panel pe" id="pVolc" role="dialog" aria-label="Volcano watch">
+    <div class="panel-h">VOLC · USGS <button type="button" data-close="volc" aria-label="Close volcano panel">✕</button></div>
+    <div class="panel-b">
+      <p class="disc" id="volcPDisc">OFFICIAL ALERT LEVELS · NOT A FORECAST. USGS observatories publish a ground alert level and an aviation color code for each monitored US volcano. For decisions use volcanoes.usgs.gov and local authorities. Dim CATALOG dots are the Smithsonian GVP Holocene list — static context, not live activity.</p>
+      <div class="lvkey"><span style="color:#00ff87"><i></i>NORMAL / GREEN</span><span style="color:#ffcc00"><i></i>ADVISORY / YELLOW</span><span style="color:#ff0080"><i></i>WATCH / ORANGE</span><span style="color:#ff2a55"><i></i>WARNING / RED</span></div>
+      <div class="stat"><span>STATUS</span><span id="volcPSt">…</span></div>
+      <div class="stat"><span>SOURCE</span><span id="volcPSrc">…</span></div>
+      <div class="stat"><span>WARNING</span><span id="volcPWarn">…</span></div>
+      <div class="stat"><span>WATCH</span><span id="volcPWatch">…</span></div>
+      <div class="stat"><span>ADVISORY</span><span id="volcPAdv">…</span></div>
+      <div class="stat"><span>NORMAL</span><span id="volcPNorm">…</span></div>
+      <div class="stat"><span>CATALOG</span><span id="volcPCat">…</span></div>
+      <div class="stat"><span>PULLED</span><span id="volcPAge">…</span></div>
+      <div class="stat"><span>NEXT PULL</span><span id="volcPNext">…</span></div>
+      <div style="margin-top:8px;letter-spacing:.14em;font-size:10px;color:var(--c)">ELEVATED</div>
+      <div id="volcPList"></div>
+      <p style="margin-top:8px;opacity:.75">Source: USGS Volcano Hazards Program HANS public API (keyless) and the Smithsonian Global Volcanism Program Holocene list, mirrored through the NEXUS /api/volc function. Not affiliated with or endorsed by USGS or the Smithsonian. Marker color is the higher of the alert level and the color code. LIVE only after a successful pull; never invents volcanoes or alert states.</p>
+    </div>
+  </div>
+
   <div class="panel pe" id="pAntman">
     <div class="panel-h">ANTMAN CONSOLE <button type="button" data-close="antman">✕</button></div>
     <div class="panel-b" id="antmanFeed"></div>
@@ -550,7 +587,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
           <li>Netlify-ready · /api/air function · keyless local HTML</li>
           <li>Direct action · verify everything · no fluff</li>
         </ul>
-        <div class="contact">NEXUS EYE v0.4.7 · ORIGINAL</div>
+        <div class="contact">NEXUS EYE v0.4.8 · ORIGINAL</div>
       </div>
       <p style="margin-top:12px;opacity:.7;font-size:10px">Tip: open HIRE, zoom Earth, tap a CCTV marker, screenshot the HUD.</p>
     </div>
@@ -615,13 +652,14 @@ const TEX={
 
 
 /* ---- Freshness (LIVE / STALE / OFFLINE ages) ---- */
-const STALE_MS={alerts:10*60*1000,haz:30*60*1000,fire:50*60*1000,quake:8*60*1000,iss:25*1000,wx:15*60*1000,air:45*1000,cctv:3*60*1000,sats:6*60*60*1000,launch:6*60*60*1000,aur:25*60*1000};
+const STALE_MS={alerts:10*60*1000,haz:30*60*1000,fire:50*60*1000,volc:50*60*1000,quake:8*60*1000,iss:25*1000,wx:15*60*1000,air:45*1000,cctv:3*60*1000,sats:6*60*60*1000,launch:6*60*60*1000,aur:25*60*1000};
 const fresh={
   quake:{okAt:0,failAt:0,label:'QUAKE',count:''},
   iss:{okAt:0,failAt:0,label:'ISS',count:''},
   wx:{okAt:0,failAt:0,label:'WX',count:''},
   haz:{okAt:0,failAt:0,label:'HAZ',count:''},
   fire:{okAt:0,failAt:0,label:'FIRE',count:''},
+  volc:{okAt:0,failAt:0,label:'VOLC',count:''},
   air:{okAt:0,failAt:0,label:'AIR',count:'',mode:'proto'},
   cctv:{okAt:0,failAt:0,label:'CCTV',count:''},
   alerts:{okAt:0,failAt:0,label:'ALERTS',count:''},
@@ -631,6 +669,8 @@ const fresh={
 };
 /* v0.4.4 FIRE state — declared early (paintBadgeAge runs during init) */
 var fireS={list:[],pts:null,peak:0,err:'',inflight:false,lastTry:0,reqN:0,failN:0,nextAt:0,rl:false,waitMs:0,skipN:0,pullAt:0,source:'',window:'',sel:null};
+/* v0.4.8 VOLC state — declared early (paintBadgeAge runs during init) */
+var volcS={list:[],elevated:[],catList:[],catOk:false,catErr:'',catAt:'',counts:{NORMAL:0,ADVISORY:0,WATCH:0,WARNING:0},pts:null,cat:null,rings:[],err:'',inflight:false,lastTry:0,reqN:0,failN:0,nextAt:0,rl:false,waitMs:0,skipN:0,pullAt:0,sourceName:'',upStale:false};
 /* v0.4.3 AURORA state — declared early (paintBadgeAge runs during init) */
 var aurS={grid:null,obs:0,fc:0,kp:null,kpAt:0,kpErr:'',err:'',inflight:false,lastTry:0,n:0,max:0,pts:null,reqN:0,failN:0,nextAt:0,rl:false,waitMs:0,skipN:0,rows:0,bad:0,pullAt:0};
 /* v0.4.1 LAUNCH state — declared early (paintBadgeAge runs during init) */
@@ -679,6 +719,7 @@ function paintBadgeAge(){
   paintLaunchBadge(now);
   paintAurBadge(now);
   paintFireBadge(now);
+  paintVolcBadge(now);
   /* QUAKE */
   (function(){
     const el=document.getElementById('bQuake');const f=fresh.quake;
@@ -805,7 +846,7 @@ setInterval(paintBadgeAge,1000);
 /* ---- Share deep-links ?lat=&lon=&alt=&layers= ---- */
 let shareLat=null,shareLon=null,shareSilent=false;
 function layerList(){
-  return ['mesh','sun','aur','quake','iss','sats','launch','orbit','air','wx','haz','fire','cctv','alerts'].filter(k=>layers[k]).join(',');
+  return ['mesh','sun','aur','quake','iss','sats','launch','orbit','air','wx','haz','fire','volc','cctv','alerts'].filter(k=>layers[k]).join(',');
 }
 function aimAt(lat,lon,alt,snap){
   /* Camera on +Z. three r128 DEFAULT Euler XYZ ≡ Rx∘Ry. Keep order unset.
@@ -822,7 +863,7 @@ function aimAt(lat,lon,alt,snap){
 function applyLayersCSV(csv){
   if(!csv)return;
   const want=new Set(String(csv).split(',').map(s=>s.trim().toLowerCase()).filter(Boolean));
-  ['mesh','sun','aur','quake','iss','sats','launch','orbit','air','wx','haz','fire','cctv','alerts'].forEach(k=>{
+  ['mesh','sun','aur','quake','iss','sats','launch','orbit','air','wx','haz','fire','volc','cctv','alerts'].forEach(k=>{
     const on=want.has(k);
     layers[k]=on;
     const btn=document.querySelector('.rail-btn[data-layer="'+k+'"]');
@@ -839,6 +880,7 @@ function applyLayersCSV(csv){
     if(k==='wx')gWx.visible=on;
     if(k==='haz')gHaz.visible=on;
     if(k==='fire'){gFire.visible=on;if(on&&bootDone)fireLoad('user');}
+    if(k==='volc'){gVolc.visible=on;if(on&&bootDone)volcLoad('user');}
     if(k==='cctv'){gCctv.visible=on;if(on&&typeof cctvLoadPack==='function')cctvLoadPack();}
     if(k==='alerts'){gAlerts.visible=on;if(on)alertsMaybeLoad();else alertsDockClose();}
   });
@@ -895,9 +937,10 @@ const bootEl=document.getElementById('boot');
 const bootLog=document.getElementById('bootLog');
 const bootBar=document.getElementById('bootBar');
 const lines=[
-  'NEXUS EYE KERNEL · v0.4.7',
+  'NEXUS EYE KERNEL · v0.4.8',
   'FEED · NOAA SWPC OVATION AURORA + Kp · STANDBY (rail AURORA or ?layers=…,aur)',
   'FEED · NASA FIRMS MODIS FIRE · STANDBY (rail FIRE or ?layers=…,fire)',
+  'FEED · USGS VOLCANO WATCH · STANDBY (rail VOLC or ?layers=…,volc)',
   'FEED · NOAA / NWS ALERTS api.weather.gov · LIVE ARM · TX FIRST',
   'PALETTE LOCK · #00ff87 #60efff #ff0080 #ffcc00',
   'MESH · BLUE MARBLE + NIGHT + CLOUDS + ATMOS',
@@ -940,6 +983,7 @@ function finishBoot(){
   if(layers.cctv)setTimeout(cctvLoadPack,300); /* glassfix N8: fetch cctv-pack.json only after boot, only if CCTV is on */
   if(layers.aur)aurLoad('boot');
   if(layers.fire)fireLoad('boot');
+  if(layers.volc)volcLoad('boot');
   loadQuakes();
   loadIss();
   if(layers.sats)satsLoad('boot');
@@ -1090,10 +1134,11 @@ const gRoutes=new THREE.Group();root.add(gRoutes);
 const gWx=new THREE.Group();root.add(gWx);
 const gHaz=new THREE.Group();root.add(gHaz);
 const gFire=new THREE.Group();gFire.visible=false;root.add(gFire); /* v0.4.4: FIRE off unless the link or the rail turns it on */
+const gVolc=new THREE.Group();gVolc.visible=false;root.add(gVolc); /* v0.4.8: VOLC off unless the link or the rail turns it on */
 const gCctv=new THREE.Group();root.add(gCctv);
 const gAur=new THREE.Group();gAur.visible=false;root.add(gAur); /* R2 AU-7: AURORA is off unless the link or the rail turns it on */
 
-const layers={mesh:true,sun:true,aur:false,quake:true,iss:true,sats:true,launch:true,orbit:true,air:true,wx:true,haz:true,fire:false,cctv:true,alerts:true};
+const layers={mesh:true,sun:true,aur:false,quake:true,iss:true,sats:true,launch:true,orbit:true,air:true,wx:true,haz:true,fire:false,volc:false,cctv:true,alerts:true};
 
 /* ==== SUN v0.4.2 — real-time day/night terminator (computed in-browser, no network) ====
    Subsolar point from NOAA low-precision solar equations (~0.1°). Key light follows the real sun;
@@ -3191,7 +3236,7 @@ function setTicker(t,holdMs){
   document.getElementById('ticker').textContent=t;
   if(holdMs){tickerHoldUntil=now+holdMs;tickerHoldAt=now;}else if(now<tickerHoldUntil)tickerHoldUntil=0;
 }
-const panels={ops:document.getElementById('pOps'),antman:document.getElementById('pAntman'),hire:document.getElementById('pHire'),sun:document.getElementById('pSun'),aur:document.getElementById('pAur'),fire:document.getElementById('pFire'),cctvLive:document.getElementById('pCctvLive'),cctvCity:document.getElementById('pCctvCity')};
+const panels={ops:document.getElementById('pOps'),antman:document.getElementById('pAntman'),hire:document.getElementById('pHire'),sun:document.getElementById('pSun'),aur:document.getElementById('pAur'),fire:document.getElementById('pFire'),volc:document.getElementById('pVolc'),cctvLive:document.getElementById('pCctvLive'),cctvCity:document.getElementById('pCctvCity')};
 /* R2 SU-2/N5: SUN badge → SUN panel (works on touch: no hover needed). The badge is a DOM element above the canvas, so the tap never reaches the globe. */
 (function(){const b=document.getElementById('bSun');if(!b)return;
   b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();sunPanelToggle();});
@@ -3204,6 +3249,10 @@ const panels={ops:document.getElementById('pOps'),antman:document.getElementById
 (function(){const b=document.getElementById('bFire');if(!b)return;
   b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();firePanelToggle();});
   b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();firePanelToggle();}});})();
+/* v0.4.8 VOLC: badge → VOLC panel */
+(function(){const b=document.getElementById('bVolc');if(!b)return;
+  b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();volcPanelToggle();});
+  b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();volcPanelToggle();}});})();
 document.querySelectorAll('.rail-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     if(btn.dataset.layer){
@@ -3223,6 +3272,7 @@ document.querySelectorAll('.rail-btn').forEach(btn=>{
       if(k==='wx')gWx.visible=layers.wx;
       if(k==='haz'){gHaz.visible=layers.haz;if(!layers.haz&&/^HAZ/.test(tip.textContent||''))tip.style.display='none';}
       if(k==='fire'){gFire.visible=layers.fire;if(layers.fire)fireLoad('user');else{if(/^FIRE/.test(tip.textContent||''))tip.style.display='none';const pf=document.getElementById('pFire');if(pf)pf.classList.remove('open');}paintBadgeAge();setTicker(layers.fire?'FIRE · on · NASA FIRMS MODIS':'FIRE · off');}
+      if(k==='volc'){gVolc.visible=layers.volc;if(layers.volc)volcLoad('user');else{if(/^VOLC/.test(tip.textContent||''))tip.style.display='none';const pv=document.getElementById('pVolc');if(pv)pv.classList.remove('open');}paintBadgeAge();setTicker(layers.volc?'VOLC · on · USGS volcano watch':'VOLC · off');}
       if(k==='alerts'){gAlerts.visible=layers.alerts;if(layers.alerts){if(!alertsInflight&&Date.now()-alertsLastTry>=ALERTS_EVERY)loadAlerts(true);}else alertsDockClose();paintBadgeAge();}
       if(k==='cctv'){gCctv.visible=layers.cctv;if(!layers.cctv)cctvClose();else cctvLoadPack();paintBadgeAge(); /* R4 N-r3a: badge flips PAUSED/back at once */}
       writeDeepLink(true);
@@ -3348,6 +3398,7 @@ function pickEntity(clientX,clientY,pre){
   satsPickNow=pre?pre.sp:satsScreenPick(clientX,clientY,touch?18:10);
   const satD=satsPickNow?satsPickNow.d:Infinity;
   const lnPick=pre&&('lp' in pre)?pre.lp:lnScreenPick(clientX,clientY,touch?20:12),lnD=lnPick?lnPick.d:Infinity;
+  const vp=layers.volc?volcScreenPick(clientX,clientY,touch?16:10):null,vpD=vp?vp.d:Infinity; /* v0.4.8 VOLC */
   const ent=pickOtherInfo(clientX,clientY),entD=ent?ent.d:Infinity;
   let act='none',rule='empty';
   const near=[];
@@ -3355,13 +3406,15 @@ function pickEntity(clientX,clientY,pre){
   if(entD<=TAP_TIGHT)near.push(['entity',entD]);
   if(satD<=TAP_TIGHT)near.push(['sat',satD]);
   if(lnD<=TAP_TIGHT)near.push(['launch',lnD]);
+  if(vp&&!vp.cat&&vpD<=TAP_TIGHT)near.push(['volc',vpD]);
   near.sort((p,q)=>p[1]-q[1]);
   if(ah&&ah.exact){if(near.length){act=near[0][0];rule='in-polygon · point object <=6px';}else{act='alert';rule='in-polygon · alert';}}
   else if(near.length){act=near[0][0];rule='point object <=6px';}
   else if(ent){act='entity';rule='ray hit';}
   else{
     const ad=ah?ah.d:Infinity,other=Math.min(ad,camD);
-    if(lnPick&&lnD+SAT_MARGIN<=Math.min(other,satD)){act='launch';rule='pad clearly closer';}
+    if(vp&&!vp.cat&&vpD<=Math.min(other,satD,lnD)){act='volc';rule='volcano nearest';}
+    else if(lnPick&&lnD+SAT_MARGIN<=Math.min(other,satD)){act='launch';rule='pad clearly closer';}
     else if(satsPickNow&&satD+SAT_MARGIN<=other){act='sat';rule='sat clearly closer';}
     else if(ah&&ad<=camD){act='alert';rule='alert ring <= cam';}
     else if(cand.length){act='cctv';rule='cam radius';}
@@ -3373,6 +3426,39 @@ function pickEntity(clientX,clientY,pre){
     pad:lnPick&&lnPick.p.key,padD:r1(lnD),act,rule,id:cam?cam.id:aHit?aHit.id:act==='sat'?satsPickNow.s.id:act==='launch'?lnPick.p.key:null,t:Date.now()};
   if(act!=='sat')satsCardClose();
   if(act!=='launch')lnCardClose(); /* S3: an empty tap or any other pick deselects the satellite (clears ring + track) */
+  const firePick=layers.fire?fireScreenPick(clientX,clientY,touch?12:8):null;
+  if(act==='none'&&firePick){act='fire';rule='hotspot before static catalog';if(alertsLastTap){alertsLastTap.act=act;alertsLastTap.rule=rule;}}
+  if(act==='none'&&vp){act='volc';rule=vp.cat?'catalog dot':'volcano radius';if(alertsLastTap){alertsLastTap.act=act;alertsLastTap.rule=rule;}}
+  if(act==='fire'){
+    const u=firePick.f;
+    tip.style.display='block';
+    tip.style.left=Math.max(6,Math.min(innerWidth-266,clientX+12))+'px';
+    tip.style.top=Math.max(6,Math.min(innerHeight-130,clientY+12))+'px';
+    const fs=fireStatus(Date.now());
+    tip.innerHTML='<div class="t">FIRE · FIRMS · '+hazEsc(fs.st)+'</div><div>'+u.lat.toFixed(3)+', '+u.lon.toFixed(3)+'</div>'+
+      '<div class="v">FRP '+u.frp.toFixed(1)+' MW · '+hazEsc(fireSatLabel(u.sat))+(u.dn?' · '+(u.dn==='N'?'night':'day'):'')+'</div>'+
+      '<div style="opacity:.7;margin-top:3px">acq '+fireAcq(u)+(u.conf?' · conf '+hazEsc(u.conf):'')+' · '+FIRE_DISC+'</div>';
+    setTicker('LOCK · FIRE · FRP '+Math.round(u.frp)+' MW · '+u.lat.toFixed(2)+','+u.lon.toFixed(2));
+    antmanSay(pick(ANTMAN.click));
+    return;
+  }
+  if(act==='volc'){
+    const v=vp.v,vs=volcStatus(Date.now());
+    tip.style.display='block';
+    tip.style.left=Math.max(6,Math.min(innerWidth-266,clientX+12))+'px';
+    tip.style.top=Math.max(6,Math.min(innerHeight-150,clientY+12))+'px';
+    if(vp.cat){
+      tip.innerHTML='<div class="t">VOLC · CATALOG</div><div>'+hazEsc(v.name)+(v.country?' · '+hazEsc(v.country):'')+'</div>'+
+        '<div class="v">last eruption '+(v.last==null?'unknown':(v.last<0?Math.abs(v.last)+' BCE':v.last+' CE'))+'</div>'+
+        '<div style="opacity:.7;margin-top:3px">Smithsonian GVP Holocene list · static context, not live activity</div>';
+      setTicker('LOCK · VOLC CATALOG · '+v.name);
+    }else{
+      tip.innerHTML=volcCardHtml(v,vs);
+      setTicker('LOCK · VOLC · '+v.name+' · '+(v.level||'—')+' / '+(v.color||'—'));
+    }
+    antmanSay(pick(ANTMAN.click));
+    return;
+  }
   if(act==='none'){tip.style.display='none';return;}
   if(act==='alert'){tip.style.display='none';alertsOpenCard(aHit,false);
     if(camsNear>1&&camD<=TAP_TIGHT)setTicker('LOCK · NWS · '+aHit.event+' · '+camsNear+' cams here too — zoom in to pick a cam');return;}
@@ -3407,20 +3493,6 @@ function pickEntity(clientX,clientY,pre){
     const qf=fresh.quake,qAge=Date.now()-qf.okAt,qSt=!qf.okAt?'OFFLINE':(qAge>STALE_MS.quake||qf.failAt>qf.okAt)?'STALE '+ageStr(qAge):'LIVE';
     tip.innerHTML='<div class="t">QUAKE · USGS '+qSt+'</div><div>M <span class="v">'+u.mag.toFixed(1)+'</span></div><div>'+esc(u.props.place||'—')+'</div>';
     setTicker('LOCK · M'+u.mag.toFixed(1)+' · '+(u.props.place||''));
-    antmanSay(pick(ANTMAN.click));
-    return;
-  }
-  const firePick=(!pre&&layers.fire)?fireScreenPick(clientX,clientY,8):null;
-  if(firePick){
-    const u=firePick.f;
-    tip.style.display='block';
-    tip.style.left=Math.max(6,Math.min(innerWidth-266,clientX+12))+'px';
-    tip.style.top=Math.max(6,Math.min(innerHeight-130,clientY+12))+'px';
-    const fs=fireStatus(Date.now());
-    tip.innerHTML='<div class="t">FIRE · FIRMS · '+hazEsc(fs.st)+'</div><div>'+u.lat.toFixed(3)+', '+u.lon.toFixed(3)+'</div>'+
-      '<div class="v">FRP '+u.frp.toFixed(1)+' MW · '+hazEsc(fireSatLabel(u.sat))+(u.dn?' · '+(u.dn==='N'?'night':'day'):'')+'</div>'+
-      '<div style="opacity:.7;margin-top:3px">acq '+fireAcq(u)+(u.conf?' · conf '+hazEsc(u.conf):'')+' · '+FIRE_DISC+'</div>';
-    setTicker('LOCK · FIRE · FRP '+Math.round(u.frp)+' MW · '+u.lat.toFixed(2)+','+u.lon.toFixed(2));
     antmanSay(pick(ANTMAN.click));
     return;
   }
@@ -3633,6 +3705,7 @@ function frame(now){
   if(bootDone&&layers.sats&&!satsInflight&&!document.hidden&&satsNextTry&&Date.now()>=satsNextTry)satsLoad('sched'); /* R2 S1/B1: paced, never per-frame */
   if(bootDone&&layers.aur&&!aurS.inflight&&!document.hidden&&Date.now()>=aurS.nextAt)aurLoad('sched'); /* R2: nextAt = 10 min after a good pull; 10/20/30 min (cap) after failures; never before a 429 Retry-After */
   if(bootDone&&layers.fire&&!fireS.inflight&&!document.hidden&&Date.now()>=fireS.nextAt)fireLoad('sched'); /* v0.4.4: ~15 min poll; backoff on failures */
+  if(bootDone&&layers.volc&&!volcS.inflight&&!document.hidden&&Date.now()>=volcS.nextAt)volcLoad('sched'); /* v0.4.8: ~15 min poll; backoff on failures */
   if(layers.fire&&fireS.pts)fireS.pts.material.opacity=0.82+0.18*Math.sin(now*0.0013);
   if(layers.aur&&aurS.pts)aurS.pts.material.opacity=0.78+0.22*Math.sin(now*0.0011);
   if(bootDone&&now-lastIssPoll>8000){lastIssPoll=now;loadIss();}
@@ -3813,6 +3886,229 @@ window.__nexusFire={
   shift:ms=>{if(fresh.fire.okAt)fresh.fire.okAt-=ms;if(fresh.fire.failAt)fresh.fire.failAt-=ms;fireS.pullAt=Math.max(0,fireS.pullAt-ms);fireS.nextAt=Math.max(0,fireS.nextAt-ms);paintBadgeAge();}
 };
 /* ==== /FIRE ==== */
+/* ==== VOLC v0.4.8 — volcano watch · original NEXUS architecture (ported from staged v0.4.5) ====
+   LIVE: USGS Volcano Hazards Program HANS public API (via /api/volc): every monitored US volcano with its official
+   alert level (NORMAL/ADVISORY/WATCH/WARNING) and aviation color code (GREEN/YELLOW/ORANGE/RED).
+   CATALOG: Smithsonian GVP Holocene volcano list, dim static context points — never labelled LIVE.
+   Off by default. LIVE only after a successful /api/volc pull. STALE keeps last-good markers.
+   OFFLINE draws nothing if never loaded. Never invents volcanoes or alert states. */
+var VOLC_POLL=15*60e3,VOLC_BACKOFF_CAP=45*60e3;
+var VOLC_DISC='official USGS alert levels · US-monitored volcanoes · not a forecast';
+var VOLC_LV=['NORMAL','ADVISORY','WATCH','WARNING'],VOLC_CC=['GREEN','YELLOW','ORANGE','RED'];
+var VOLC_HEX=['#00ff87','#ffcc00','#ff0080','#ff2a55'];
+var volcWorld=new THREE.Vector3(),volcNdc=new THREE.Vector3(),volcRay=new THREE.Vector3();
+function volcRank(v){return Math.max(VOLC_LV.indexOf(v.level),VOLC_CC.indexOf(v.color),0);}
+function volcTex(kind){const key='_tex_'+kind;if(volcS[key])return volcS[key];const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');
+  if(kind==='ring'){x.strokeStyle='rgba(255,255,255,1)';x.lineWidth=4;x.beginPath();x.arc(32,32,24,0,Math.PI*2);x.stroke();
+    x.lineWidth=2;x.globalAlpha=.5;x.beginPath();x.arc(32,32,29,0,Math.PI*2);x.stroke();}
+  else{const gr=x.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(0.3,'rgba(255,255,255,.75)');gr.addColorStop(0.65,'rgba(255,255,255,.22)');gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.fillRect(0,0,64,64);
+    if(kind==='peak'){x.fillStyle='rgba(255,255,255,.95)';x.beginPath();x.moveTo(32,14);x.lineTo(44,40);x.lineTo(20,40);x.closePath();x.fill();}}
+  volcS[key]=new THREE.CanvasTexture(c);return volcS[key];}
+function volcRgb(r){const c=new THREE.Color(VOLC_HEX[r]||VOLC_HEX[0]);return [c.r,c.g,c.b];}
+function volcClear(){
+  if(volcS.pts){gVolc.remove(volcS.pts);volcS.pts.geometry.dispose();volcS.pts.material.dispose();volcS.pts=null;}
+  if(volcS.cat){gVolc.remove(volcS.cat);volcS.cat.geometry.dispose();volcS.cat.material.dispose();volcS.cat=null;}
+  (volcS.rings||[]).forEach(s=>{gVolc.remove(s);s.material.dispose();});volcS.rings=[];}
+function volcNumber(v){return (typeof v==='number'||typeof v==='string'&&v.trim()!=='')&&Number.isFinite(Number(v))?Number(v):NaN;}
+function volcValidate(j){
+  if(!j||j.ok===false||!Array.isArray(j.volcanoes))throw new Error('malformed required volcano feed');
+  if(j.monitoredOk===false)throw new Error('monitored coverage unavailable; incomplete USGS pull');
+  for(const v of j.volcanoes){
+    if(!v||typeof v!=='object'||Array.isArray(v)||
+       !((typeof v.vnum==='string'&&v.vnum.trim())||(typeof v.vnum==='number'&&Number.isFinite(v.vnum)))||
+       typeof v.name!=='string'||!v.name.trim()||!VOLC_LV.includes(v.level)||!VOLC_CC.includes(v.color))
+      throw new Error('malformed required volcano row or alert state');
+    for(const k of ['obs','obsName','sent','url','synopsis'])if(v[k]!=null&&typeof v[k]!=='string')throw new Error('malformed volcano '+k);
+    for(const k of ['lat','lon'])if(v[k]!=null&&!(typeof v[k]==='number'||typeof v[k]==='string'))throw new Error('malformed volcano coordinate type');
+  }
+}
+function volcBuild(j){
+  /* Validate the complete required collection before destroying last-good geometry. */
+  volcValidate(j);
+  volcClear();
+  const list=[],counts={NORMAL:0,ADVISORY:0,WATCH:0,WARNING:0},pos=[],col=[];
+  const src=Array.isArray(j&&j.volcanoes)?j.volcanoes:[];
+  for(const v0 of src){if(!v0)continue;
+    const v={vnum:String(v0.vnum||''),name:String(v0.name||'—'),obs:String(v0.obs||''),obsName:String(v0.obsName||''),
+      level:VOLC_LV.includes(String(v0.level))?String(v0.level):'',color:VOLC_CC.includes(String(v0.color))?String(v0.color):'',
+      sent:String(v0.sent||''),url:/^https:\/\/volcanoes\.usgs\.gov\//.test(String(v0.url||''))?String(v0.url):'',synopsis:String(v0.synopsis||''),
+      lat:volcNumber(v0.lat),lon:volcNumber(v0.lon)};
+    v.rank=volcRank(v);if(v.level)counts[v.level]++;
+    v.drawn=Number.isFinite(v.lat)&&Number.isFinite(v.lon)&&Math.abs(v.lat)<=90&&Math.abs(v.lon)<=180;
+    list.push(v);
+    if(!v.drawn)continue;
+    const P=latLonToVec3(v.lat,v.lon,1.014);pos.push(P.x,P.y,P.z);col.push(...volcRgb(v.rank));
+    if(v.rank>0){const m=new THREE.SpriteMaterial({map:volcTex('ring'),color:new THREE.Color(VOLC_HEX[v.rank]),transparent:true,opacity:.9,depthWrite:false,blending:THREE.AdditiveBlending});
+      const s=new THREE.Sprite(m);s.position.copy(latLonToVec3(v.lat,v.lon,1.016));s.userData={type:'volc',rank:v.rank,base:0.05+0.012*v.rank};s.scale.setScalar(s.userData.base);s.renderOrder=9;gVolc.add(s);volcS.rings.push(s);}
+  }
+  list.sort((a,b)=>b.rank-a.rank||a.name.localeCompare(b.name));
+  if(pos.length){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
+    const m=new THREE.PointsMaterial({size:0.034,map:volcTex('peak'),vertexColors:true,transparent:true,opacity:.95,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true});
+    volcS.pts=new THREE.Points(g,m);volcS.pts.renderOrder=9;volcS.pts.userData={type:'volc'};gVolc.add(volcS.pts);}
+  /* CATALOG: static context, dim, never LIVE */
+  const cat=j&&j.catalog&&j.catalog.ok&&Array.isArray(j.catalog.pts)?j.catalog.pts:[];const clist=[],cpos=[];
+  for(const r of cat){if(!Array.isArray(r))continue;const lat=volcNumber(r[0]),lon=volcNumber(r[1]);if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)continue;
+    clist.push({lat,lon,name:String(r[2]||'—'),country:String(r[3]||''),last:r[4]==null?null:+r[4],vnum:String(r[5]||'')});const P=latLonToVec3(lat,lon,1.008);cpos.push(P.x,P.y,P.z);}
+  if(cpos.length){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(cpos,3));
+    const m=new THREE.PointsMaterial({size:0.016,map:volcTex('dot'),color:0x60efff,transparent:true,opacity:.32,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true});
+    volcS.cat=new THREE.Points(g,m);volcS.cat.renderOrder=7;volcS.cat.userData={type:'volc-cat'};gVolc.add(volcS.cat);}
+  volcS.list=list;volcS.counts=counts;volcS.elevated=list.filter(v=>v.rank>0);volcS.catList=clist;
+  volcS.catOk=!!cpos.length;volcS.catErr=j&&j.catalog?String(j.catalog.err||''):'no catalog';volcS.catAt=j&&j.catalog&&j.catalog.pulledAt?String(j.catalog.pulledAt):'';
+}
+function volcVisible(w){const C=camera.position;volcRay.copy(w).sub(C);const L=volcRay.length();if(L<1e-6)return true;volcRay.divideScalar(L);
+  const b=C.dot(volcRay),cc=C.lengthSq()-1,disc=b*b-cc;if(disc<0)return true;const t=-b-Math.sqrt(disc);return !(t>0&&t<L);}
+function volcPickIn(arr,r,cx,cy,R){let best=null,bd=R;
+  for(let i=0;i<arr.length;i++){const v=arr[i];if(v.drawn===false)continue;
+    volcWorld.copy(latLonToVec3(v.lat,v.lon,r)).applyMatrix4(root.matrixWorld);if(!volcVisible(volcWorld))continue;
+    volcNdc.copy(volcWorld).project(camera);if(volcNdc.z>1)continue;
+    const x=(volcNdc.x+1)/2*innerWidth,y=(1-volcNdc.y)/2*innerHeight,d=Math.hypot(x-cx,y-cy)-(v.rank||0)*1.5;
+    if(d<bd){bd=d;best=v;}}
+  return best?{v:best,d:bd}:null;}
+function volcScreenPick(cx,cy,R){
+  if(!layers.volc||(!volcS.list.length&&!volcS.catList.length))return null;
+  root.updateMatrixWorld(true);
+  const m=volcPickIn(volcS.list,1.014,cx,cy,R==null?10:R);if(m)return {v:m.v,d:m.d,cat:false};
+  const c=volcS.catOk?volcPickIn(volcS.catList,1.008,cx,cy,6):null;return c?{v:c.v,d:c.d,cat:true}:null;}
+function volcWhen(iso){const ms=Date.parse(iso||'');if(!Number.isFinite(ms))return '—';
+  try{return new Date(ms).toLocaleString('en-US',{timeZone:'America/Chicago',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).replace(',','')+' CT';}catch(e){return hazEsc(iso);}}
+function volcStatus(now){const f=fresh.volc;now=now||Date.now();
+  if(!layers.volc)return {st:'OFF',cls:'off',age:null};
+  if(!f.okAt)return {st:f.failAt?'OFFLINE':'…',cls:'off',age:null};
+  const age=now-f.okAt,stale=age>STALE_MS.volc||f.failAt>f.okAt||volcS.upStale;
+  return {st:stale?'STALE':'LIVE',cls:stale?'stale':'live',age};}
+function volcReason(){return volcS.err?(' · '+volcS.err+(fresh.volc.okAt?' · holding last-good':'')):(volcS.upStale?' · server holding last-good':'');}
+function volcTicker(){const s=volcStatus(Date.now());return 'VOLC · USGS '+s.st+' · '+volcS.elevated.length+' elevated of '+volcS.list.length+' monitored'+volcReason();}
+function volcCardHtml(v,s){return '<div class="t" data-volc-vnum="'+hazEsc(v.vnum)+'">VOLC · USGS · '+hazEsc(s.st+volcReason())+'</div><div>'+hazEsc(v.name)+' · '+hazEsc(v.obs||'—')+'</div>'+
+  '<div class="v">'+volcLevelHtml(v)+'</div>'+
+  '<div style="opacity:.7;margin-top:3px">updated '+volcWhen(v.sent)+' · official alert level, not a forecast</div>';}
+function volcSurfaces(s){
+  const card=document.getElementById('tip'),title=card&&card.querySelector('.t[data-volc-vnum]');
+  if(card&&card.style.display==='block'&&title){
+    /* Selection is a stable feed identity, never a retained row object or old HTML. */
+    const id=title.getAttribute('data-volc-vnum'),v=volcS.list.find(row=>row.vnum===id);
+    if(!v||s.st==='OFF'){card.style.display='none';card.innerHTML='';}
+    else card.innerHTML=volcCardHtml(v,s);
+  }
+  const t=document.getElementById('ticker');if(t&&/^VOLC · USGS (LIVE|STALE|OFFLINE)/.test(t.textContent))t.textContent=volcTicker();
+}
+function volcCountsStr(){const c=volcS.counts||{};return (c.WARNING||0)+' warning · '+(c.WATCH||0)+' watch · '+(c.ADVISORY||0)+' advisory · '+(c.NORMAL||0)+' normal';}
+function volcLabels(st){
+  const k=document.getElementById('volcRailK');if(k)k.textContent=st==='OFF'?'usgs volcano off · official alert levels':'usgs volcano · '+st.toLowerCase()+' · '+volcS.elevated.length+' elevated';
+  const o=document.getElementById('volcOpsV');if(!o)return;
+  if(st==='OFF')o.textContent='OFF · USGS volcano alert levels + aviation color codes · '+VOLC_DISC;
+  else if(st==='OFFLINE')o.textContent='OFFLINE · '+(volcS.err||'/api/volc unreachable')+' · nothing drawn';
+  else if(st==='…')o.textContent='… · USGS volcano alert levels · loading';
+  else o.textContent=st+' · '+volcS.elevated.length+' elevated of '+volcS.list.length+' monitored ('+volcCountsStr()+')'+(volcS.catOk?' · CATALOG '+volcS.catList.length+' Holocene (static)':'')+volcReason()+' · '+VOLC_DISC;}
+function paintVolcBadge(now){
+  const el=document.getElementById('bVolc');if(!el)return;
+  const on=!!layers.volc,s=volcStatus(now);volcSurfaces(s);
+  if(!on){el.className='badge off';el.textContent='VOLC · OFF';el.title='VOLC layer off. Official USGS volcano alert levels and aviation color codes. Tap for the VOLC panel.';volcLabels('OFF');volcPanelPaint(now,s,false);return;}
+  if(s.st==='…'){el.className='badge off';el.textContent='VOLC · …';el.title='Loading USGS volcano alert levels via /api/volc. Tap for the VOLC panel.';volcLabels('…');volcPanelPaint(now,s,true);return;}
+  if(s.st==='OFFLINE'){el.className='badge off';el.textContent='VOLC · OFFLINE';el.title='USGS /api/volc unreachable · no volcanoes drawn ('+volcS.err+'). Tap for the VOLC panel.';volcLabels('OFFLINE');volcPanelPaint(now,s,true);return;}
+  const age=s.age!=null?ageStr(s.age):'';
+  el.className='badge '+s.cls;
+  el.textContent='VOLC · '+s.st+' '+volcS.elevated.length+(age?' '+age:'');
+  el.title=(s.st==='LIVE'?'USGS HANS · ':'Last good USGS pull · ')+volcS.elevated.length+' elevated of '+volcS.list.length+' monitored ('+volcCountsStr()+')'+(age?' · '+age+' ago':'')+'. Official alert levels, not a forecast. Tap for the VOLC panel.';
+  volcLabels(s.st);volcPanelPaint(now,s,true);}
+function volcLevelHtml(v){const r=v.rank||0;return '<b style="color:'+VOLC_HEX[r]+'">'+hazEsc(v.level||'—')+'</b> / '+hazEsc(v.color||'—');}
+function volcPanelPaint(now,s,on){
+  const P=document.getElementById('pVolc');if(!P||!P.classList.contains('open'))return;
+  const set=(id,t)=>{const e=document.getElementById(id);if(e)e.textContent=t;};
+  set('volcPSt',!on?'LAYER OFF':s.st+(s.age!=null?' · pulled '+ageStr(s.age)+' ago':'')+volcReason());
+  set('volcPSrc',volcS.sourceName||'USGS Volcano Hazards Program · HANS (via /api/volc)');
+  const c=volcS.counts||{};
+  set('volcPWarn',on&&fresh.volc.okAt?String(c.WARNING||0):'—');set('volcPWatch',on&&fresh.volc.okAt?String(c.WATCH||0):'—');
+  set('volcPAdv',on&&fresh.volc.okAt?String(c.ADVISORY||0):'—');set('volcPNorm',on&&fresh.volc.okAt?String(c.NORMAL||0):'—');
+  set('volcPCat',volcS.catOk?volcS.catList.length+' Holocene volcanoes · CATALOG (static, not live)':(fresh.volc.okAt?'unavailable'+(volcS.catErr?' ('+volcS.catErr+')':''):'—'));
+  set('volcPAge',fresh.volc.okAt?ageStr(now-fresh.volc.okAt)+' ago'+(volcS.upStale?' · server holding last-good':''):(volcS.err||'never'));
+  set('volcPNext',!on?'—':(volcS.nextAt?('in '+ageStr(Math.max(0,volcS.nextAt-now))+(volcS.rl?' · rate-limited':'')):'…'));
+  const L=document.getElementById('volcPList');if(!L)return;
+  const key=on+'|'+fresh.volc.okAt+'|'+volcS.elevated.length;if(L.__k===key)return;L.__k=key;
+  if(!on||!fresh.volc.okAt){L.innerHTML='<div class="vrow" style="opacity:.6">'+(on?'no live data — nothing drawn':'layer off')+'</div>';return;}
+  if(!volcS.elevated.length){L.innerHTML='<div class="vrow" style="opacity:.75">No US volcano above NORMAL / GREEN in this pull.</div>';return;}
+  L.innerHTML=volcS.elevated.map(v=>'<div class="vrow" data-vnum="'+hazEsc(v.vnum)+'"><div class="vn">'+hazEsc(v.name)+(v.drawn?'':' <span style="opacity:.6">(no point)</span>')+'</div>'+
+    '<div>'+volcLevelHtml(v)+' · '+hazEsc(v.obs||'—')+'</div><div style="opacity:.7">updated '+volcWhen(v.sent)+(v.url?' · <a href="'+hazEsc(v.url)+'" target="_blank" rel="noopener noreferrer">notice</a>':'')+'</div></div>').join('');}
+function volcPanelToggle(force){
+  const P=document.getElementById('pVolc');if(!P)return;
+  const open=force!=null?!!force:!P.classList.contains('open');
+  Object.keys(panels).forEach(k=>{if(panels[k]&&k!=='volc')panels[k].classList.remove('open');});
+  document.querySelectorAll('.rail-btn[data-panel]').forEach(b=>b.classList.remove('on'));
+  if(!open){P.classList.remove('open');return;}
+  const L=document.getElementById('volcPList');if(L)L.__k='';
+  P.classList.add('open');paintVolcBadge(Date.now());}
+function volcPreferError(previous,next){
+  /* A generic alias failure must not erase the required-feed coverage diagnosis. */
+  return /monitored coverage unavailable|incomplete USGS pull/i.test(previous)&&!/monitored coverage unavailable|incomplete USGS pull/i.test(next)?previous:next;
+}
+async function volcLoad(why){
+  if(volcS.inflight)return false;
+  if(why!=='force'&&Date.now()<volcS.nextAt){volcS.skipN++;return false;}
+  if(!layers.volc&&why!=='force')return false;
+  volcS.inflight=true;volcS.lastTry=Date.now();volcS.reqN++;
+  const endpoints=['/api/volc','/.netlify/functions/volc'];let ok=false,lastErr=volcPreferError(volcS.err,'');
+  try{
+    for(const ep of endpoints){
+      try{
+        const ac=typeof AbortController!=='undefined'?new AbortController():null;const to=setTimeout(()=>ac&&ac.abort(),18000);
+        let res;try{res=await fetch(ep,{cache:'no-store',headers:{Accept:'application/json'},signal:ac?ac.signal:undefined});}finally{clearTimeout(to);}
+        if(res.status===429){const ra=typeof lnRetryAfter==='function'?lnRetryAfter(res):null;
+          const wait=(ra==null||!Number.isFinite(ra))?3600e3:Math.min(2*3600e3,Math.max(60e3,ra));
+          const e=new Error(ra==null?'HTTP 429 rate-limited (Retry-After not readable)':'HTTP 429 rate-limited');e.rl=true;e.wait=wait;throw e;}
+        if(!res.ok){let body={};try{body=await res.json();}catch(e){}lastErr=volcPreferError(lastErr,'HTTP '+res.status+(body.message?' · '+String(body.message):''));continue;}
+        const j=await res.json();
+        volcValidate(j);
+        volcBuild(j);
+        volcS.sourceName=String(j.sourceName||'USGS Volcano Hazards Program · HANS');
+        volcS.err=typeof j.coverageError==='string'?j.coverageError:'';volcS.failN=0;volcS.rl=false;volcS.pullAt=Date.now();volcS.upStale=!!j.stale||!Number.isFinite(Date.parse(j.pulledAt||''))||Date.parse(j.pulledAt)>Date.now();
+        volcS.waitMs=VOLC_POLL;volcS.nextAt=volcS.pullAt+volcS.waitMs;
+        markFresh('volc',true,volcS.elevated.length);fresh.volc.failAt=0; /* a good pull clears the earlier failure */
+        /* honest age: the server pull time, never newer than now */
+        const pa=Date.parse(j.pulledAt||'');if(Number.isFinite(pa)&&pa<=Date.now())fresh.volc.okAt=pa;
+        if(why!=='sched')setTicker(volcTicker());
+        ok=true;break;
+      }catch(e){
+        if(e&&e.rl){volcS.err=volcPreferError(volcS.err,String(e.message||e));volcS.failN++;volcS.rl=true;volcS.waitMs=Math.max(VOLC_POLL,e.wait||0);volcS.nextAt=Date.now()+volcS.waitMs;markFresh('volc',false);throw e;}
+        lastErr=volcPreferError(lastErr,(e&&e.name==='AbortError')?'timeout':String(e&&e.message||e));
+      }
+    }
+    if(!ok)throw new Error(lastErr||'unreachable');
+  }catch(e){
+    if(!(e&&e.rl)){volcS.err=volcPreferError(volcS.err,String(e&&e.message||e));volcS.failN++;
+      const step=Math.min(VOLC_BACKOFF_CAP,VOLC_POLL*Math.max(1,volcS.failN));
+      volcS.waitMs=Math.max(step,(e&&e.wait)||0);volcS.nextAt=Date.now()+volcS.waitMs;volcS.rl=false;
+      markFresh('volc',false);
+      if(!fresh.volc.okAt){volcClear();volcS.list=[];volcS.elevated=[];volcS.catList=[];volcS.catOk=false;volcS.counts={NORMAL:0,ADVISORY:0,WATCH:0,WARNING:0};}
+      setTicker(volcTicker());}
+  }finally{volcS.inflight=false;try{paintBadgeAge();}catch(e){}}
+  return ok;}
+function volcTick(now){if(!layers.volc)return;const k=0.5+0.5*Math.sin(now*0.0032);
+  for(const s of volcS.rings){const u=s.userData;s.scale.setScalar(u.base*(1+0.35*k*(u.rank>=2?1.4:1)));s.material.opacity=0.55+0.4*(1-k);}
+  if(volcS.pts)volcS.pts.material.opacity=0.85+0.15*Math.sin(now*0.0011);}
+(function(){const P=document.getElementById('pVolc');if(!P)return;
+  const isOpen=()=>P.classList.contains('open');
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&isOpen()){volcPanelToggle(false);}});
+  P.addEventListener('click',e=>{const t=e.target;if(t&&t.getAttribute&&t.getAttribute('data-close')==='volc'){e.preventDefault();volcPanelToggle(false);}});
+  let t=null;canvas.addEventListener('pointerdown',e=>{if(!isOpen())return;t={id:e.pointerId,x:e.clientX,y:e.clientY,m:0};});
+  canvas.addEventListener('pointermove',e=>{if(!t||t.id!==e.pointerId)return;t.m=Math.max(t.m,Math.hypot(e.clientX-t.x,e.clientY-t.y));});
+  canvas.addEventListener('pointerup',e=>{const g=t;t=null;if(!g||g.id!==e.pointerId||(window.pointers&&pointers.size>0))return;
+    if(Math.max(g.m,Math.hypot(e.clientX-g.x,e.clientY-g.y))>=8)return;if(isOpen())volcPanelToggle(false);});
+  canvas.addEventListener('pointercancel',()=>{t=null;});})();
+window.__nexusVolc={
+  state:()=>{const s=volcStatus(Date.now());const B=document.getElementById('bVolc')||{};return{
+    on:!!layers.volc,visible:!!(gVolc&&gVolc.visible),count:volcS.list.length,elevated:volcS.elevated.length,counts:Object.assign({},volcS.counts),
+    drawnN:volcS.list.filter(v=>v.drawn).length,rings:volcS.rings.length,catN:volcS.catList.length,catOk:volcS.catOk,catDrawn:!!volcS.cat,
+    st:s.st,cls:s.cls,badge:B.textContent,badgeCls:B.className,
+    panelOpen:!!(document.getElementById('pVolc')||{classList:{contains:()=>false}}).classList.contains('open'),
+    okAt:fresh.volc.okAt,failAt:fresh.volc.failAt,err:volcS.err,reqN:volcS.reqN,failN:volcS.failN,skipN:volcS.skipN,upStale:volcS.upStale,
+    nextAt:volcS.nextAt,waitMs:volcS.waitMs,rl:volcS.rl,pullAt:volcS.pullAt,drawn:!!volcS.pts,
+    top:volcS.elevated.slice(0,5).map(v=>({name:v.name,level:v.level,color:v.color,rank:v.rank}))};},
+  load:volcLoad,panel:volcPanelToggle,pick:volcScreenPick,build:volcBuild,rayVisible:null, /* pickMeshVisible arrives with the v0.4.9 hidden-layer tap filter */
+  qaInject:j=>{volcBuild(j);fresh.volc.okAt=Date.now();paintBadgeAge();},
+  project:(i)=>{const v=volcS.elevated[i||0];if(!v||!v.drawn)return null;root.updateMatrixWorld(true);volcWorld.copy(latLonToVec3(v.lat,v.lon,1.014)).applyMatrix4(root.matrixWorld);
+    const vis=volcVisible(volcWorld);volcNdc.copy(volcWorld).project(camera);return {x:(volcNdc.x+1)/2*innerWidth,y:(1-volcNdc.y)/2*innerHeight,vis,name:v.name};},
+  shift:ms=>{if(fresh.volc.okAt)fresh.volc.okAt-=ms;if(fresh.volc.failAt)fresh.volc.failAt-=ms;volcS.pullAt=Math.max(0,volcS.pullAt-ms);volcS.nextAt=Math.max(0,volcS.nextAt-ms);paintBadgeAge();}
+};
+/* ==== /VOLC ==== */
 /* ==== AURORA v0.4.3 — NOAA SWPC OVATION aurora oval + planetary Kp (keyless, CORS-open public feeds) ====
    Draws OVATION's forecast probability of visible aurora (1° grid, cells >= 6%) as a glowing shell over the poles.
    Honest: badge is LIVE only while the last pull is fresh (< 25 min) AND the model's own observation time is < 60 min old

@@ -1,6 +1,6 @@
-# NEXUS EYE v0.4.7
+# NEXUS EYE v0.4.8
 
-Field-ops planet console by DoubleA (@AntManThePro). A photoreal globe with live public intel — quakes, weather alerts, launches, satellites, aurora, fires, and public CCTV snapshots. Original NEXUS build, from scratch. Not perfect, just real.
+Field-ops planet console by DoubleA (@AntManThePro). A photoreal globe with live public intel — quakes, weather alerts, launches, satellites, aurora, fires, volcanoes, and public CCTV snapshots. Original NEXUS build, from scratch. Not perfect, just real.
 
 **Live:** https://nexus-eye-doublea.netlify.app/
 
@@ -21,6 +21,7 @@ Field-ops planet console by DoubleA (@AntManThePro). A photoreal globe with live
 - ISS · LIVE · WX · LIVE
 - AIR · LIVE when `/api/air` returns a proved, fresh set from community ADS-B (adsb.lol, ODbL 1.0), Texas first of six fixed regions. A failed refresh keeps last-good positions as STALE for up to 5 minutes, then OFFLINE. Nothing is simulated. Contains information from adsb.lol, made available under the ODbL 1.0.
 - FIRE · NASA FIRMS MODIS C6.1 24h thermal hotspots via `/api/fire` (off unless the rail or a deep-link turns it on). LIVE after a successful pull; STALE keeps last-good points; OFFLINE draws nothing. Thermal detections, not ground truth.
+- VOLC · USGS volcano alert levels and aviation color codes via `/api/volc` (off unless the rail or a deep-link turns it on). LIVE after a successful pull; STALE keeps last-good markers; OFFLINE draws nothing. Smithsonian GVP Holocene dots are dim static context, never labelled LIVE. Official alert levels, not a forecast.
 - ORBIT · KEPLER
 - CCTV · PUBLIC (+ last-good / FRAME OFFLINE) · TxDOT cams via `/api/cam` (allowlisted snapshot Function) + `cctv-pack.json`
 
@@ -37,6 +38,7 @@ Three.js r128 (CDN) · satellite.js 5.0.0 (self-hosted, `lib/`) · vanilla JS ·
 
 ## Release
 
+v0.4.8 — VOLC: USGS Volcano Hazards Program HANS alert levels + aviation color codes, with the Smithsonian GVP Holocene catalog as dim static context, via `/api/volc`. Off unless the rail or `?layers=…,volc` turns it on. Stacked on v0.4.7.
 v0.4.7 — TX LIVE: `/api/air` uses a Texas-first community ADS-B proxy (adsb.lol, ODbL 1.0) instead of OpenSky (which blocked this host's cloud IPs and 503'd). AIR is LIVE / STALE / OFFLINE only — the old PROTO simulated planes are gone. Adds `netlify/functions/fire.js` so the existing FIRE layer's `/api/fire` call has a function to hit. Built on v0.4.6 (drift fix, icons, egg, CITY tabs, PREV/nearest-NEXT).
 v0.4.6 — Stop idle globe drift; firmer drag friction. Icons, README how-to, footer egg.
 v0.4.5 — SUN/AURORA/FIRE plus city tabs, PREV/nearest-NEXT, CCTV LIVE VERIFIED + CCTV CITY panels.
