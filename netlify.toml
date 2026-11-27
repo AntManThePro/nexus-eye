@@ -81,6 +81,12 @@
   to = "/.netlify/functions/buoy"
   status = 200
 
+# v0.4.11: /api/buoyhist?id= — one station's last 48 h from NDBC realtime2 (keyless; id-validated, size-capped)
+[[redirects]]
+  from = "/api/buoyhist"
+  to = "/.netlify/functions/buoyhist"
+  status = 200
+
 [[redirects]]
   from = "/eye"
   to = "/index.html"
