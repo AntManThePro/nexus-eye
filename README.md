@@ -1,6 +1,6 @@
-# NEXUS EYE v0.4.9
+# NEXUS EYE v0.4.10
 
-Field-ops planet console by DoubleA (@AntManThePro). A photoreal globe with live public intel — quakes, weather alerts, launches, satellites, aurora, fires, volcanoes, and public CCTV snapshots. Original NEXUS build, from scratch. Not perfect, just real.
+Field-ops planet console by DoubleA (@AntManThePro). A photoreal globe with live public intel — quakes, weather alerts, launches, satellites, aurora, fires, volcanoes, marine buoys, and public CCTV snapshots. Original NEXUS build, from scratch. Not perfect, just real.
 
 **Live:** https://nexus-eye-doublea.netlify.app/
 
@@ -22,6 +22,7 @@ Field-ops planet console by DoubleA (@AntManThePro). A photoreal globe with live
 - AIR · LIVE when `/api/air` returns a proved, fresh set from community ADS-B (adsb.lol, ODbL 1.0), Texas first of six fixed regions. A failed refresh keeps last-good positions as STALE for up to 5 minutes, then OFFLINE. Nothing is simulated. Contains information from adsb.lol, made available under the ODbL 1.0.
 - FIRE · NASA FIRMS MODIS C6.1 24h thermal hotspots via `/api/fire` (off unless the rail or a deep-link turns it on). LIVE after a successful pull; STALE keeps last-good points; OFFLINE draws nothing. Thermal detections, not ground truth.
 - VOLC · USGS volcano alert levels and aviation color codes via `/api/volc` (off unless the rail or a deep-link turns it on). LIVE after a successful pull; STALE keeps last-good markers; OFFLINE draws nothing. Smithsonian GVP Holocene dots are dim static context, never labelled LIVE. Official alert levels, not a forecast.
+- BUOY · NOAA NDBC latest observations via `/api/buoy` (off unless the rail or a deep-link turns it on). Wind, waves, temperatures, pressure. LIVE needs a pull no more than 50 min old and a median station observation no more than 3 h old; dimmed dots are stations whose own observation is older than 3 h. Missing values stay missing. Not a forecast. Optional `?buoy=tx` or `?buoy=gulf` filter.
 - ORBIT · KEPLER
 - CCTV · PUBLIC 8,334-cam catalog (4 dead TxDOT cameras removed) · `/api/cam` names failures and holds a last-good frame as STALE. "NO NEW FRAME" only if the source re-stamped identical bytes (frozen) or nothing changed for 3× cadence (min 10 min). ALERTS · NWS is LIVE only when our pull is < 10 min old AND the NWS `updated` time is present, not in the future, and not older than 60 min; otherwise STALE (or OFFLINE if we have never pulled).
 
@@ -38,6 +39,7 @@ Three.js r128 (CDN) · satellite.js 5.0.0 (self-hosted, `lib/`) · vanilla JS ·
 
 ## Release
 
+v0.4.10 — BUOY: NOAA NDBC latest marine observations via `/api/buoy`. Off unless the rail or `?layers=…,buoy` turns it on. Stacked on v0.4.9.
 v0.4.9 — CCTV/NWS honesty: catalog 8,338 → 8,334 (4 dead TxDOT cams removed); `/api/cam` 9s budget, named failures, last-good STALE; "NO NEW FRAME" only if frozen or 3× cadence (min 10 min); NWS LIVE uses a 60-min source-updated check in addition to the 10-min pull; hidden-layer tap filter. Stacked on v0.4.8.
 v0.4.8 — VOLC: USGS Volcano Hazards Program HANS alert levels + aviation color codes, with the Smithsonian GVP Holocene catalog as dim static context, via `/api/volc`. Off unless the rail or `?layers=…,volc` turns it on. Stacked on v0.4.7.
 v0.4.7 — TX LIVE: `/api/air` uses a Texas-first community ADS-B proxy (adsb.lol, ODbL 1.0) instead of OpenSky (which blocked this host's cloud IPs and 503'd). AIR is LIVE / STALE / OFFLINE only — the old PROTO simulated planes are gone. Adds `netlify/functions/fire.js` so the existing FIRE layer's `/api/fire` call has a function to hit. Built on v0.4.6 (drift fix, icons, egg, CITY tabs, PREV/nearest-NEXT).
