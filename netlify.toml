@@ -69,6 +69,12 @@
   to = "/.netlify/functions/fire"
   status = 200
 
+# v0.4.8: /api/volc — USGS HANS volcano alert levels + GVP Holocene catalog proxy (keyless)
+[[redirects]]
+  from = "/api/volc"
+  to = "/.netlify/functions/volc"
+  status = 200
+
 [[redirects]]
   from = "/eye"
   to = "/index.html"
