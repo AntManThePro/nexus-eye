@@ -4,8 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
 <meta name="theme-color" content="#07070a"/>
-<meta name="description" content="NEXUS EYE v0.4.9 — photoreal field-ops planet console by DoubleA (@AntManThePro)"/>
-<title>NEXUS EYE · v0.4.9</title>
+<meta name="description" content="NEXUS EYE v0.4.10 — photoreal field-ops planet console by DoubleA (@AntManThePro)"/>
+<title>NEXUS EYE · v0.4.10</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32"/>
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180"/>
@@ -298,6 +298,25 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
 #pVolc .vrow{padding:6px 0;border-top:1px solid var(--chrome);font-size:11px;line-height:1.45;overflow-wrap:anywhere}
 #pVolc .vrow .vn{color:var(--c);letter-spacing:.06em}
 #pVolc .vrow a{color:var(--c);display:inline-flex;align-items:center;min-width:32px;min-height:32px;padding:0 4px;box-sizing:border-box}
+/* v0.4.7.2 BUOY: badge is a button (tap panel), 34px hit via pseudo; wave/wind tint from the NEXUS palette */
+#bBuoy{pointer-events:auto;cursor:pointer;position:relative}
+#bBuoy:focus-visible{outline:1px solid var(--c);outline-offset:1px}
+#bBuoy::before{content:'';position:absolute;left:0;right:0;top:50%;height:34px;transform:translateY(-50%)}
+@media(min-width:641px){#pBuoy{top:max(calc(58px + var(--safe-t)),var(--rail-top,0px))}}
+#pBuoy .disc{margin:0 0 8px;padding:6px 8px;border:1px solid var(--c);color:var(--c);font-size:11px;line-height:1.45}
+#pBuoy .stat span:last-child{text-align:right}
+#pBuoy button[data-close]{min-width:32px;min-height:32px}
+#pBuoy .bchips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+#pBuoy .bchips button{font:inherit;font-size:11px;letter-spacing:.08em;min-height:32px;padding:0 10px;background:transparent;border:1px solid #444;color:#9aa;cursor:pointer}
+#pBuoy .bchips button.on{border-color:var(--g);color:var(--g);box-shadow:0 0 8px rgba(0,255,135,.25)}
+#pBuoy .lvkey{display:flex;flex-wrap:wrap;gap:4px 10px;margin:4px 0 6px;font-size:10px;letter-spacing:.06em}
+#pBuoy .lvkey i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:-1px;box-shadow:0 0 6px currentColor;background:currentColor}
+#pBuoy .lvkey i.ring{background:transparent;border:2px solid currentColor;width:6px;height:6px;box-shadow:none}
+#pBuoy .brow{display:block;width:100%;text-align:left;font:inherit;font-size:11px;line-height:1.45;color:#b8ffe0;background:none;border:0;border-top:1px solid var(--chrome);padding:6px 0;min-height:32px;cursor:pointer;overflow-wrap:anywhere}
+#pBuoy .brow .vn{color:var(--c);letter-spacing:.06em}
+#pBuoy .brow .rg{color:var(--y);font-size:10px;letter-spacing:.1em}
+#pBuoy .vrow{padding:6px 0;border-top:1px solid var(--chrome);font-size:11px;line-height:1.45}
+#tip a.bl{pointer-events:auto;color:var(--c);display:inline-flex;align-items:center;min-height:32px}
 .sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 #cctvDock .meta,#cctvDock .meta .src,#cctvDock .meta .cn,#cctvDock .meta .cc,#cctvDock .meta .cx,#cctvDock .err,#cctvDock .cerr,#cctvDock .cerr span,#cctvDock .cpill{font-size:11px}
 #cctvDock .cpill{max-width:calc(100% - 12px);line-height:1.35;letter-spacing:.06em}
@@ -398,7 +417,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     <circle cx="48" cy="20" r="2" fill="#ffcc00"/>
   </svg>
   <div class="boot-title">NEXUS EYE</div>
-  <div class="boot-sub">SPATIAL INTEL · v0.4.9 · FIELD OPS</div>
+  <div class="boot-sub">SPATIAL INTEL · v0.4.10 · FIELD OPS</div>
   <div class="boot-log" id="bootLog"></div>
   <div class="boot-bar"><i id="bootBar"></i></div>
   <button class="boot-skip pe" id="bootSkip" type="button">SKIP BOOT ▸</button>
@@ -413,7 +432,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="#00ff87" stroke-width="1.5"/><circle cx="32" cy="32" r="18" fill="none" stroke="#60efff" stroke-width="1" opacity=".7"/><ellipse cx="32" cy="32" rx="28" ry="10" fill="none" stroke="#ff0080" stroke-width="1" opacity=".8"/><circle cx="32" cy="32" r="6" fill="#00ff87"/><circle cx="32" cy="32" r="2.5" fill="#07070a"/><circle cx="48" cy="20" r="2" fill="#ffcc00"/></svg>
       <div>
         <h1>NEXUS EYE</h1>
-        <div class="ver">v0.4.9 · OPERATOR // DOUBLEA · ANTMAN ASSIST</div>
+        <div class="ver">v0.4.10 · OPERATOR // DOUBLEA · ANTMAN ASSIST</div>
       </div>
     </div>
     <div class="badges">
@@ -426,6 +445,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <span class="badge off" id="bHaz">HAZ · …</span>
       <span class="badge off" id="bFire" role="button" tabindex="0" aria-controls="pFire" aria-describedby="fireSrDisc" title="NASA FIRMS MODIS C6.1 active-fire thermal hotspots (24h). Thermal detections, not ground truth. Off unless the link asks for it. Tap for the FIRE panel.">FIRE · OFF</span>
       <span class="badge off" id="bVolc" role="button" tabindex="0" aria-controls="pVolc" aria-describedby="volcSrDisc" title="USGS volcano alert levels and aviation color codes for monitored US volcanoes. Off unless the link asks for it. Tap for the VOLC panel.">VOLC · OFF</span>
+      <span class="badge off" id="bBuoy" role="button" tabindex="0" aria-controls="pBuoy" aria-describedby="buoySrDisc" title="NOAA NDBC buoy and coastal station observations. Off unless the link asks for it. Tap for the BUOY panel.">BUOY · OFF</span>
       <span class="badge off" id="bAlerts" title="NOAA / National Weather Service active alerts">ALERTS · …</span>
       <span class="badge pub" id="bSun" role="button" tabindex="0" aria-controls="pSun" title="Sun position computed in-browser from the device clock (NOAA low-precision solar equations, about 0.1°). Not a data feed. Tap for the SUN panel.">SUN · CALC</span>
       <span class="badge proto" id="bOrbit">ORBIT · KEPLER</span>
@@ -435,6 +455,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     <span class="sr" id="aurSrDisc">Aurora: NOAA SWPC OVATION is a model forecast of the chance of visible aurora about 30 to 90 minutes ahead, not a sighting.</span>
     <span class="sr" id="fireSrDisc">Fire: NASA FIRMS MODIS thermal detections over about 24 hours. Satellite hotspots, not ground truth.</span>
     <span class="sr" id="volcSrDisc">Volcano: official USGS alert levels and aviation color codes for monitored US volcanoes. Not a forecast. Catalog points are static context, not live activity.</span>
+    <span class="sr" id="buoySrDisc">Buoy: measured marine observations from NOAA National Data Buoy Center stations, each with its own observation time. Not a forecast.</span>
   </div>
 
   <div class="rail pe">
@@ -451,6 +472,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     <button class="rail-btn on" data-layer="haz" type="button">HAZ<span class="k" id="hazRailK">nasa eonet …</span></button>
     <button class="rail-btn toggle-off" data-layer="fire" type="button" title="Active-fire thermal hotspots: NASA FIRMS MODIS C6.1 24h via /api/fire. Thermal detections, not ground truth. Off unless the link asks for it (?layers=…,fire).">FIRE<span class="k" id="fireRailK">firms modis off · thermal detections · not ground truth</span></button>
     <button class="rail-btn toggle-off" data-layer="volc" type="button" title="Volcano watch: USGS alert levels + aviation color codes via /api/volc, Smithsonian GVP Holocene catalog as dim static context. Off unless the link asks for it (?layers=…,volc).">VOLC<span class="k" id="volcRailK">usgs volcano off · official alert levels</span></button>
+    <button class="rail-btn toggle-off" data-layer="buoy" type="button" title="Marine observations: NOAA NDBC buoys and coastal stations via /api/buoy (wind, waves, temperatures, pressure). Off unless the link asks for it (?layers=…,buoy).">BUOY<span class="k" id="buoyRailK">ndbc buoys off · marine obs</span></button>
     <button class="rail-btn on" data-layer="cctv" type="button">CCTV<span class="k">official public cams</span></button>
     <button class="rail-btn" id="btnCctvFilter" type="button" title="CCTV quick-filter: ALL → TX → US → INTL">TX<span class="k">cctv · texas</span></button>
     <button class="rail-btn" id="btnCctvAustin" type="button" title="CCTV filter: Austin, TX only (913 cams)">AUSTIN<span class="k">cctv · austin</span></button>
@@ -483,6 +505,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <div class="stat"><span>HAZ</span><span id="hazOpsV">… · NASA EONET fires / storms / volcanoes</span></div>
       <div class="stat"><span>FIRE</span><span id="fireOpsV">OFF · NASA FIRMS MODIS C6.1 thermal hotspots (24h) · thermal detections · not ground truth</span></div>
       <div class="stat"><span>VOLC</span><span id="volcOpsV">OFF · USGS volcano alert levels + aviation color codes · official USGS alert levels · US-monitored volcanoes · not a forecast</span></div>
+      <div class="stat"><span>BUOY</span><span id="buoyOpsV">OFF · NOAA NDBC buoy + coastal station observations · measured marine observations · not a forecast</span></div>
       <div class="stat"><span>ALERTS</span><span id="alertsOpsV">… · NOAA / NWS active alerts · TX first</span></div>
       <div class="stat"><span>CCTV</span><span>8,334-cam official public catalog · LIVE count = source-time verified only · TX TxDOT / TranStar / Austin · US NYC / Caltrans / ODOT · INTL</span></div>
       <div class="stat"><span>ORBIT</span><span>KEPLER · scout craft</span></div>
@@ -562,6 +585,29 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     </div>
   </div>
 
+  <div class="panel pe" id="pBuoy" role="dialog" aria-label="Marine buoy observations">
+    <div class="panel-h">BUOY · NDBC <button type="button" data-close="buoy" aria-label="Close buoy panel">✕</button></div>
+    <div class="panel-b">
+      <p class="disc" id="buoyPDisc">MEASURED OBSERVATIONS · NOT A FORECAST. Each station reports on its own schedule; every value shows its own observation time. Missing values stay missing. For marine decisions use weather.gov marine forecasts and the NDBC station pages.</p>
+      <div class="stat"><span>STATUS</span><span id="buoyPSt">…</span></div>
+      <div class="stat"><span>SOURCE</span><span id="buoyPSrc">…</span></div>
+      <div class="stat"><span>STATIONS</span><span id="buoyPCount">…</span></div>
+      <div class="stat"><span>REGIONS</span><span id="buoyPRegion">…</span></div>
+      <div class="stat"><span>FRESHEST OBS</span><span id="buoyPNew">…</span></div>
+      <div class="stat"><span>MEDIAN OBS</span><span id="buoyPMed">…</span></div>
+      <div class="stat"><span>OLDEST OBS</span><span id="buoyPOld">…</span></div>
+      <div class="stat"><span>NDBC FILE</span><span id="buoyPFile">…</span></div>
+      <div class="stat"><span>PULLED</span><span id="buoyPAge">…</span></div>
+      <div class="stat"><span>NEXT PULL</span><span id="buoyPNext">…</span></div>
+      <div class="bchips" role="group" aria-label="Buoy filter"><button type="button" data-buoy-filter="ALL" aria-pressed="true">ALL</button><button type="button" data-buoy-filter="GULF" aria-pressed="false">GULF</button><button type="button" data-buoy-filter="TX" aria-pressed="false">TX</button></div>
+      <div class="bchips" role="group" aria-label="Buoy dot color"><button type="button" data-buoy-tint="wave" aria-pressed="true">TINT · WAVES</button><button type="button" data-buoy-tint="wind" aria-pressed="false">TINT · WIND</button></div>
+      <div class="lvkey" id="buoyPKey"></div>
+      <div style="margin-top:4px;letter-spacing:.14em;font-size:10px;color:var(--c)">STATIONS · TEXAS FIRST</div>
+      <div id="buoyPList"></div>
+      <p style="margin-top:8px;opacity:.75">Source: NOAA National Data Buoy Center latest observations (keyless public file), mirrored through the NEXUS /api/buoy function. Not affiliated with or endorsed by NOAA or NDBC. LIVE needs a pull no more than 50 min old and a median station observation no more than 3 h old; dimmed dots are stations whose own observation is older than 3 h. Wind m/s (knots in brackets), waves m, temperatures °C, pressure hPa.</p>
+    </div>
+  </div>
+
   <div class="panel pe" id="pAntman">
     <div class="panel-h">ANTMAN CONSOLE <button type="button" data-close="antman">✕</button></div>
     <div class="panel-b" id="antmanFeed"></div>
@@ -587,7 +633,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
           <li>Netlify-ready · /api/air function · keyless local HTML</li>
           <li>Direct action · verify everything · no fluff</li>
         </ul>
-        <div class="contact">NEXUS EYE v0.4.9 · ORIGINAL</div>
+        <div class="contact">NEXUS EYE v0.4.10 · ORIGINAL</div>
       </div>
       <p style="margin-top:12px;opacity:.7;font-size:10px">Tip: open HIRE, zoom Earth, tap a CCTV marker, screenshot the HUD.</p>
     </div>
@@ -652,7 +698,7 @@ const TEX={
 
 
 /* ---- Freshness (LIVE / STALE / OFFLINE ages) ---- */
-const STALE_MS={alerts:10*60*1000,haz:30*60*1000,fire:50*60*1000,volc:50*60*1000,quake:8*60*1000,iss:25*1000,wx:15*60*1000,air:45*1000,cctv:3*60*1000,sats:6*60*60*1000,launch:6*60*60*1000,aur:25*60*1000};
+const STALE_MS={alerts:10*60*1000,haz:30*60*1000,fire:50*60*1000,volc:50*60*1000,buoy:50*60*1000,quake:8*60*1000,iss:25*1000,wx:15*60*1000,air:45*1000,cctv:3*60*1000,sats:6*60*60*1000,launch:6*60*60*1000,aur:25*60*1000};
 const fresh={
   quake:{okAt:0,failAt:0,label:'QUAKE',count:''},
   iss:{okAt:0,failAt:0,label:'ISS',count:''},
@@ -660,6 +706,7 @@ const fresh={
   haz:{okAt:0,failAt:0,label:'HAZ',count:''},
   fire:{okAt:0,failAt:0,label:'FIRE',count:''},
   volc:{okAt:0,failAt:0,label:'VOLC',count:''},
+  buoy:{okAt:0,failAt:0,label:'BUOY',count:''},
   air:{okAt:0,failAt:0,label:'AIR',count:'',mode:'proto'},
   cctv:{okAt:0,failAt:0,label:'CCTV',count:''},
   alerts:{okAt:0,failAt:0,label:'ALERTS',count:''},
@@ -671,6 +718,8 @@ const fresh={
 var fireS={list:[],pts:null,peak:0,err:'',inflight:false,lastTry:0,reqN:0,failN:0,nextAt:0,rl:false,waitMs:0,skipN:0,pullAt:0,source:'',window:'',sel:null};
 /* v0.4.8 VOLC state — declared early (paintBadgeAge runs during init) */
 var volcS={list:[],elevated:[],catList:[],catOk:false,catErr:'',catAt:'',counts:{NORMAL:0,ADVISORY:0,WATCH:0,WARNING:0},pts:null,cat:null,rings:[],err:'',inflight:false,lastTry:0,reqN:0,failN:0,nextAt:0,rl:false,waitMs:0,skipN:0,pullAt:0,sourceName:'',upStale:false};
+/* v0.4.10 BUOY state — declared early (paintBadgeAge runs during init) */
+var buoyS={list:[],counts:{TX:0,GULF:0,ALL:0},stats:null,noPos:0,newest:NaN,median:NaN,oldest:NaN,srcMod:NaN,pts:null,err:'',serverErr:'',inflight:false,lastTry:0,reqN:0,failN:0,nextAt:0,rl:false,waitMs:0,skipN:0,pullAt:0,upStale:false,filter:'ALL',tint:'wave',drawnAt:0};
 /* v0.4.3 AURORA state — declared early (paintBadgeAge runs during init) */
 var aurS={grid:null,obs:0,fc:0,kp:null,kpAt:0,kpErr:'',err:'',inflight:false,lastTry:0,n:0,max:0,pts:null,reqN:0,failN:0,nextAt:0,rl:false,waitMs:0,skipN:0,rows:0,bad:0,pullAt:0};
 /* v0.4.1 LAUNCH state — declared early (paintBadgeAge runs during init) */
@@ -720,6 +769,7 @@ function paintBadgeAge(){
   paintAurBadge(now);
   paintFireBadge(now);
   paintVolcBadge(now);
+  paintBuoyBadge(now);
   /* QUAKE */
   (function(){
     const el=document.getElementById('bQuake');const f=fresh.quake;
@@ -846,7 +896,7 @@ setInterval(paintBadgeAge,1000);
 /* ---- Share deep-links ?lat=&lon=&alt=&layers= ---- */
 let shareLat=null,shareLon=null,shareSilent=false;
 function layerList(){
-  return ['mesh','sun','aur','quake','iss','sats','launch','orbit','air','wx','haz','fire','volc','cctv','alerts'].filter(k=>layers[k]).join(',');
+  return ['mesh','sun','aur','quake','iss','sats','launch','orbit','air','wx','haz','fire','volc','buoy','cctv','alerts'].filter(k=>layers[k]).join(',');
 }
 function aimAt(lat,lon,alt,snap){
   /* Camera on +Z. three r128 DEFAULT Euler XYZ ≡ Rx∘Ry. Keep order unset.
@@ -863,7 +913,7 @@ function aimAt(lat,lon,alt,snap){
 function applyLayersCSV(csv){
   if(!csv)return;
   const want=new Set(String(csv).split(',').map(s=>s.trim().toLowerCase()).filter(Boolean));
-  ['mesh','sun','aur','quake','iss','sats','launch','orbit','air','wx','haz','fire','volc','cctv','alerts'].forEach(k=>{
+  ['mesh','sun','aur','quake','iss','sats','launch','orbit','air','wx','haz','fire','volc','buoy','cctv','alerts'].forEach(k=>{
     const on=want.has(k);
     layers[k]=on;
     const btn=document.querySelector('.rail-btn[data-layer="'+k+'"]');
@@ -881,6 +931,7 @@ function applyLayersCSV(csv){
     if(k==='haz')gHaz.visible=on;
     if(k==='fire'){gFire.visible=on;if(on&&bootDone)fireLoad('user');}
     if(k==='volc'){gVolc.visible=on;if(on&&bootDone)volcLoad('user');}
+    if(k==='buoy'){gBuoy.visible=on;if(on&&bootDone)buoyLoad('user');}
     if(k==='cctv'){gCctv.visible=on;if(on&&typeof cctvLoadPack==='function')cctvLoadPack();}
     if(k==='alerts'){gAlerts.visible=on;if(on)alertsMaybeLoad();else alertsDockClose();}
   });
@@ -905,6 +956,7 @@ function parseDeepLink(){
     if(one==='alerts'||af==='TX'){if(!layers.alerts)applyLayersCSV(layerList()+',alerts');}
     if(af==='TX')alertsApplyFilter('TX',true);
     if(one==='alerts'){if(lat==null||lon==null)aimAt(CCTV_AIM.TX[0],CCTV_AIM.TX[1],alt!=null&&Number.isFinite(+alt)?+alt:2.6,true);alertsOpenList();}
+    const bf=(p.get('buoy')||'').trim().toUpperCase();if(bf==='GULF'||bf==='TX')buoySetFilter(bf); /* v0.4.10 */
   }catch(e){}
 }
 function writeDeepLink(force){
@@ -918,6 +970,7 @@ function writeDeepLink(force){
   q.set('layers',layerList());
   if(typeof cctvFilter!=='undefined'&&cctvFilter!=='ALL')q.set('cctv',cctvFilter.toLowerCase());
   if(typeof alertsFilter!=='undefined'&&alertsFilter==='TX')q.set('alerts','tx');
+  if(layers.buoy&&buoyS.filter!=='ALL')q.set('buoy',buoyS.filter.toLowerCase());
   const next=location.pathname+location.hash.split('?')[0]+'?'+q.toString();
   const cur=location.pathname+location.search;
   if(!force&&cur.endsWith('?'+q.toString()))return;
@@ -937,10 +990,11 @@ const bootEl=document.getElementById('boot');
 const bootLog=document.getElementById('bootLog');
 const bootBar=document.getElementById('bootBar');
 const lines=[
-  'NEXUS EYE KERNEL · v0.4.9',
+  'NEXUS EYE KERNEL · v0.4.10',
   'FEED · NOAA SWPC OVATION AURORA + Kp · STANDBY (rail AURORA or ?layers=…,aur)',
   'FEED · NASA FIRMS MODIS FIRE · STANDBY (rail FIRE or ?layers=…,fire)',
   'FEED · USGS VOLCANO WATCH · STANDBY (rail VOLC or ?layers=…,volc)',
+  'FEED · NOAA NDBC BUOYS · STANDBY (rail BUOY or ?layers=…,buoy)',
   'FEED · NOAA / NWS ALERTS api.weather.gov · LIVE ARM · TX FIRST',
   'PALETTE LOCK · #00ff87 #60efff #ff0080 #ffcc00',
   'MESH · BLUE MARBLE + NIGHT + CLOUDS + ATMOS',
@@ -984,6 +1038,7 @@ function finishBoot(){
   if(layers.aur)aurLoad('boot');
   if(layers.fire)fireLoad('boot');
   if(layers.volc)volcLoad('boot');
+  if(layers.buoy)buoyLoad('boot');
   loadQuakes();
   loadIss();
   if(layers.sats)satsLoad('boot');
@@ -1135,10 +1190,11 @@ const gWx=new THREE.Group();root.add(gWx);
 const gHaz=new THREE.Group();root.add(gHaz);
 const gFire=new THREE.Group();gFire.visible=false;root.add(gFire); /* v0.4.4: FIRE off unless the link or the rail turns it on */
 const gVolc=new THREE.Group();gVolc.visible=false;root.add(gVolc); /* v0.4.8: VOLC off unless the link or the rail turns it on */
+const gBuoy=new THREE.Group();gBuoy.visible=false;root.add(gBuoy); /* v0.4.10: BUOY off unless the link or the rail turns it on */
 const gCctv=new THREE.Group();root.add(gCctv);
 const gAur=new THREE.Group();gAur.visible=false;root.add(gAur); /* R2 AU-7: AURORA is off unless the link or the rail turns it on */
 
-const layers={mesh:true,sun:true,aur:false,quake:true,iss:true,sats:true,launch:true,orbit:true,air:true,wx:true,haz:true,fire:false,volc:false,cctv:true,alerts:true};
+const layers={mesh:true,sun:true,aur:false,quake:true,iss:true,sats:true,launch:true,orbit:true,air:true,wx:true,haz:true,fire:false,volc:false,buoy:false,cctv:true,alerts:true};
 
 /* ==== SUN v0.4.2 — real-time day/night terminator (computed in-browser, no network) ====
    Subsolar point from NOAA low-precision solar equations (~0.1°). Key light follows the real sun;
@@ -3262,15 +3318,34 @@ setInterval(()=>{if(bootDone)antmanSay(pick(ANTMAN.idle));},30000);
 
 /* glassfix #6: setTicker(text, holdMs). A held message (CCTV filter, 20s) can't be overwritten by feed chatter;
    a fresh user action (input after the hold started, within 1.5s) still can. */
+/* v0.4.10: a selected marker (BUOY card, etc.) owns the ticker until the card closes or the layer turns off. */
+var tickerSelection=null;
 let tickerHoldUntil=0,tickerHoldAt=0,tickerInputAt=0;
 ['pointerdown','keydown'].forEach(ev=>addEventListener(ev,()=>{tickerInputAt=Date.now();},{capture:true,passive:true}));
+function tickerWrite(t){const tk=document.getElementById('ticker');if(!tk)return;tk.textContent=t;
+  if(!/^AIR(?: · | )(LIVE|STALE|OFFLINE)/.test(t))tk.__airKey=null;}
+function tickerSelectionActive(){
+  if(!tickerSelection)return false;
+  if(tickerSelection.alive&&!tickerSelection.alive()){tickerSelection=null;return false;}
+  return true;}
+function tickerPaintSelection(){
+  if(!tickerSelectionActive())return false;
+  const t=tickerSelection.read?tickerSelection.read():tickerSelection.text;
+  if(t==null){tickerSelection=null;return false;}
+  tickerWrite(t);return true;}
+function tickerSelect(kind,key,text,alive,read){
+  tickerSelection={kind,key,text,alive,read};tickerHoldUntil=0;tickerPaintSelection();}
+function tipTickerSelect(kind,key,text,read){
+  tip.dataset.tickerKind=kind;tip.dataset.tickerKey=String(key);
+  tickerSelect(kind,String(key),text,()=>tip.style.display==='block'&&tip.dataset.tickerKind===kind&&tip.dataset.tickerKey===String(key)&&layers[kind]!==false,read);}
 function setTicker(t,holdMs){
+  if(tickerPaintSelection())return;
   const now=Date.now();
   if(!holdMs&&now<tickerHoldUntil&&!(tickerInputAt>tickerHoldAt&&now-tickerInputAt<1500))return;
-  document.getElementById('ticker').textContent=t;
+  tickerWrite(t);
   if(holdMs){tickerHoldUntil=now+holdMs;tickerHoldAt=now;}else if(now<tickerHoldUntil)tickerHoldUntil=0;
 }
-const panels={ops:document.getElementById('pOps'),antman:document.getElementById('pAntman'),hire:document.getElementById('pHire'),sun:document.getElementById('pSun'),aur:document.getElementById('pAur'),fire:document.getElementById('pFire'),volc:document.getElementById('pVolc'),cctvLive:document.getElementById('pCctvLive'),cctvCity:document.getElementById('pCctvCity')};
+const panels={ops:document.getElementById('pOps'),antman:document.getElementById('pAntman'),hire:document.getElementById('pHire'),sun:document.getElementById('pSun'),aur:document.getElementById('pAur'),fire:document.getElementById('pFire'),volc:document.getElementById('pVolc'),buoy:document.getElementById('pBuoy'),cctvLive:document.getElementById('pCctvLive'),cctvCity:document.getElementById('pCctvCity')};
 /* R2 SU-2/N5: SUN badge → SUN panel (works on touch: no hover needed). The badge is a DOM element above the canvas, so the tap never reaches the globe. */
 (function(){const b=document.getElementById('bSun');if(!b)return;
   b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();sunPanelToggle();});
@@ -3287,6 +3362,10 @@ const panels={ops:document.getElementById('pOps'),antman:document.getElementById
 (function(){const b=document.getElementById('bVolc');if(!b)return;
   b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();volcPanelToggle();});
   b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();volcPanelToggle();}});})();
+/* v0.4.10 BUOY: badge → BUOY panel */
+(function(){const b=document.getElementById('bBuoy');if(!b)return;
+  b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();buoyPanelToggle();});
+  b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();buoyPanelToggle();}});})();
 document.querySelectorAll('.rail-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     if(btn.dataset.layer){
@@ -3307,6 +3386,7 @@ document.querySelectorAll('.rail-btn').forEach(btn=>{
       if(k==='haz'){gHaz.visible=layers.haz;if(!layers.haz&&/^HAZ/.test(tip.textContent||''))tip.style.display='none';}
       if(k==='fire'){gFire.visible=layers.fire;if(layers.fire)fireLoad('user');else{if(/^FIRE/.test(tip.textContent||''))tip.style.display='none';const pf=document.getElementById('pFire');if(pf)pf.classList.remove('open');}paintBadgeAge();setTicker(layers.fire?'FIRE · on · NASA FIRMS MODIS':'FIRE · off');}
       if(k==='volc'){gVolc.visible=layers.volc;if(layers.volc)volcLoad('user');else{if(/^VOLC/.test(tip.textContent||''))tip.style.display='none';const pv=document.getElementById('pVolc');if(pv)pv.classList.remove('open');}paintBadgeAge();setTicker(layers.volc?'VOLC · on · USGS volcano watch':'VOLC · off');}
+      if(k==='buoy'){gBuoy.visible=layers.buoy;if(layers.buoy)buoyLoad('user');else{if(/^BUOY/.test(tip.textContent||''))tip.style.display='none';const pb=document.getElementById('pBuoy');if(pb)pb.classList.remove('open');}paintBadgeAge();setTicker(layers.buoy?'BUOY · on · NOAA NDBC':'BUOY · off');}
       if(k==='alerts'){gAlerts.visible=layers.alerts;if(layers.alerts){if(!alertsInflight&&Date.now()-alertsLastTry>=ALERTS_EVERY)loadAlerts(true);}else alertsDockClose();paintBadgeAge();}
       if(k==='cctv'){gCctv.visible=layers.cctv;if(!layers.cctv)cctvClose();else cctvLoadPack();paintBadgeAge(); /* R4 N-r3a: badge flips PAUSED/back at once */}
       writeDeepLink(true);
@@ -3433,6 +3513,7 @@ function pickEntity(clientX,clientY,pre){
   const satD=satsPickNow?satsPickNow.d:Infinity;
   const lnPick=pre&&('lp' in pre)?pre.lp:lnScreenPick(clientX,clientY,touch?20:12),lnD=lnPick?lnPick.d:Infinity;
   const vp=layers.volc?volcScreenPick(clientX,clientY,touch?16:10):null,vpD=vp?vp.d:Infinity; /* v0.4.8 VOLC */
+  const bp=layers.buoy?buoyScreenPick(clientX,clientY,touch?16:9):null,bpD=bp?bp.d:Infinity; /* v0.4.10 BUOY */
   const ent=pickOtherInfo(clientX,clientY),entD=ent?ent.d:Infinity;
   let act='none',rule='empty';
   const near=[];
@@ -3441,6 +3522,7 @@ function pickEntity(clientX,clientY,pre){
   if(satD<=TAP_TIGHT)near.push(['sat',satD]);
   if(lnD<=TAP_TIGHT)near.push(['launch',lnD]);
   if(vp&&!vp.cat&&vpD<=TAP_TIGHT)near.push(['volc',vpD]);
+  if(bp&&bpD<=TAP_TIGHT)near.push(['buoy',bpD]);
   near.sort((p,q)=>p[1]-q[1]);
   if(ah&&ah.exact){if(near.length){act=near[0][0];rule='in-polygon · point object <=6px';}else{act='alert';rule='in-polygon · alert';}}
   else if(near.length){act=near[0][0];rule='point object <=6px';}
@@ -3462,6 +3544,7 @@ function pickEntity(clientX,clientY,pre){
   if(act!=='launch')lnCardClose(); /* S3: an empty tap or any other pick deselects the satellite (clears ring + track) */
   const firePick=layers.fire?fireScreenPick(clientX,clientY,touch?12:8):null;
   if(act==='none'&&firePick){act='fire';rule='hotspot before static catalog';if(alertsLastTap){alertsLastTap.act=act;alertsLastTap.rule=rule;}}
+  if(act==='none'&&bp&&!(vp&&!vp.cat&&vpD<bpD)){act='buoy';rule='buoy radius';if(alertsLastTap){alertsLastTap.act=act;alertsLastTap.rule=rule;}}
   if(act==='none'&&vp){act='volc';rule=vp.cat?'catalog dot':'volcano radius';if(alertsLastTap){alertsLastTap.act=act;alertsLastTap.rule=rule;}}
   if(act==='fire'){
     const u=firePick.f;
@@ -3476,6 +3559,7 @@ function pickEntity(clientX,clientY,pre){
     antmanSay(pick(ANTMAN.click));
     return;
   }
+  if(act==='buoy'){buoyOpenCard(bp.s,clientX,clientY);antmanSay(pick(ANTMAN.click));return;}
   if(act==='volc'){
     const v=vp.v,vs=volcStatus(Date.now());
     tip.style.display='block';
@@ -3750,6 +3834,7 @@ function frame(now){
   if(bootDone&&layers.aur&&!aurS.inflight&&!document.hidden&&Date.now()>=aurS.nextAt)aurLoad('sched'); /* R2: nextAt = 10 min after a good pull; 10/20/30 min (cap) after failures; never before a 429 Retry-After */
   if(bootDone&&layers.fire&&!fireS.inflight&&!document.hidden&&Date.now()>=fireS.nextAt)fireLoad('sched'); /* v0.4.4: ~15 min poll; backoff on failures */
   if(bootDone&&layers.volc&&!volcS.inflight&&!document.hidden&&Date.now()>=volcS.nextAt)volcLoad('sched'); /* v0.4.8: ~15 min poll; backoff on failures */
+  if(bootDone&&layers.buoy&&!buoyS.inflight&&!document.hidden&&Date.now()>=buoyS.nextAt)buoyLoad('sched'); /* v0.4.10: ~15 min poll; backoff 15/30/45/60 min; Retry-After */
   if(layers.fire&&fireS.pts)fireS.pts.material.opacity=0.82+0.18*Math.sin(now*0.0013);
   if(layers.aur&&aurS.pts)aurS.pts.material.opacity=0.78+0.22*Math.sin(now*0.0011);
   if(bootDone&&now-lastIssPoll>8000){lastIssPoll=now;loadIss();}
@@ -4153,6 +4238,284 @@ window.__nexusVolc={
   shift:ms=>{if(fresh.volc.okAt)fresh.volc.okAt-=ms;if(fresh.volc.failAt)fresh.volc.failAt-=ms;volcS.pullAt=Math.max(0,volcS.pullAt-ms);volcS.nextAt=Math.max(0,volcS.nextAt-ms);paintBadgeAge();}
 };
 /* ==== /VOLC ==== */
+/* ==== BUOY v0.4.10 — marine observations · original NEXUS architecture (ported from staged v0.4.7.2) ====
+   Source: NOAA National Data Buoy Center latest observations (keyless), mirrored through the NEXUS /api/buoy function
+   (the NDBC host sends no CORS header). Every station carries its own UTC observation time.
+   Off by default. LIVE only when the last pull is fresh (server pull ≤ 50 min old, not server-held last-good) AND the
+   median station observation is ≤ 3 h old. Otherwise STALE (last-good kept, with the reason). OFFLINE if nothing ever
+   loaded: nothing drawn. "MM" from NDBC stays missing — never invented, never interpolated. */
+var BUOY_POLL=15*60e3,BUOY_BACKOFF_CAP=60*60e3,BUOY_OBS_LIVE_MS=3*3600e3,BUOY_LIST_MAX=80;
+var BUOY_HEX={g:'#00ff87',c:'#60efff',y:'#ffcc00',p:'#ff0080',none:'#7a8a96'};
+var BUOY_DISC='measured marine observations · not a forecast';
+var buoyWorld=new THREE.Vector3(),buoyNdc=new THREE.Vector3(),buoyRay=new THREE.Vector3();
+var BUOY_KEYS=['wdir','wspd','gst','wvht','dpd','apd','mwd','pres','ptdy','atmp','wtmp','dewp','vis','tide'];
+function buoyRegion(lat,lon){
+  /* approximate boxes, documented in the README: TX coast/offshore; Gulf of Mexico (Yucatan Channel cut-off) */
+  if(lat>=25.8&&lat<=30.2&&lon>=-97.9&&lon<=-93.5)return 'TX';
+  if(lat>=18&&lat<=31&&lon>=-98&&lon<=-81&&!(lat<21.5&&lon>-87))return 'GULF';
+  return '';}
+function buoyNum(v){return typeof v==='number'&&Number.isFinite(v)?v:null;}
+function buoyValidate(j){
+  if(!j||j.ok!==true||!Array.isArray(j.stations))throw new Error('malformed buoy payload');
+  if(!j.stations.length)throw new Error('malformed buoy payload: 0 stations');
+  if(!Number.isFinite(Date.parse(j.pulledAt||'')))throw new Error('malformed buoy payload: no pull time');
+  const now=Date.now();
+  if(Date.parse(j.pulledAt)>now)throw new Error('malformed buoy payload: future pull time');
+  let good=0;
+  for(const s of j.stations){
+    if(!s||typeof s!=='object'||Array.isArray(s))throw new Error('malformed buoy row');
+    if(typeof s.id!=='string'||!/^[A-Z0-9]{3,8}$/.test(s.id))throw new Error('malformed buoy station id');
+    if(typeof s.t!=='string'||!Number.isFinite(Date.parse(s.t)))throw new Error('malformed buoy observation time');
+    if(Date.parse(s.t)>now)throw new Error('malformed buoy observation time: future');
+    for(const k of BUOY_KEYS)if(s[k]!=null&&buoyNum(s[k])==null)throw new Error('malformed buoy value '+k);
+    if(buoyNum(s.lat)!=null&&buoyNum(s.lon)!=null&&Math.abs(s.lat)<=90&&Math.abs(s.lon)<=180)good++;
+  }
+  if(!good)throw new Error('malformed buoy payload: no station with a position');
+}
+function buoyTint(s,mode){
+  if(mode==='wind'){const v=s.wspd;if(v==null)return BUOY_HEX.none;const kt=v*1.943844;return kt<10?BUOY_HEX.g:kt<20?BUOY_HEX.c:kt<30?BUOY_HEX.y:BUOY_HEX.p;}
+  const v=s.wvht;if(v==null)return BUOY_HEX.none;return v<1?BUOY_HEX.g:v<2?BUOY_HEX.c:v<4?BUOY_HEX.y:BUOY_HEX.p;}
+function buoyTex(kind){const key='_tex_'+kind;if(buoyS[key])return buoyS[key];const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');
+  /* white core (tinted by vertex color) + black outline (stays black) so dots read on bright ocean and dark night side */
+  x.lineWidth=5;x.strokeStyle='rgba(0,0,0,.85)';
+  if(kind==='ring'){x.beginPath();x.arc(32,32,19,0,Math.PI*2);x.stroke();x.lineWidth=6;x.strokeStyle='rgba(255,255,255,1)';x.beginPath();x.arc(32,32,15,0,Math.PI*2);x.stroke();}
+  else{x.fillStyle='rgba(255,255,255,1)';x.beginPath();x.arc(32,32,18,0,Math.PI*2);x.fill();x.stroke();}
+  buoyS[key]=new THREE.CanvasTexture(c);return buoyS[key];}
+function buoyClear(){for(const k of ['pts','hollow'])if(buoyS[k]){gBuoy.remove(buoyS[k]);buoyS[k].geometry.dispose();buoyS[k].material.dispose();buoyS[k]=null;}}
+function buoyShown(){const f=buoyS.filter;return f==='ALL'?buoyS.list:buoyS.list.filter(s=>f==='TX'?s.region==='TX':!!s.region);}
+function buoyHasTint(s,mode){return mode==='wind'?s.wspd!=null:s.wvht!=null;}
+function buoyDraw(){
+  buoyClear();const now=Date.now(),sets={pts:{pos:[],col:[]},hollow:{pos:[],col:[]}};
+  for(const s of buoyShown()){const k=buoyHasTint(s,buoyS.tint)?'pts':'hollow',P=latLonToVec3(s.lat,s.lon,1.009);sets[k].pos.push(P.x,P.y,P.z);
+    const c=new THREE.Color(k==='pts'?buoyTint(s,buoyS.tint):BUOY_HEX.c),old=now-s.at>BUOY_OBS_LIVE_MS;if(old)c.multiplyScalar(.45);sets[k].col.push(c.r,c.g,c.b);}
+  for(const k of ['pts','hollow']){const S0=sets[k];if(!S0.pos.length)continue;
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(S0.pos,3));g.setAttribute('color',new THREE.Float32BufferAttribute(S0.col,3));
+    const m=new THREE.PointsMaterial({size:k==='pts'?0.05:0.044,map:buoyTex(k==='pts'?'dot':'ring'),vertexColors:true,transparent:true,opacity:k==='pts'?1:.8,alphaTest:.05,depthWrite:false,sizeAttenuation:true});
+    buoyS[k]=new THREE.Points(g,m);buoyS[k].renderOrder=8;buoyS[k].userData={type:'buoy'};gBuoy.add(buoyS[k]);}
+  buoyS.drawnAt=now;}
+function buoyBuild(j){
+  /* validate the whole payload before destroying last-good geometry */
+  buoyValidate(j);
+  const list=[];let noPos=0;
+  for(const s0 of j.stations){
+    const lat=buoyNum(s0.lat),lon=buoyNum(s0.lon);
+    if(lat==null||lon==null||Math.abs(lat)>90||Math.abs(lon)>180){noPos++;continue;}
+    const s={id:s0.id,lat,lon,t:s0.t,at:Date.parse(s0.t),region:buoyRegion(lat,lon)};
+    for(const k of BUOY_KEYS)s[k]=buoyNum(s0[k]);
+    list.push(s);}
+  const rk=r=>r==='TX'?0:r==='GULF'?1:2;
+  const nowB=Date.now(),od=x=>nowB-x.at>BUOY_OBS_LIVE_MS?1:0; /* Texas, then Gulf, then the rest; fresh obs before old; bigger waves first */
+  list.sort((a,b)=>rk(a.region)-rk(b.region)||od(a)-od(b)||((b.wvht==null?-1:b.wvht)-(a.wvht==null?-1:a.wvht))||a.id.localeCompare(b.id));
+  const ts=list.map(s=>s.at).filter(Number.isFinite).sort((a,b)=>a-b);
+  buoyS.list=list;buoyS.noPos=noPos+((j.stats&&+j.stats.noPosition)||0);
+  buoyS.stats=j.stats&&typeof j.stats==='object'?j.stats:null;
+  buoyS.newest=ts.length?ts[ts.length-1]:NaN;buoyS.oldest=ts.length?ts[0]:NaN;
+  buoyS.median=ts.length?(ts.length%2?ts[ts.length>>1]:Math.round((ts[(ts.length>>1)-1]+ts[ts.length>>1])/2)):NaN;
+  buoyS.srcMod=Date.parse(j.sourceModified||'');
+  buoyS.counts={TX:list.filter(s=>s.region==='TX').length,GULF:list.filter(s=>s.region).length,ALL:list.length};
+  buoyDraw();}
+function buoyVisible(w){const C=camera.position;buoyRay.copy(w).sub(C);const L=buoyRay.length();if(L<1e-6)return true;buoyRay.divideScalar(L);
+  const b=C.dot(buoyRay),cc=C.lengthSq()-1,disc=b*b-cc;if(disc<0)return true;const t=-b-Math.sqrt(disc);return !(t>0&&t<L);}
+function buoyProject(s){buoyWorld.copy(latLonToVec3(s.lat,s.lon,1.009)).applyMatrix4(root.matrixWorld);const vis=buoyVisible(buoyWorld);
+  buoyNdc.copy(buoyWorld).project(camera);return {x:(buoyNdc.x+1)/2*innerWidth,y:(1-buoyNdc.y)/2*innerHeight,vis:vis&&buoyNdc.z<=1};}
+function buoyScreenPick(cx,cy,R){
+  if(!layers.buoy||!(buoyS.pts||buoyS.hollow)||!buoyS.list.length)return null;
+  root.updateMatrixWorld(true);let best=null,bd=R==null?9:R;
+  for(const s of buoyShown()){const p=buoyProject(s);if(!p.vis)continue;const d=Math.hypot(p.x-cx,p.y-cy);if(d<bd){bd=d;best=s;}}
+  return best?{s:best,d:bd}:null;}
+function buoyWhen(ms){if(!Number.isFinite(ms))return '—';
+  try{return new Date(ms).toLocaleString('en-US',{timeZone:'America/Chicago',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).replace(',','')+' CT';}catch(e){return new Date(ms).toISOString();}}
+function buoyAge(ms,now){if(!Number.isFinite(ms))return '';const a=(now||Date.now())-ms;return a<0?'ahead of clock':ageStr(a)+' ago';}
+function buoyStatus(now){const f=fresh.buoy;now=now||Date.now();
+  if(!layers.buoy)return {st:'OFF',cls:'off',age:null,why:''};
+  if(!f.okAt)return {st:f.failAt?'OFFLINE':'…',cls:'off',age:null,why:''};
+  const pull=now-f.okAt,obs=Number.isFinite(buoyS.median)?now-buoyS.median:Infinity;let why='';
+  if(f.failAt>f.okAt)why='refresh failed';else if(buoyS.upStale)why='server holding last-good'+(buoyS.serverErr?' ('+buoyS.serverErr+')':'');
+  else if(pull<0)why='pull ahead of clock';else if(pull>STALE_MS.buoy)why='pull '+ageStr(pull)+' old';else if(!(obs<=BUOY_OBS_LIVE_MS))why=Number.isFinite(obs)?'median obs '+ageStr(obs)+' old (>3h)':'no observation time';
+  else if(obs<0)why='median obs ahead of clock';
+  return {st:why?'STALE':'LIVE',cls:why?'stale':'live',age:Number.isFinite(obs)?Math.max(0,obs):pull,pull,why};}
+function buoyReason(s){return (buoyS.err?' · '+buoyS.err+(fresh.buoy.okAt?' · holding last-good':''):'')+(s&&s.why&&!buoyS.err?' · '+s.why:'');}
+function buoyTicker(){const s=buoyStatus(Date.now());return 'BUOY · NDBC '+s.st+' · '+buoyS.list.length+' stations · TX '+(buoyS.counts.TX||0)+' · GULF '+(buoyS.counts.GULF||0)+buoyReason(s);}
+function bF(c){return c==null?'—':Math.round(c*9/5+32)+' °F';}
+function bV(v,d){return v==null?null:(d==null?v:v.toFixed(d));}
+function buoyRowsHtml(s){
+  const kt=v=>v==null?'':' ('+Math.round(v*1.943844)+' kt)',ft=v=>v==null?'':' ('+(v*3.28084).toFixed(1)+' ft)';
+  const L=[];
+  if(s.wspd!=null||s.wdir!=null||s.gst!=null)L.push('Wind '+(s.wdir!=null?s.wdir+'° ':'')+(s.wspd!=null?bV(s.wspd,1)+' m/s'+kt(s.wspd):'— m/s')+(s.gst!=null?' · gust '+bV(s.gst,1)+' m/s'+kt(s.gst):''));
+  if(s.wvht!=null||s.dpd!=null||s.apd!=null||s.mwd!=null)L.push('Waves '+(s.wvht!=null?bV(s.wvht,1)+' m'+ft(s.wvht):'— m')+(s.dpd!=null?' · dom '+s.dpd+' s':'')+(s.apd!=null?' · avg '+s.apd+' s':'')+(s.mwd!=null?' · from '+s.mwd+'°':''));
+  if(s.atmp!=null||s.wtmp!=null)L.push((s.atmp!=null?'Air '+bV(s.atmp,1)+' °C ('+bF(s.atmp)+')':'Air —')+' · '+(s.wtmp!=null?'Water '+bV(s.wtmp,1)+' °C ('+bF(s.wtmp)+')':'Water —'));
+  if(s.pres!=null)L.push('Pressure '+bV(s.pres,1)+' hPa'+(s.ptdy!=null?' · 3h '+(s.ptdy>0?'+':'')+bV(s.ptdy,1)+' hPa':''));
+  if(s.dewp!=null||s.vis!=null||s.tide!=null)L.push([s.dewp!=null?'Dew pt '+bV(s.dewp,1)+' °C':'',s.vis!=null?'Vis '+s.vis+' nmi':'',s.tide!=null?'Tide '+bV(s.tide,2)+' ft':''].filter(Boolean).join(' · '));
+  return L.length?L.map(t=>'<div>'+hazEsc(t)+'</div>').join(''):'<div style="opacity:.7">No values reported (all missing in this observation)</div>';}
+function buoyUrl(id){return 'https://www.ndbc.noaa.gov/station_page.php?station='+encodeURIComponent(String(id).toLowerCase());}
+function buoyStationStatus(v,now){
+  now=now||Date.now();const f=fresh.buoy;
+  if(!layers.buoy)return {st:'OFF',why:''};
+  if(!f.okAt)return {st:f.failAt?'OFFLINE':'…',why:''};
+  const pull=now-f.okAt,obs=now-v.at;let why='',st='LIVE';
+  if(f.failAt>f.okAt)why='refresh failed';
+  else if(buoyS.upStale)why='server holding last-good'+(buoyS.serverErr?' ('+buoyS.serverErr+')':'');
+  else if(pull<0)why='pull ahead of clock';
+  else if(pull>STALE_MS.buoy)why='pull '+ageStr(pull)+' old';
+  else if(!Number.isFinite(obs)||obs<0)why='unproved station observation time';
+  else if(obs>BUOY_OBS_LIVE_MS){why='station obs '+ageStr(obs)+' old (>3h)';st='OLD OBS';}
+  if(why&&st==='LIVE')st='STALE';
+  return {st,why,pull,age:obs};}
+function buoyCardHtml(s,st,now){now=now||Date.now();st=buoyStationStatus(s,now);const old=now-s.at>BUOY_OBS_LIVE_MS,state=st.st;
+  return '<div class="t" data-buoy-id="'+hazEsc(s.id)+'">BUOY · NDBC · '+hazEsc(state+buoyReason(st))+'</div>'+
+  '<div>Station '+hazEsc(s.id)+(s.region?' · '+s.region:'')+' · '+s.lat.toFixed(2)+', '+s.lon.toFixed(2)+'</div>'+
+  '<div class="v">'+buoyRowsHtml(s)+'</div>'+
+  '<div style="opacity:.75;margin-top:3px">Observed <time datetime="'+hazEsc(s.t)+'">'+buoyWhen(s.at)+'</time> · '+buoyAge(s.at,now)+(old?' · older than 3 h':'')+'</div>'+
+  '<div style="opacity:.75">'+BUOY_DISC+' · <a class="bl" href="'+buoyUrl(s.id)+'" target="_blank" rel="noopener noreferrer">NDBC station '+hazEsc(s.id)+'</a></div>';}
+function buoyOpenCard(s,x,y){
+  tip.style.display='block';
+  tip.style.left=Math.max(6,Math.min(innerWidth-266,(x==null?innerWidth/2-130:x+12)))+'px';
+  tip.style.top=Math.max(6,Math.min(innerHeight-190,(y==null?innerHeight*0.3:y+12)))+'px';
+  tip.innerHTML=buoyCardHtml(s,buoyStatus(Date.now()));
+  tipTickerSelect('buoy',s.id,buoyLockTicker(s),()=>{const v=buoyS.list.find(r=>r.id===s.id);return v?buoyLockTicker(v):null;});}
+function buoyLockTicker(s){const st=buoyStationStatus(s,Date.now());return 'LOCK · BUOY · '+s.id+' · '+st.st+(s.wvht!=null?' · waves '+s.wvht.toFixed(1)+' m':'')+(s.wspd!=null?' · wind '+s.wspd.toFixed(1)+' m/s':'')+buoyReason(st);}
+function buoySurfaces(s){
+  const card=document.getElementById('tip'),title=card&&card.querySelector('.t[data-buoy-id]');
+  if(card&&card.style.display==='block'&&title){
+    const id=title.getAttribute('data-buoy-id'),v=buoyS.list.find(r=>r.id===id);
+    if(!v||s.st==='OFF'||s.st==='OFFLINE'){card.style.display='none';card.innerHTML='';}
+    else{const h=buoyCardHtml(v,s);if(card.innerHTML!==h)card.innerHTML=h;}}
+  if(tickerPaintSelection())return;
+  const t=document.getElementById('ticker');
+  if(t&&/^BUOY · NDBC (LIVE|STALE|OFFLINE|…)/.test(t.textContent))setTicker(buoyTicker());}
+function buoyLabels(st){
+  const k=document.getElementById('buoyRailK');if(k)k.textContent=st==='OFF'?'ndbc buoys off · marine obs':'ndbc buoys · '+st.toLowerCase()+' · '+buoyS.list.length;
+  const o=document.getElementById('buoyOpsV');if(!o)return;
+  if(st==='OFF')o.textContent='OFF · NOAA NDBC buoy + coastal station observations · '+BUOY_DISC;
+  else if(st==='OFFLINE')o.textContent='OFFLINE · '+(buoyS.err||'/api/buoy unreachable')+' · nothing drawn';
+  else if(st==='…')o.textContent='… · NOAA NDBC marine observations · loading';
+  else o.textContent=st+' · '+buoyS.list.length+' stations (TX '+(buoyS.counts.TX||0)+' · GULF '+(buoyS.counts.GULF||0)+') · median obs '+buoyAge(buoyS.median)+buoyReason(buoyStatus(Date.now()))+' · '+BUOY_DISC;}
+function paintBuoyBadge(now){
+  const el=document.getElementById('bBuoy');if(!el||BUOY_DISC===undefined)return; /* called by paintBadgeAge before this module has run */
+  const on=!!layers.buoy,s=buoyStatus(now);buoySurfaces(s);
+  if(!on){el.className='badge off';el.textContent='BUOY · OFF';el.title='BUOY layer off. NOAA NDBC marine observations. Tap for the BUOY panel.';buoyLabels('OFF');buoyPanelPaint(now,s,false);return;}
+  if(s.st==='…'){el.className='badge off';el.textContent='BUOY · …';el.title='Loading NOAA NDBC observations via /api/buoy. Tap for the BUOY panel.';buoyLabels('…');buoyPanelPaint(now,s,true);return;}
+  if(s.st==='OFFLINE'){el.className='badge off';el.textContent='BUOY · OFFLINE';el.title='NOAA NDBC via /api/buoy unreachable · no buoys drawn ('+buoyS.err+'). Tap for the BUOY panel.';buoyLabels('OFFLINE');buoyPanelPaint(now,s,true);return;}
+  const age=s.age!=null?ageStr(s.age):'';
+  el.className='badge '+s.cls;
+  el.textContent='BUOY · '+s.st+' '+buoyS.list.length+(age?' '+age:'');
+  el.title=(s.st==='LIVE'?'NOAA NDBC · ':'Last good NDBC pull · ')+buoyS.list.length+' stations · median observation '+(age?age+' old':'unknown')+' · pulled '+ageStr(s.pull)+' ago'+buoyReason(s)+'. LIVE needs a pull ≤ 50 min old and a median observation ≤ 3 h old. Tap for the BUOY panel.';
+  buoyLabels(s.st);buoyPanelPaint(now,s,true);}
+function buoyPanelPaint(now,s,on){
+  const P=document.getElementById('pBuoy');if(!P||!P.classList.contains('open'))return;
+  const set=(id,t)=>{const e=document.getElementById(id);if(e&&e.textContent!==t)e.textContent=t;};
+  const has=on&&fresh.buoy.okAt;
+  set('buoyPSt',!on?'LAYER OFF':s.st+(s.st==='OFFLINE'||s.st==='…'?'':' · median obs '+ageStr(s.age)+' old')+buoyReason(s));
+  set('buoyPSrc','NOAA NDBC latest observations (via /api/buoy)');
+  const st=buoyS.stats;
+  set('buoyPCount',has?buoyS.list.length+' with position'+(st&&st.rows?' of '+st.rows+' rows':'')+(buoyS.noPos?' · '+buoyS.noPos+' dropped (no position)':''):'—');
+  set('buoyPRegion',has?'TX '+(buoyS.counts.TX||0)+' · GULF '+(buoyS.counts.GULF||0)+' · ALL '+buoyS.list.length:'—');
+  set('buoyPNew',has?buoyWhen(buoyS.newest)+' · '+buoyAge(buoyS.newest,now):'—');
+  set('buoyPMed',has?buoyWhen(buoyS.median)+' · '+buoyAge(buoyS.median,now):'—');
+  set('buoyPOld',has?buoyWhen(buoyS.oldest)+' · '+buoyAge(buoyS.oldest,now):'—');
+  set('buoyPFile',has&&Number.isFinite(buoyS.srcMod)?buoyWhen(buoyS.srcMod)+' · '+buoyAge(buoyS.srcMod,now):'—');
+  set('buoyPAge',fresh.buoy.okAt?ageStr(now-fresh.buoy.okAt)+' ago'+(buoyS.upStale?' · server holding last-good':''):(buoyS.err||'never'));
+  set('buoyPNext',!on?'—':(buoyS.nextAt?('in '+ageStr(Math.max(0,buoyS.nextAt-now))+(buoyS.rl?' · rate-limited':'')):'…'));
+  P.querySelectorAll('[data-buoy-filter]').forEach(b=>{const a=b.getAttribute('data-buoy-filter')===buoyS.filter;b.classList.toggle('on',a);b.setAttribute('aria-pressed',a?'true':'false');
+    const n=b.getAttribute('data-buoy-filter');const t=n+(has?' '+(buoyS.counts[n]||0):'');if(b.textContent!==t)b.textContent=t;});
+  P.querySelectorAll('[data-buoy-tint]').forEach(b=>{const a=b.getAttribute('data-buoy-tint')===buoyS.tint;b.classList.toggle('on',a);b.setAttribute('aria-pressed',a?'true':'false');});
+  const K=document.getElementById('buoyPKey');if(K){const kk=buoyS.tint;if(K.__k!==kk){K.__k=kk;
+    const rows=kk==='wind'?[['g','< 10 kt'],['c','10–19 kt'],['y','20–29 kt'],['p','≥ 30 kt'],['ring','no wind reading']]:[['g','< 1 m'],['c','1–2 m'],['y','2–4 m'],['p','≥ 4 m'],['ring','no wave sensor / reading']];
+    K.innerHTML=rows.map(r=>r[0]==='ring'?'<span style="color:'+BUOY_HEX.c+'"><i class="ring"></i>'+r[1]+'</span>':'<span style="color:'+BUOY_HEX[r[0]]+'"><i></i>'+r[1]+'</span>').join('')+'<span style="opacity:.7">dim = own obs older than 3 h</span>';}}
+  const L=document.getElementById('buoyPList');if(!L)return;
+  const key=on+'|'+fresh.buoy.okAt+'|'+buoyS.filter+'|'+buoyS.list.length+'|'+Math.floor(now/60e3);if(L.__k===key)return;L.__k=key;
+  if(!has){L.innerHTML='<div class="vrow" style="opacity:.6">'+(on?'no data loaded — nothing drawn':'layer off')+'</div>';return;}
+  const rows=buoyShown();
+  if(!rows.length){L.innerHTML='<div class="vrow" style="opacity:.75">No station in this filter in the current pull.</div>';return;}
+  L.innerHTML=rows.slice(0,BUOY_LIST_MAX).map(s=>{const old=now-s.at>BUOY_OBS_LIVE_MS;
+    return '<button type="button" class="vrow brow" data-buoy-id="'+hazEsc(s.id)+'"><span class="vn">'+hazEsc(s.id)+'</span>'+(s.region?' <span class="rg">'+s.region+'</span>':'')+
+    ' <span style="color:'+buoyTint(s,buoyS.tint)+'">'+(s.wvht!=null?s.wvht.toFixed(1)+' m':'— m')+' · '+(s.wspd!=null?Math.round(s.wspd*1.943844)+' kt':'— kt')+'</span>'+
+    (s.wtmp!=null?' · '+s.wtmp.toFixed(1)+' °C':'')+' <span style="opacity:.7'+(old?';color:var(--y)':'')+'">· '+buoyAge(s.at,now)+'</span></button>';}).join('')+
+    (rows.length>BUOY_LIST_MAX?'<div class="vrow more" style="opacity:.7">+'+(rows.length-BUOY_LIST_MAX)+' more on the globe (Texas first, then Gulf, then the rest)</div>':'');}
+function buoyPanelToggle(force){
+  const P=document.getElementById('pBuoy');if(!P)return;
+  const open=force!=null?!!force:!P.classList.contains('open');
+  Object.keys(panels).forEach(k=>{if(panels[k]&&k!=='buoy')panels[k].classList.remove('open');});
+  document.querySelectorAll('.rail-btn[data-panel]').forEach(b=>b.classList.remove('on'));
+  if(!open){P.classList.remove('open');return;}
+  const L=document.getElementById('buoyPList');if(L)L.__k='';
+  P.classList.add('open');paintBuoyBadge(Date.now());}
+function buoySetFilter(f){f=String(f||'').toUpperCase();if(!['ALL','GULF','TX'].includes(f))return;buoyS.filter=f;if(fresh.buoy.okAt)buoyDraw();
+  const L=document.getElementById('buoyPList');if(L)L.__k='';paintBuoyBadge(Date.now());}
+function buoySetTint(m){if(m!=='wave'&&m!=='wind')return;buoyS.tint=m;if(fresh.buoy.okAt)buoyDraw();const L=document.getElementById('buoyPList');if(L)L.__k='';paintBuoyBadge(Date.now());}
+async function buoyLoad(why){
+  if(buoyS.inflight)return false;
+  if(why!=='force'&&Date.now()<buoyS.nextAt){buoyS.skipN++;return false;}
+  if(!layers.buoy&&why!=='force')return false;
+  buoyS.inflight=true;buoyS.lastTry=Date.now();buoyS.reqN++;
+  const endpoints=['/api/buoy','/.netlify/functions/buoy'];let ok=false,lastErr='';
+  try{
+    for(const ep of endpoints){
+      try{
+        const ac=typeof AbortController!=='undefined'?new AbortController():null;const to=setTimeout(()=>ac&&ac.abort(),20000);
+        let res;try{res=await fetch(ep,{cache:'no-store',headers:{Accept:'application/json'},signal:ac?ac.signal:undefined});}finally{clearTimeout(to);}
+        if(res.status===429){const ra=typeof lnRetryAfter==='function'?lnRetryAfter(res):null;
+          const wait=(ra==null||!Number.isFinite(ra))?3600e3:Math.max(60e3,ra);
+          const e=new Error(ra==null?'HTTP 429 rate-limited (Retry-After not readable)':'HTTP 429 rate-limited');e.rl=true;e.wait=wait;throw e;}
+        if(!res.ok){let body={};try{body=await res.json();}catch(e){}lastErr='HTTP '+res.status+(body&&body.message?' · '+String(body.message).slice(0,80):'');const ra=typeof lnRetryAfter==='function'?lnRetryAfter(res):null;if(ra!=null&&Number.isFinite(ra)){const e=new Error(lastErr);e.wait=ra;throw e;}continue;}
+        let j;try{j=await res.json();}catch(e){throw new Error('malformed buoy reply (not JSON)');}
+        buoyValidate(j);
+        buoyBuild(j);
+        const pa=Date.parse(j.pulledAt);
+        buoyS.err='';buoyS.failN=0;buoyS.rl=false;buoyS.pullAt=Date.now();buoyS.upStale=!!j.stale||!(pa<=Date.now());
+        buoyS.serverErr=j.stale?String(j.error||''):'';
+        const heldWait=j.stale&&typeof lnRetryAfter==='function'?lnRetryAfter(res):null;
+        buoyS.waitMs=Math.max(BUOY_POLL,Number.isFinite(heldWait)?heldWait:0);buoyS.nextAt=buoyS.pullAt+buoyS.waitMs;
+        markFresh('buoy',true,buoyS.list.length);fresh.buoy.failAt=0;
+        /* honest age: the server pull time, never newer than now */
+        if(Number.isFinite(pa))fresh.buoy.okAt=pa;
+        if(why!=='sched')setTicker(buoyTicker());
+        ok=true;break;
+      }catch(e){
+        if(e&&e.rl){buoyS.err=String(e.message||e);buoyS.failN++;buoyS.rl=true;buoyS.waitMs=Math.max(BUOY_POLL,e.wait||0);buoyS.nextAt=Date.now()+buoyS.waitMs;markFresh('buoy',false);throw e;}
+        lastErr=(e&&e.name==='AbortError')?'timeout':String(e&&e.message||e);
+        if(e&&e.wait)throw e;
+        if(/malformed/i.test(lastErr))break; /* a malformed reply is not retried on the alias */
+      }
+    }
+    if(!ok)throw new Error(lastErr||'unreachable');
+  }catch(e){
+    if(!(e&&e.rl)){buoyS.err=String(e&&e.message||e);buoyS.failN++;
+      const step=Math.min(BUOY_BACKOFF_CAP,BUOY_POLL*Math.max(1,buoyS.failN));
+      buoyS.waitMs=Math.max(step,(e&&e.wait)||0);buoyS.nextAt=Date.now()+buoyS.waitMs;buoyS.rl=false;
+      markFresh('buoy',false);
+      if(!fresh.buoy.okAt){buoyClear();buoyS.list=[];buoyS.counts={TX:0,GULF:0,ALL:0};}
+      reportFeedFailure('buoy',e);
+      setTicker(buoyTicker());}
+  }finally{buoyS.inflight=false;try{paintBadgeAge();}catch(e){}}
+  return ok;}
+(function(){const P=document.getElementById('pBuoy');if(!P)return;
+  const isOpen=()=>P.classList.contains('open');
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&isOpen()){buoyPanelToggle(false);}});
+  P.addEventListener('click',e=>{const t=e.target&&e.target.closest?e.target.closest('[data-close],[data-buoy-filter],[data-buoy-tint],[data-buoy-id]'):null;if(!t)return;
+    if(t.getAttribute('data-close')==='buoy'){e.preventDefault();buoyPanelToggle(false);return;}
+    if(t.hasAttribute('data-buoy-filter')){e.preventDefault();buoySetFilter(t.getAttribute('data-buoy-filter'));writeDeepLink(true);return;}
+    if(t.hasAttribute('data-buoy-tint')){e.preventDefault();buoySetTint(t.getAttribute('data-buoy-tint'));return;}
+    if(t.hasAttribute('data-buoy-id')){e.preventDefault();const s=buoyS.list.find(r=>r.id===t.getAttribute('data-buoy-id'));if(!s)return;
+      aimAt(s.lat,s.lon,null,false);buoyOpenCard(s,null,null);}});
+  let t=null;canvas.addEventListener('pointerdown',e=>{if(!isOpen())return;t={id:e.pointerId,x:e.clientX,y:e.clientY,m:0};});
+  canvas.addEventListener('pointermove',e=>{if(!t||t.id!==e.pointerId)return;t.m=Math.max(t.m,Math.hypot(e.clientX-t.x,e.clientY-t.y));});
+  canvas.addEventListener('pointerup',e=>{const g=t;t=null;if(!g||g.id!==e.pointerId)return;
+    if(Math.max(g.m,Math.hypot(e.clientX-g.x,e.clientY-g.y))>=8)return;if(isOpen())buoyPanelToggle(false);});
+  canvas.addEventListener('pointercancel',()=>{t=null;});})();
+window.__nexusBuoy={
+  state:()=>{const s=buoyStatus(Date.now());const B=document.getElementById('bBuoy')||{};const P=document.getElementById('pBuoy');return{
+    on:!!layers.buoy,visible:!!(gBuoy&&gBuoy.visible),count:buoyS.list.length,shown:buoyShown().length,counts:Object.assign({},buoyS.counts),
+    drawn:!!(buoyS.pts||buoyS.hollow),drawnN:['pts','hollow'].reduce((n,k)=>n+(buoyS[k]?buoyS[k].geometry.getAttribute('position').count:0),0),hollowN:buoyS.hollow?buoyS.hollow.geometry.getAttribute('position').count:0,filter:buoyS.filter,tint:buoyS.tint,
+    st:s.st,cls:s.cls,why:s.why,badge:B.textContent,badgeCls:B.className,panelOpen:!!(P&&P.classList.contains('open')),
+    okAt:fresh.buoy.okAt,failAt:fresh.buoy.failAt,err:buoyS.err,inflight:buoyS.inflight,reqN:buoyS.reqN,failN:buoyS.failN,skipN:buoyS.skipN,upStale:buoyS.upStale,
+    nextAt:buoyS.nextAt,waitMs:buoyS.waitMs,rl:buoyS.rl,median:buoyS.median,newest:buoyS.newest,oldest:buoyS.oldest,
+    first:buoyS.list.slice(0,3).map(r=>({id:r.id,region:r.region,wvht:r.wvht,wspd:r.wspd}))};},
+  load:buoyLoad,panel:buoyPanelToggle,filter:buoySetFilter,tint:buoySetTint,pick:buoyScreenPick,
+  find:id=>{const s=buoyS.list.find(r=>r.id===id);if(!s)return null;root.updateMatrixWorld(true);const p=buoyProject(s);return {id:s.id,x:p.x,y:p.y,vis:p.vis};},
+  shift:ms=>{if(fresh.buoy.okAt)fresh.buoy.okAt-=ms;if(fresh.buoy.failAt)fresh.buoy.failAt-=ms;buoyS.pullAt=Math.max(0,buoyS.pullAt-ms);buoyS.nextAt=Math.max(0,buoyS.nextAt-ms);paintBadgeAge();}
+};
+/* ==== /BUOY ==== */
 /* ==== AURORA v0.4.3 — NOAA SWPC OVATION aurora oval + planetary Kp (keyless, CORS-open public feeds) ====
    Draws OVATION's forecast probability of visible aurora (1° grid, cells >= 6%) as a glowing shell over the poles.
    Honest: badge is LIVE only while the last pull is fresh (< 25 min) AND the model's own observation time is < 60 min old

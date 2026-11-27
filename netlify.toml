@@ -75,6 +75,12 @@
   to = "/.netlify/functions/volc"
   status = 200
 
+# v0.4.10: /api/buoy — NOAA NDBC latest marine observations proxy (keyless; NDBC sends no CORS header)
+[[redirects]]
+  from = "/api/buoy"
+  to = "/.netlify/functions/buoy"
+  status = 200
+
 [[redirects]]
   from = "/eye"
   to = "/index.html"
