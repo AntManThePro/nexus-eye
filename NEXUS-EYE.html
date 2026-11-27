@@ -4,8 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
 <meta name="theme-color" content="#07070a"/>
-<meta name="description" content="NEXUS EYE v0.4.11 — photoreal field-ops planet console by DoubleA (@AntManThePro)"/>
-<title>NEXUS EYE · v0.4.11</title>
+<meta name="description" content="NEXUS EYE v0.4.12 — photoreal field-ops planet console by DoubleA (@AntManThePro)"/>
+<title>NEXUS EYE · v0.4.12</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32"/>
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180"/>
@@ -318,6 +318,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
 #pBuoy .vrow{padding:6px 0;border-top:1px solid var(--chrome);font-size:11px;line-height:1.45}
 #tip a.bl{pointer-events:auto;color:var(--c);display:inline-flex;align-items:center;min-height:32px}
 #tip.bscroll{touch-action:pan-y;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#tip .bsk{pointer-events:auto;display:block;flex:none;padding:3px 0 9px;margin:-3px 0 -9px;touch-action:pan-y;cursor:crosshair;outline:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+#tip .bsk:focus-visible svg{outline:1px solid var(--c);outline-offset:1px}
+#tip .bsr{position:relative;z-index:1;pointer-events:auto;cursor:pointer;color:var(--y);font-size:.88em;white-space:nowrap;overflow:hidden}
 .sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 #cctvDock .meta,#cctvDock .meta .src,#cctvDock .meta .cn,#cctvDock .meta .cc,#cctvDock .meta .cx,#cctvDock .err,#cctvDock .cerr,#cctvDock .cerr span,#cctvDock .cpill{font-size:11px}
 #cctvDock .cpill{max-width:calc(100% - 12px);line-height:1.35;letter-spacing:.06em}
@@ -418,7 +421,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     <circle cx="48" cy="20" r="2" fill="#ffcc00"/>
   </svg>
   <div class="boot-title">NEXUS EYE</div>
-  <div class="boot-sub">SPATIAL INTEL · v0.4.11 · FIELD OPS</div>
+  <div class="boot-sub">SPATIAL INTEL · v0.4.12 · FIELD OPS</div>
   <div class="boot-log" id="bootLog"></div>
   <div class="boot-bar"><i id="bootBar"></i></div>
   <button class="boot-skip pe" id="bootSkip" type="button">SKIP BOOT ▸</button>
@@ -433,7 +436,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="#00ff87" stroke-width="1.5"/><circle cx="32" cy="32" r="18" fill="none" stroke="#60efff" stroke-width="1" opacity=".7"/><ellipse cx="32" cy="32" rx="28" ry="10" fill="none" stroke="#ff0080" stroke-width="1" opacity=".8"/><circle cx="32" cy="32" r="6" fill="#00ff87"/><circle cx="32" cy="32" r="2.5" fill="#07070a"/><circle cx="48" cy="20" r="2" fill="#ffcc00"/></svg>
       <div>
         <h1>NEXUS EYE</h1>
-        <div class="ver">v0.4.11 · OPERATOR // DOUBLEA · ANTMAN ASSIST</div>
+        <div class="ver">v0.4.12 · OPERATOR // DOUBLEA · ANTMAN ASSIST</div>
       </div>
     </div>
     <div class="badges">
@@ -634,7 +637,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
           <li>Netlify-ready · /api/air function · keyless local HTML</li>
           <li>Direct action · verify everything · no fluff</li>
         </ul>
-        <div class="contact">NEXUS EYE v0.4.11 · ORIGINAL</div>
+        <div class="contact">NEXUS EYE v0.4.12 · ORIGINAL</div>
       </div>
       <p style="margin-top:12px;opacity:.7;font-size:10px">Tip: open HIRE, zoom Earth, tap a CCTV marker, screenshot the HUD.</p>
     </div>
@@ -991,7 +994,7 @@ const bootEl=document.getElementById('boot');
 const bootLog=document.getElementById('bootLog');
 const bootBar=document.getElementById('bootBar');
 const lines=[
-  'NEXUS EYE KERNEL · v0.4.11',
+  'NEXUS EYE KERNEL · v0.4.12',
   'FEED · NOAA SWPC OVATION AURORA + Kp · STANDBY (rail AURORA or ?layers=…,aur)',
   'FEED · NASA FIRMS MODIS FIRE · STANDBY (rail FIRE or ?layers=…,fire)',
   'FEED · USGS VOLCANO WATCH · STANDBY (rail VOLC or ?layers=…,volc)',
@@ -4427,13 +4430,12 @@ function buoyHistStatus(h,now){
   return {st,why,pull};}
 function buoyHHMM(ms){try{return new Date(ms).toLocaleTimeString('en-US',{timeZone:'America/Chicago',hour:'2-digit',minute:'2-digit',hourCycle:'h23'})+' CT';}catch(e){return new Date(ms).toISOString().slice(11,16)+' UTC';}}
 function buoySpark(arr,col,W,H,t0,t1){
-  const vs=arr.map(p=>p[1]);let lo=Math.min(...vs),hi=Math.max(...vs);if(hi-lo<1e-9){lo-=0.5;hi+=0.5;}
-  const X=t=>((t-t0)/(t1-t0))*(W-4)+2,Y=v=>H-2-((v-lo)/(hi-lo))*(H-4);let d='',dots='';
+  const {X,Y}=buoySparkScale(arr,W,H,t0,t1);let d='',dots='';
   for(let i=0;i<arr.length;i++){const [t,v]=arr[i],joinPrev=i>0&&t-arr[i-1][0]<=BUOY_HIST_GAP_MS,joinNext=i<arr.length-1&&arr[i+1][0]-t<=BUOY_HIST_GAP_MS;
     d+=(joinPrev?'L':'M')+X(t).toFixed(1)+' '+Y(v).toFixed(1); /* gaps >90 min break the line — never bridged, never interpolated */
     if(!joinPrev&&!joinNext)dots+='<circle cx="'+X(t).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="1.2" fill="'+col+'"/>';}
   const last=arr[arr.length-1],mid=X(t1-24*3600e3).toFixed(1);
-  return '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" aria-hidden="true" style="display:block"><line x1="'+mid+'" x2="'+mid+'" y1="0" y2="'+H+'" stroke="rgba(96,239,255,.18)" stroke-width="1"/><path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>'+dots+'<circle cx="'+X(last[0]).toFixed(1)+'" cy="'+Y(last[1]).toFixed(1)+'" r="2" fill="'+col+'"/></svg>';}
+  return '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" aria-hidden="true" style="display:block"><line x1="'+mid+'" x2="'+mid+'" y1="0" y2="'+H+'" stroke="rgba(96,239,255,.18)" stroke-width="1"/><path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>'+dots+'<circle cx="'+X(last[0]).toFixed(1)+'" cy="'+Y(last[1]).toFixed(1)+'" r="2" fill="'+col+'"/><line class="bsl" x1="0" x2="0" y1="0" y2="'+H+'" stroke="#ffffff" stroke-opacity=".55" stroke-width="1" visibility="hidden"/><circle class="bsd" cx="0" cy="0" r="2.8" fill="#07070a" stroke="'+col+'" stroke-width="1.4" visibility="hidden"/></svg>';}
 function buoyHistRow(k,lab,u,dp,col,flat,a,now,t0,t1){
   const head='<span style="width:54px;flex:none;color:'+col+'">'+lab+'</span>';
   if(!a.length)return '<div class="bhr" data-k="'+k+'" style="display:flex;align-items:center;gap:6px;margin-top:2px">'+head+'<span style="opacity:.6">no data · all readings missing in 48 h</span></div>';
@@ -4448,18 +4450,19 @@ function buoyHistRow(k,lab,u,dp,col,flat,a,now,t0,t1){
   if(ref)arrowLab='vs 24h';
   else{const span=last[0]-a[0][0];if(span>=3600e3){ref=a[0];arrowLab='vs '+Math.round(span/3600e3)+'h';}}
   let tr='';if(ref){const dl=last[1]-ref[1];tr=Math.abs(dl)<flat?'→':dl>0?'↑':'↓';}
-  return '<div class="bhr" data-k="'+k+'" style="margin-top:2px"><div style="display:flex;align-items:center;gap:6px">'+head+buoySpark(a,col,100,20,t0,t1)+
+  const vt='no reading picked · latest '+last[1].toFixed(dp)+' '+u+' at '+buoyHHMM(last[0])+(old?' · OLD OBS':'');
+  return '<div class="bhr" data-k="'+k+'" style="margin-top:2px"><div style="display:flex;align-items:center;gap:6px">'+head+'<span class="bsk" tabindex="0" role="slider" aria-orientation="horizontal" aria-valuemin="1" aria-valuemax="'+a.length+'" aria-valuenow="'+a.length+'" aria-valuetext="'+vt+'" data-vt="'+vt+'" data-t0="'+t0+'" data-t1="'+t1+'" aria-label="'+lab+' 48 h trend. Hover, drag or use the arrow keys to read each measured value; Escape clears.">'+buoySpark(a,col,100,20,t0,t1)+'</span>'+
     '<span style="white-space:nowrap;font-size:.92em">'+last[1].toFixed(dp)+' '+u+(tr?' '+tr:'')+'<br><span style="opacity:.6">'+mn.toFixed(dp)+'–'+mx.toFixed(dp)+'</span></span></div>'+
-    '<div class="bht" style="opacity:.55;font-size:.88em;margin-left:60px">'+when+(arrowLab?' · arrow '+arrowLab:'')+'</div></div>';}
+    '<div class="bht" style="opacity:.55;font-size:.88em;margin-left:60px">'+when+(arrowLab?' · arrow '+arrowLab:'')+'</div><div class="bsr" aria-live="polite" hidden></div></div>';}
 function buoyHistHtml(id){
   const h=buoyHist[id],box=c=>'<div class="bh" data-bh="'+hazEsc(id)+'" style="margin-top:5px;padding-top:4px;border-top:1px solid rgba(96,239,255,.18)">'+c+'</div>';
-  const now=Date.now();
+  const now=Date.now();buoyHistLastDrawn={id,series:{}};
   if(!h||h.st==='loading')return box('<div style="opacity:.6">48 h TREND · loading measured history…</div>');
   if(h.st==='none')return box('<div style="opacity:.6">48 h TREND · NDBC publishes no history file for this station</div>');
   if(h.st==='err')return box('<div style="opacity:.6">48 h TREND · unavailable · '+hazEsc(h.err||'NDBC is not answering')+buoyHistWait(h,now)+' · nothing drawn</div>');
-  const t1=now,t0=now-BUOY_HIST_WIN,F=buoyHistStatus(h,now),rows=[];let drawn=0;
+  const t1=now,t0=now-BUOY_HIST_WIN,F=buoyHistStatus(h,now),rows=[],D={};let drawn=0;buoyHistLastDrawn={id,t0,t1,series:D};
   for(const [k,lab,u,dp,col,,,flat] of BUOY_HIST_SER){
-    const a=(h.series[k]||[]).filter(p=>p[0]>=t0&&p[0]<=t1);if(a.length>=2)drawn++;
+    const a=(h.series[k]||[]).filter(p=>p[0]>=t0&&p[0]<=t1);D[k]=a;if(a.length>=2)drawn++;
     rows.push(buoyHistRow(k,lab,u,dp,col,flat,a,now,t0,t1));}
   const pullTxt=Number.isFinite(F.pull)&&F.pull>=0?(now<h.pulledAt?'pulled ≤'+buoyDurUp(BUOY_HIST_SKEW)+' ago (device clock behind server)':'pulled '+ageStr(F.pull)+' ago'):'pull time unproved';
   const axis='<div class="bhx" style="display:flex;justify-content:space-between;width:100px;margin-left:60px;opacity:.5;font-size:.82em"><span>−48h</span><span>−24h</span><span>now</span></div>';
@@ -4536,6 +4539,115 @@ function buoyPlaceCard(){
   addEventListener('touchcancel',()=>{touching=false;},{passive:true,capture:true});
   tip.addEventListener('scroll',()=>{scrollAt=performance.now();},{passive:true});
   window.buoyCardBusy=()=>tip.classList.contains('bscroll')&&(touching||performance.now()-scrollAt<400);})();
+/* ==== v0.4.12 TREND SCRUB (ported from staged v0.4.9.1) — read any single measured reading on a sparkline ====
+   Mouse: hover reads, click pins. Touch: tap pins; the first 8 px of travel decide the axis: sideways scrubs, vertical scrolls the card and picks nothing.
+   Keys: ←/→ step, Home/End, Escape clears. Readout, ring and line all come from the readings the card has drawn (never a newer, undrawn pull).
+   The marker always snaps to a real reading (its own NDBC time); nothing between readings is ever interpolated, and a gap is jumped, not bridged.
+   Tap the yellow readout to clear it. A repaint never drops the pick while it is still inside the 48 h window. */
+var buoyScrub=null,buoyScrubDown=false,buoyScrubG=null,buoyScrubOpenAt=-1e9;
+function buoyScrubReset(){const g=buoyScrubG;if(g&&g.sk)try{g.sk.releasePointerCapture(g.pid);}catch(_){}buoyScrub=null;buoyScrubDown=false;buoyScrubG=null;}
+function buoyScrubActive(){return !!(buoyScrub||buoyScrubDown)&&tip.style.display==='block';}
+(function(){const busy=window.buoyCardBusy;window.buoyCardBusy=()=>buoyScrubDown||busy();})();
+function buoyScrubId(){const t=tip.querySelector('.t[data-buoy-id]');return t?t.getAttribute('data-buoy-id'):null;}
+function buoyScrubSeries(id,k,t0,t1){const d=tip.__buoyDrawn;if(!d||d.id!==id||!d.series)return [];return (d.series[k]||[]).filter(p=>p[0]>=t0&&p[0]<=t1);}
+/* age to the nearest minute under 24 h ("5h07m"), nearest hour beyond (the date and CT time give the exact moment) */
+function buoyScrubAge(ms){ms=Math.max(0,ms);const m=Math.round(ms/60000);if(m<1)return '<1m';if(ms<24*3600e3){if(m<60)return m+'m';const r=m%60;return Math.floor(m/60)+'h'+(r<10?'0':'')+r+'m';}return Math.round(ms/3600e3)+'h';}
+function buoyScrubWhen(t,now){const hm=buoyHHMM(t);if(now-t<=24*3600e3)return hm;
+  try{return new Date(t).toLocaleDateString('en-US',{timeZone:'America/Chicago',month:'short',day:'numeric'})+' '+hm;}catch(e){return new Date(t).toISOString().slice(5,10)+' '+hm;}}
+function buoyScrubPaint(){
+  if(tip.style.display!=='block'){if(buoyScrub||buoyScrubG)buoyScrubReset();return;}const id=buoyScrubId();if(!id)return;
+  tip.querySelectorAll('.bhr').forEach(r=>{
+    const k=r.dataset.k,sk=r.querySelector('.bsk'),out=r.querySelector('.bsr'),bht=r.querySelector('.bht');if(!sk||!out)return;
+    const svg=sk.querySelector('svg'),ln=svg&&svg.querySelector('.bsl'),dt=svg&&svg.querySelector('.bsd');if(!ln||!dt)return;
+    const t0=+sk.dataset.t0,t1=+sk.dataset.t1,on=buoyScrub&&buoyScrub.id===id&&buoyScrub.k===k;
+    const arr=on?buoyScrubSeries(id,k,t0,t1):[],p=on?arr.find(q=>q[0]===buoyScrub.t)||null:null;
+    if(!p){if(ln.getAttribute('visibility')!=='hidden'){ln.setAttribute('visibility','hidden');dt.setAttribute('visibility','hidden');}
+      if(!out.hidden){out.hidden=true;out.textContent='';out.dataset.f='';}if(bht&&bht.hidden)bht.hidden=false;sk.classList.remove('on');
+      if(sk.getAttribute('aria-valuetext')!==sk.dataset.vt){sk.setAttribute('aria-valuetext',sk.dataset.vt||'no reading picked');sk.setAttribute('aria-valuenow',String(arr.length||sk.getAttribute('aria-valuemax')||1));}return;}
+    const W=+svg.getAttribute('width'),H=+svg.getAttribute('height'),{X,Y}=buoySparkScale(arr,W,H,t0,t1),x=X(p[0]).toFixed(1),y=Y(p[1]).toFixed(1);
+    ln.setAttribute('x1',x);ln.setAttribute('x2',x);dt.setAttribute('cx',x);dt.setAttribute('cy',y);ln.setAttribute('visibility','visible');dt.setAttribute('visibility','visible');
+    const ser=BUOY_HIST_SER.find(q=>q[0]===k),i=arr.indexOf(p);
+    const now=Date.now(),ago=buoyScrubAge(now-p[0])+' ago',when=buoyScrubWhen(p[0],now),val=p[1].toFixed(ser[3])+' '+ser[2];
+    const old=!!(bht&&/OLD OBS/.test(bht.textContent)),parts=[when,val,ago].concat(old?['OLD OBS']:[]),x2=buoyScrub.pin?' ✕':'',txt=parts.join(' · ')+x2;
+    const full=ser[1]+' '+val+' measured at '+when+', '+ago+(old?' · this row is OLD OBS':'')+' · reading '+(i+1)+' of '+arr.length+(buoyScrub.pin?' · tap it or press Escape to clear':'');
+    /* the readout takes the latest-time line's exact height and stays on one line, so the card never grows or jumps under the finger */
+    if(bht&&!bht.hidden){out.style.minHeight=bht.offsetHeight+'px';out.style.maxHeight=Math.max(bht.offsetHeight,12)+'px';bht.hidden=true;}
+    out.hidden=false;
+    /* fit: full text if it fits the row, else tighter separators, else a smaller font, so time, value, age, tag and ✕ always show */
+    if(out.dataset.f!==txt){out.dataset.f=txt;out.style.fontSize='';out.textContent=txt;
+      if(out.scrollWidth>out.clientWidth+0.5)out.textContent=parts.join('·')+x2;
+      for(let f=0.84;out.scrollWidth>out.clientWidth+0.5&&f>=0.6;f-=0.04)out.style.fontSize=f.toFixed(2)+'em';}
+    if(out.title!==full){out.title=full;out.setAttribute('aria-label',full);sk.setAttribute('aria-valuetext',full);}
+    sk.setAttribute('aria-valuemax',String(arr.length));sk.setAttribute('aria-valuenow',String(i+1));out.dataset.i=(i+1)+'/'+arr.length;sk.classList.add('on');});
+  /* a pick whose reading left the window (or whose row vanished) is dropped */
+  if(buoyScrub&&buoyScrub.id===id&&!tip.querySelector('.bsk.on'))buoyScrub=null;}
+/* keyboard focus on a sparkline survives the card's timed repaint */
+function buoyScrubFocusKey(){const a=document.activeElement;if(!a||!a.classList||!a.classList.contains('bsk')||!tip.contains(a))return null;const r=a.closest('.bhr');return r?r.dataset.k:null;}
+function buoyScrubRefocus(k){if(!k)return;const sk=tip.querySelector('.bhr[data-k="'+k+'"] .bsk');if(sk)try{sk.focus({preventScroll:true});}catch(_){}}
+function buoyScrubPick(sk,clientX){
+  const id=buoyScrubId(),row=sk.closest('.bhr');if(!id||!row)return null;
+  const k=row.dataset.k,t0=+sk.dataset.t0,t1=+sk.dataset.t1,svg=sk.querySelector('svg');if(!svg)return null;
+  const arr=buoyScrubSeries(id,k,t0,t1);if(!arr.length)return null;
+  const r=svg.getBoundingClientRect(),W=+svg.getAttribute('width'),fx=(clientX-r.left)/(r.width||W)*W,t=t0+((fx-2)/(W-4))*(t1-t0);
+  let best=arr[0];for(const p of arr)if(Math.abs(p[0]-t)<Math.abs(best[0]-t))best=p;
+  return {id,k,t:best[0]};}
+(function(){
+  const skOf=e=>e.target&&e.target.closest?e.target.closest('.bsk'):null;
+  tip.addEventListener('pointerdown',e=>{
+    const sk=skOf(e);
+    if(sk){
+      if(e.pointerType==='mouse'){if(e.button!==0)return;const p=buoyScrubPick(sk,e.clientX);if(!p)return;
+        buoyScrub=Object.assign(p,{pin:true});buoyScrubDown=true;buoyScrubG={sk,pid:e.pointerId,ax:'h',mouse:true};try{sk.setPointerCapture(e.pointerId);}catch(_){}
+        buoyScrubPaint();e.stopPropagation();return;}
+      /* touch / pen: nothing is picked until the gesture shows its axis (tap, or 8 px of mostly sideways travel) */
+      if(buoyScrubG){e.stopPropagation();return;} /* one finger scrubs at a time */
+      if(performance.now()-buoyScrubOpenAt<250){e.stopPropagation();return;} /* a stray touch that lands as the card opens never picks */
+      if(!buoyScrubPick(sk,e.clientX))return;
+      buoyScrubG={sk,pid:e.pointerId,x:e.clientX,y:e.clientY,ax:null};buoyScrubDown=true;e.stopPropagation();return;}
+    const out=e.target&&e.target.closest?e.target.closest('.bsr'):null;
+    if(out&&!out.hidden){buoyScrub=null;buoyScrubPaint();e.stopPropagation();}});
+  tip.addEventListener('pointermove',e=>{
+    const g=buoyScrubG;
+    if(g&&!g.mouse&&e.pointerId===g.pid){
+      if(!g.ax){const dx=e.clientX-g.x,dy=e.clientY-g.y;if(Math.max(Math.abs(dx),Math.abs(dy))<8)return;
+        if(Math.abs(dx)>Math.abs(dy)){g.ax='h';try{g.sk.setPointerCapture(g.pid);}catch(_){}}
+        else{g.ax='v';buoyScrubDown=false;return;}} /* vertical: the card scrolls and nothing is picked */
+      if(g.ax!=='h')return;const p=buoyScrubPick(g.sk,e.clientX);if(!p)return;
+      if(!buoyScrub||buoyScrub.t!==p.t||buoyScrub.k!==p.k||buoyScrub.id!==p.id||!buoyScrub.pin){buoyScrub=Object.assign(p,{pin:true});buoyScrubPaint();}
+      return;}
+    if(e.pointerType!=='mouse')return;
+    const sk=skOf(e);if(!sk)return;
+    {const p=buoyScrubPick(sk,e.clientX);if(!p)return;
+      const pin=buoyScrubDown||!!(buoyScrub&&buoyScrub.pin&&buoyScrub.k===p.k&&buoyScrub.id===p.id);
+      if(!buoyScrub||buoyScrub.t!==p.t||buoyScrub.k!==p.k||buoyScrub.pin!==pin){buoyScrub=Object.assign(p,{pin});buoyScrubPaint();}}});
+  const up=e=>{const g=buoyScrubG;
+    if(g&&e.pointerId===g.pid){
+      if(!g.mouse&&!g.ax&&e.type==='pointerup'){const p=tip.contains(g.sk)?buoyScrubPick(g.sk,g.x):null;if(p)buoyScrub=Object.assign(p,{pin:true});} /* a tap pins */
+      try{g.sk.releasePointerCapture(g.pid);}catch(_){}buoyScrubG=null;buoyScrubDown=false;buoyScrubPaint();buoyScrubFlush();}
+    else if(!g&&buoyScrubDown){buoyScrubDown=false;buoyScrubFlush();}};
+  addEventListener('pointerup',up,true);addEventListener('pointercancel',up,true);
+  tip.addEventListener('pointerout',e=>{
+    if(e.pointerType!=='mouse'||buoyScrubDown)return;const sk=skOf(e);if(!sk)return;
+    if(e.relatedTarget&&sk.contains(e.relatedTarget))return;
+    if(buoyScrub&&!buoyScrub.pin){buoyScrub=null;buoyScrubPaint();}});
+  tip.addEventListener('keydown',e=>{
+    const sk=skOf(e);if(!sk)return;const K=e.key;
+    if(K==='Escape'||K==='Esc'){if(buoyScrub){buoyScrub=null;buoyScrubPaint();e.preventDefault();e.stopPropagation();}return;}
+    if(!['ArrowLeft','ArrowRight','Home','End'].includes(K))return;
+    const id=buoyScrubId(),row=sk.closest('.bhr');if(!id||!row)return;const k=row.dataset.k,arr=buoyScrubSeries(id,k,+sk.dataset.t0,+sk.dataset.t1);if(!arr.length)return;
+    e.preventDefault();e.stopPropagation();
+    let i=buoyScrub&&buoyScrub.id===id&&buoyScrub.k===k?arr.findIndex(p=>p[0]===buoyScrub.t):-1;
+    if(K==='Home')i=0;else if(K==='End')i=arr.length-1;else if(i<0)i=arr.length-1;else i=Math.max(0,Math.min(arr.length-1,i+(K==='ArrowLeft'?-1:1)));
+    buoyScrub={id,k,t:arr[i][0],pin:true};buoyScrubPaint();});})();
+/* a repaint deferred by the gesture lands as soon as the finger or mouse lifts, line, ring and readout together */
+function buoyScrubFlush(){setTimeout(()=>{if(tip.style.display==='block'&&buoyScrubId()&&!buoyCardBusy())buoySurfaces(buoyStatus(Date.now()));},60);}
+/* closing or re-targeting the card by any path clears every scrub state */
+new MutationObserver(()=>{if(!buoyScrub&&!buoyScrubG&&!buoyScrubDown)return;const id=buoyScrubId();
+  if(tip.style.display!=='block'||!id){buoyScrubReset();return;}
+  if(buoyScrub&&buoyScrub.id!==id)buoyScrub=null;
+  if(buoyScrubG&&!tip.contains(buoyScrubG.sk)){buoyScrubG=null;buoyScrubDown=false;}}).observe(tip,{attributes:true,attributeFilter:['style'],childList:true});
+window.__nexusBuoyScrub={get:()=>buoyScrub,paint:buoyScrubPaint,gesture:()=>buoyScrubG&&{ax:buoyScrubG.ax,mouse:!!buoyScrubG.mouse},down:()=>buoyScrubDown,active:()=>buoyScrubActive(),drawn:()=>tip.__buoyDrawn||null};
+addEventListener('resize',()=>buoyPlaceCard());
 addEventListener('resize',()=>buoyPlaceCard());
 window.__nexusBuoyTrend={floor:buoyCardFloor,place:buoyPlaceCard,dur:buoyDurUp,status:id=>{const h=buoyHist[id];return h&&h.st==='ok'?buoyHistStatus(h,Date.now()):null;}};
 
@@ -4543,7 +4655,8 @@ function buoyOpenCard(s,x,y){
   tip.style.display='block';
   tip.style.left=Math.max(6,Math.min(innerWidth-266,(x==null?innerWidth/2-130:x+12)))+'px';
   tip.dataset.buoyAy=y==null?'':String(y);
-  tip.innerHTML=buoyCardHtml(s,buoyStatus(Date.now()));
+  buoyScrubReset();buoyScrubOpenAt=performance.now(); /* every open (same or another station) starts with no reading or gesture */
+  tip.innerHTML=buoyCardHtml(s,buoyStatus(Date.now()));tip.__buoyHtml=tip.innerHTML;tip.__buoyDrawn=buoyHistLastDrawn;
   tip.scrollTop=0; /* a (re)opened card always starts at its status line; only repaints of an open card keep their scroll */
   buoyPlaceCard();
   if(tip.scrollTop)tip.scrollTop=0; /* the browser re-applies a hidden card's old offset once it is a scroll box again */
@@ -4555,7 +4668,7 @@ function buoySurfaces(s){
   if(card&&card.style.display==='block'&&title){
     const id=title.getAttribute('data-buoy-id'),v=buoyS.list.find(r=>r.id===id);
     if(!v||s.st==='OFF'||s.st==='OFFLINE'){card.style.display='none';card.innerHTML='';}
-    else{buoyHistLoad(id);const h=buoyCardHtml(v,s);if(card.innerHTML!==h&&!buoyCardBusy()){const st=card.scrollTop;card.innerHTML=h;buoyPlaceCard();if(st&&card.scrollTop!==st)card.scrollTop=st;}}}
+    else{buoyHistLoad(id);const h=buoyCardHtml(v,s),drawn=buoyHistLastDrawn;if(card.__buoyHtml!==h&&!buoyCardBusy()){const st=card.scrollTop,fk=buoyScrubFocusKey();card.innerHTML=h;card.__buoyHtml=h;card.__buoyDrawn=drawn;buoyScrubPaint();buoyScrubRefocus(fk);buoyPlaceCard();if(st&&card.scrollTop!==st)card.scrollTop=st;}}}
   if(tickerPaintSelection())return;
   const t=document.getElementById('ticker');
   if(t&&/^BUOY · NDBC (LIVE|STALE|OFFLINE|…)/.test(t.textContent))setTicker(buoyTicker());}
