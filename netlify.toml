@@ -63,6 +63,12 @@
   to = "/.netlify/functions/cam"
   status = 200
 
+# v0.4.7: /api/fire — NASA FIRMS MODIS C6.1 active-fire CSV proxy (keyless)
+[[redirects]]
+  from = "/api/fire"
+  to = "/.netlify/functions/fire"
+  status = 200
+
 [[redirects]]
   from = "/eye"
   to = "/index.html"

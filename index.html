@@ -4,8 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
 <meta name="theme-color" content="#07070a"/>
-<meta name="description" content="NEXUS EYE v0.4.6 — photoreal field-ops planet console by DoubleA (@AntManThePro)"/>
-<title>NEXUS EYE · v0.4.6</title>
+<meta name="description" content="NEXUS EYE v0.4.7 — photoreal field-ops planet console by DoubleA (@AntManThePro)"/>
+<title>NEXUS EYE · v0.4.7</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32"/>
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180"/>
@@ -385,7 +385,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     <circle cx="48" cy="20" r="2" fill="#ffcc00"/>
   </svg>
   <div class="boot-title">NEXUS EYE</div>
-  <div class="boot-sub">SPATIAL INTEL · v0.4.6 · FIELD OPS</div>
+  <div class="boot-sub">SPATIAL INTEL · v0.4.7 · FIELD OPS</div>
   <div class="boot-log" id="bootLog"></div>
   <div class="boot-bar"><i id="bootBar"></i></div>
   <button class="boot-skip pe" id="bootSkip" type="button">SKIP BOOT ▸</button>
@@ -400,7 +400,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="#00ff87" stroke-width="1.5"/><circle cx="32" cy="32" r="18" fill="none" stroke="#60efff" stroke-width="1" opacity=".7"/><ellipse cx="32" cy="32" rx="28" ry="10" fill="none" stroke="#ff0080" stroke-width="1" opacity=".8"/><circle cx="32" cy="32" r="6" fill="#00ff87"/><circle cx="32" cy="32" r="2.5" fill="#07070a"/><circle cx="48" cy="20" r="2" fill="#ffcc00"/></svg>
       <div>
         <h1>NEXUS EYE</h1>
-        <div class="ver">v0.4.6 · OPERATOR // DOUBLEA · ANTMAN ASSIST</div>
+        <div class="ver">v0.4.7 · OPERATOR // DOUBLEA · ANTMAN ASSIST</div>
       </div>
     </div>
     <div class="badges">
@@ -415,7 +415,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <span class="badge off" id="bAlerts" title="NOAA / National Weather Service active alerts">ALERTS · …</span>
       <span class="badge pub" id="bSun" role="button" tabindex="0" aria-controls="pSun" title="Sun position computed in-browser from the device clock (NOAA low-precision solar equations, about 0.1°). Not a data feed. Tap for the SUN panel.">SUN · CALC</span>
       <span class="badge proto" id="bOrbit">ORBIT · KEPLER</span>
-      <span class="badge proto" id="bAir">AIR · PROTO</span>
+      <span class="badge off" id="bAir">AIR · …</span>
       <span class="badge pub" id="bCctv">CCTV · PUBLIC</span>
     </div>
     <span class="sr" id="aurSrDisc">Aurora: NOAA SWPC OVATION is a model forecast of the chance of visible aurora about 30 to 90 minutes ahead, not a sighting.</span>
@@ -469,7 +469,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <div class="stat"><span>ALERTS</span><span id="alertsOpsV">… · NOAA / NWS active alerts · TX first</span></div>
       <div class="stat"><span>CCTV</span><span>8,338-cam official public catalog · LIVE count = source-time verified only · TX TxDOT / TranStar / Austin · US NYC / Caltrans / ODOT · INTL</span></div>
       <div class="stat"><span>ORBIT</span><span>KEPLER · scout craft</span></div>
-      <div class="stat"><span>AIR</span><span>LIVE via /api/air · else PROTO</span></div>
+      <div class="stat"><span>AIR</span><span>LIVE via /api/air · else OFFLINE</span></div>
       <div class="stat"><span>SHARE</span><span>?lat=&amp;lon=&amp;alt=&amp;layers= · ?layer=alerts · ?alerts=tx</span></div>
       <div class="stat"><span>FRESH</span><span>LIVE / STALE / OFFLINE ages</span></div>
       <h3>BADGES · FULL TEXT</h3>
@@ -541,8 +541,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
           <li>UNRULY — React game shipped under pressure</li>
           <li>Hardware hacking · rings · nexus modules</li>
           <li>Photoreal Three.js globe · Blue Marble · atmosphere</li>
-          <li>LIVE feeds + STALE ages · honest PROTO when offline</li>
-          <li>AIR · LIVE via allowlisted Netlify Function (else PROTO)</li>
+          <li>LIVE feeds + STALE ages · honest OFFLINE when a feed is down</li>
+          <li>AIR · LIVE via allowlisted server function (community ADS-B, Texas first, else OFFLINE)</li>
           <li>Share deep-links · ?lat=&amp;lon=&amp;alt=&amp;layers=</li>
           <li>CCTV · 8,338-cam official public catalog · Texas first · per-cam LIVE/STALE/OFFLINE, LIVE only when source time is verified</li>
           <li>HAZ · NASA EONET natural-hazard layer + storm tracks</li>
@@ -550,7 +550,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
           <li>Netlify-ready · /api/air function · keyless local HTML</li>
           <li>Direct action · verify everything · no fluff</li>
         </ul>
-        <div class="contact">NEXUS EYE v0.4.6 · ORIGINAL</div>
+        <div class="contact">NEXUS EYE v0.4.7 · ORIGINAL</div>
       </div>
       <p style="margin-top:12px;opacity:.7;font-size:10px">Tip: open HIRE, zoom Earth, tap a CCTV marker, screenshot the HUD.</p>
     </div>
@@ -721,17 +721,13 @@ function paintBadgeAge(){
       el.title=stale?('Last good EONET pull '+new Date(f.okAt).toLocaleTimeString()+' · refresh failing'):'NASA EONET open events';
     }else{el.className='badge off';el.textContent='HAZ · OFFLINE';el.title='NASA EONET unreachable · no points drawn';hazLabels('OFFLINE');}
   })();
-  /* AIR — never lie: LIVE only after successful /api/air */
+  /* AIR — never lie (v0.4.7): badge, ticker and any open AIR card all read the same airFreshness() value */
   (function(){
-    const el=document.getElementById('bAir');const f=fresh.air;
-    if(f.mode==='live'&&f.okAt){
-      const age=now-f.okAt;const stale=age>STALE_MS.air;
-      el.className=stale?'badge stale':'badge live';
-      el.textContent='AIR · '+(stale?'STALE':'LIVE')+' '+(f.count?f.count+' ':'')+ageStr(age);
-    }else{
-      el.className='badge proto';
-      el.textContent='AIR · PROTO';
-    }
+    const el=document.getElementById('bAir');const F=airFreshness(now);
+    el.className='badge '+({LIVE:'live',STALE:'stale'}[F.st]||'off');
+    el.textContent=F.st==='OFF'?'AIR · OFF':F.st==='WAIT'?'AIR · …':'AIR · '+F.st+((F.st==='LIVE'||F.st==='STALE')?' '+(F.count?F.count+' ':'')+ageStr(F.age):'');
+    el.title=F.title;
+    airSurfaces(F);
   })();
   /* CCTV — v0.3.8: count = cams verified LIVE at runtime this session (never the pack size).
      glassfix #4: LIVE only for cams whose last refresh succeeded within cadence with a verified source time;
@@ -899,7 +895,7 @@ const bootEl=document.getElementById('boot');
 const bootLog=document.getElementById('bootLog');
 const bootBar=document.getElementById('bootBar');
 const lines=[
-  'NEXUS EYE KERNEL · v0.4.6',
+  'NEXUS EYE KERNEL · v0.4.7',
   'FEED · NOAA SWPC OVATION AURORA + Kp · STANDBY (rail AURORA or ?layers=…,aur)',
   'FEED · NASA FIRMS MODIS FIRE · STANDBY (rail FIRE or ?layers=…,fire)',
   'FEED · NOAA / NWS ALERTS api.weather.gov · LIVE ARM · TX FIRST',
@@ -912,7 +908,7 @@ const lines=[
   'FEED · Open-Meteo WX · LIVE ARM',
   'FEED · NASA EONET HAZ · LIVE ARM',
   'CCTV · PUBLIC PACK+ · LAST-GOOD CACHE',
-  'AIR · LIVE ARM (/api/air) · PROTO FALLBACK',
+  'AIR · LIVE ARM (/api/air) · OFFLINE if unreachable',
   'ANTMAN · SWEET OPERATOR ONLINE',
   'OPERATOR · DOUBLEA / @AntManThePro',
   'THESIS · FIELD OPS · NOT A SPY TOY',
@@ -1597,48 +1593,34 @@ async function loadIss(){
   }
 }
 
-/* AIR — LIVE via /api/air (Netlify) · else honest PROTO sim */
+/* v0.4.7: expected feed failures log as warnings, not as thrown-looking errors */
+function reportFeedFailure(key,e){
+  const msg=String(e&&e.message||e),expected=(e&&['AbortError','TimeoutError'].includes(e.name))||/HTTP \d|fetch failed|failed to fetch|network|timeout|source|payload|malformed|reply|aircraft|holding last-good|unproved|not deployed/i.test(msg);
+  if(expected)console.warn(key+' refresh: '+msg);else console.error(key+' code error',e);
+}
+/* AIR — LIVE via /api/air (server function, community ADS-B) · else STALE → OFFLINE, nothing simulated (v0.4.4.1) */
 const airEntities=[];
 let airLive=false;
 function clearAirMeshes(){
   while(gAir.children.length)gAir.remove(gAir.children[0]);
   airEntities.length=0;
 }
-function seedAirProto(){
-  clearAirMeshes();
-  /* keep route lines once */
-  if(!gRoutes.children.length){
-    const hubs=[
-      {lat:40.6,lon:-73.8,name:'JFK'},{lat:51.5,lon:-0.1,name:'LHR'},
-      {lat:35.5,lon:139.8,name:'HND'},{lat:25.3,lon:55.4,name:'DXB'},
-      {lat:-33.9,lon:151.2,name:'SYD'},{lat:33.9,lon:-118.4,name:'LAX'},
-      {lat:1.36,lon:103.99,name:'SIN'},{lat:41.9,lon:12.5,name:'FCO'}
-    ];
-    hubs.forEach((h,i)=>{
-      const dest=hubs[(i+3)%hubs.length];
-      drawGreatCircle(h.lat,h.lon,dest.lat,dest.lon,0xff0080);
-    });
-  }
-  const hubs2=[
+/* v0.4.4.1: decorative hub-to-hub arcs only (drawn once, unchanged look). The simulated PROTO aircraft are gone — when
+   /api/air has no live data the AIR layer draws no planes and the badge says OFFLINE with the reason. */
+function airSeedRoutes(){
+  if(gRoutes.children.length)return;
+  const hubs=[
     {lat:40.6,lon:-73.8,name:'JFK'},{lat:51.5,lon:-0.1,name:'LHR'},
     {lat:35.5,lon:139.8,name:'HND'},{lat:25.3,lon:55.4,name:'DXB'},
     {lat:-33.9,lon:151.2,name:'SYD'},{lat:33.9,lon:-118.4,name:'LAX'},
     {lat:1.36,lon:103.99,name:'SIN'},{lat:41.9,lon:12.5,name:'FCO'}
   ];
-  hubs2.forEach((h,i)=>{
-    const dest=hubs2[(i+3)%hubs2.length];
-    const mesh=new THREE.Mesh(new THREE.ConeGeometry(0.016,0.036,4),new THREE.MeshBasicMaterial({color:COL.p}));
-    mesh.rotation.x=Math.PI/2;gAir.add(mesh);
-    airEntities.push({mesh,from:h,to:dest,t:Math.random(),speed:0.00004+Math.random()*0.00003,call:h.name+String(100+i),proto:true,live:false});
-  });
-  airLive=false;
-  fresh.air.mode='proto';
-  paintBadgeAge();
+  hubs.forEach((h,i)=>{const dest=hubs[(i+3)%hubs.length];drawGreatCircle(h.lat,h.lon,dest.lat,dest.lon,0xff0080);});
 }
-function renderAirLive(aircraft){
+function renderAirLive(aircraft,meta){
   clearAirMeshes();
-  const list=(aircraft||[]).filter(a=>a&&Number.isFinite(+a.lat)&&Number.isFinite(+a.lon));
-  const max=Math.min(list.length,160);
+  const list=(aircraft||[]).filter(a=>a&&typeof a.lat==='number'&&typeof a.lon==='number'&&Number.isFinite(a.lat)&&Number.isFinite(a.lon)); /* r2: no null→0 coercion */
+  const max=Math.min(list.length,180);
   for(let i=0;i<max;i++){
     const a=list[i];
     const mesh=new THREE.Mesh(new THREE.ConeGeometry(0.012,0.028,4),new THREE.MeshBasicMaterial({color:COL.g}));
@@ -1651,37 +1633,137 @@ function renderAirLive(aircraft){
       mesh.rotateZ((-a.heading)*Math.PI/180);
     }
     const call=(a.callsign||a.icao||'AC'+i).toString().trim();
-    mesh.userData={type:'air',live:true,call,lat:+a.lat,lon:+a.lon,alt:a.alt,vel:a.velocity,hdg:a.heading};
+    const key=String(a.icao||call||'ac'+i);
+    mesh.userData={type:'air',live:true,call,key,lat:+a.lat,lon:+a.lon,alt:a.alt,vel:a.velocity,hdg:a.heading};
     gAir.add(mesh);
-    airEntities.push({mesh,live:true,proto:false,call,lat:+a.lat,lon:+a.lon,alt:a.alt,vel:a.velocity,hdg:a.heading,t:0,speed:0,from:null,to:null});
+    airEntities.push({mesh,live:true,proto:false,call,key,lat:+a.lat,lon:+a.lon,alt:a.alt,vel:a.velocity,hdg:a.heading,t:0,speed:0,from:null,to:null});
   }
   airLive=true;
+  airMeta=meta||{};
   markFresh('air',true,airEntities.length);
   paintBadgeAge();
-  setTicker('AIR · LIVE '+airEntities.length+' · OpenSky via /api/air');
+  {const t=airTickerText(airFreshness(Date.now()));if(t)setTicker(t);}
+}
+/* v0.4.4.1 hotfix — AIR honesty + pacing.
+   · One endpoint only: /api/air. The old second try at the platform's default function path always 404'd (a function
+     with a custom path is not served there), which is the 404 seen in the console after every failure.
+   · LIVE = a proved source time no more than 120 s old, never in the future. A failed refresh keeps the last-good aircraft as STALE for up to 5 min, then
+     clears them → OFFLINE. Cold failure → OFFLINE with the reason; nothing simulated is drawn.
+   · Failures back off 60 s → 2 min → 5 min, never sooner than the server's Retry-After; no polling while the AIR layer
+     is off or the tab is hidden. */
+const AIR_BACKOFF=[60e3,120e3,300e3],AIR_KEEP_MS=5*60e3,AIR_TIMEOUT=12000;
+/* r2: freshness is anchored on the SOURCE time the server reports (j.time, seconds), never on when we fetched it.
+   LIVE = accepted set whose source time is ≤ 120 s old and no failed refresh since; STALE = held last-good (failed
+   refresh or source time > 120 s); the held set is dropped 5 min after its source time → OFFLINE. */
+const AIR_SRC_LIVE_MS=120e3,AIR_SRC_FUTURE_MS=0,AIR_MAX_WAIT_MS=3600e3;
+let airMeta={},airErr='',airFailN=0,airNextTry=0,airInflight=false,airSrcAt=0;
+function airClearStale(){
+  if(airLive&&airSrcAt&&Date.now()-airSrcAt>AIR_KEEP_MS){clearAirMeshes();airLive=false;fresh.air.mode='off';paintBadgeAge();}
+}
+/* r2 B1: a reply must PROVE freshness before it may replace the drawn set. Returns {rows,srcAt} or throws. */
+function airTsMs(v){return typeof v==='number'&&Number.isFinite(v)?(v>1e12?v:v*1000):NaN;}
+function airValidate(res,j,now){
+  if(res.status!==200)throw new Error('HTTP '+res.status+(j&&typeof j.reason==='string'?' · '+j.reason:''));
+  if(!j||typeof j!=='object'||j.ok!==true||!Array.isArray(j.aircraft))throw new Error('malformed reply');
+  if(j.stale)throw new Error(typeof j.reason==='string'?j.reason:'server holding last-good');
+  const srcAt=airTsMs(j.time);
+  if(!Number.isFinite(srcAt))throw new Error('reply has no source time');
+  if(now-srcAt>AIR_SRC_LIVE_MS)throw new Error('source time '+ageStr(now-srcAt)+' old');
+  if(srcAt-now>AIR_SRC_FUTURE_MS)throw new Error('source time is in the future');
+  const rows=[];let bad=0;
+  for(const a of j.aircraft){
+    if(!a||typeof a!=='object'){bad++;continue;}
+    const ok=typeof a.lat==='number'&&typeof a.lon==='number'&&Number.isFinite(a.lat)&&Number.isFinite(a.lon)&&Math.abs(a.lat)<=90&&Math.abs(a.lon)<=180;
+    const ts=airTsMs(a.ts);
+    if(!ok||!Number.isFinite(ts)||now-ts>AIR_SRC_LIVE_MS+60e3||ts-now>AIR_SRC_FUTURE_MS){bad++;continue;}
+    rows.push(a);
+  }
+  if(!rows.length)throw new Error(j.aircraft.length?'no valid aircraft in reply ('+bad+' malformed)':'reply has no aircraft');
+  if(bad*2>j.aircraft.length)throw new Error('malformed reply ('+bad+'/'+j.aircraft.length+' rows bad)');
+  return {rows,srcAt};
+}
+/* r2 B2: the ONE effective AIR state. */
+function airFreshness(now){
+  now=now||Date.now();const f=fresh.air,why=airErr||'';
+  const next=airNextTry>now?' · next try in '+ageStr(airNextTry-now):'';
+  const credit=' · community ADS-B receivers (adsb.lol, ODbL 1.0) via /api/air';
+  const m=airMeta||{},part=m.partial?' · partial coverage: '+m.regionsOk+'/'+m.regionsTotal+' regions answered':'';
+  if(!layers.air)return {st:'OFF',age:0,count:0,title:'AIR layer off · no /api/air requests while off'};
+  if(airLive&&airSrcAt){
+    const age=Math.max(0,now-airSrcAt);
+    if(age>AIR_KEEP_MS)return {st:'OFFLINE',age,count:0,title:'No live aircraft · last good set older than 5 min, dropped'+(why?' · '+why:'')+next+' · nothing simulated'};
+    const failed=f.failAt>f.okAt||airSrcAt>now;
+    if(failed||age>AIR_SRC_LIVE_MS)return {st:'STALE',age,count:airEntities.length,
+      title:'Last good positions '+ageStr(age)+' old (source time)'+(failed&&why?' · refresh failing: '+why:'')+next+part+credit};
+    return {st:'LIVE',age,count:airEntities.length,title:'Live ADS-B positions · source time '+ageStr(age)+' old'+part+credit};
+  }
+  if(f.failAt||f.okAt)return {st:'OFFLINE',age:0,count:0,title:'No live aircraft · '+(why||'/api/air unavailable')+next+' · nothing simulated'};
+  return {st:'WAIT',age:0,count:0,title:'Loading live aircraft from /api/air'};
+}
+function airTickerText(F){
+  if(F.st==='LIVE')return 'AIR · LIVE '+F.count+(airMeta.partial?' · '+airMeta.regionsOk+'/'+airMeta.regionsTotal+' regions':'')+' · community ADS-B via /api/air';
+  if(F.st==='STALE')return 'AIR · STALE · '+(airErr?'refresh failed ('+airErr+') · ':'')+'holding last-good '+ageStr(F.age)+' old';
+  if(F.st==='OFFLINE')return 'AIR · OFFLINE · '+(airErr||'no live aircraft')+' · nothing simulated';
+  return null;
+}
+function airCardHtml(ent,F){
+  const st=F.st==='STALE'?'STALE '+ageStr(F.age):F.st;
+  return '<div class="t" data-air-key="'+esc(ent.key)+'">AIR · '+esc(st)+'</div><div>'+esc(ent.call)+'</div><div class="v">'+(ent.alt!=null?Math.round(ent.alt)+' m':'—')+' · hdg '+(ent.hdg!=null?Math.round(ent.hdg):'—')+
+    '</div><div style="opacity:.6;margin-top:3px">community ADS-B · adsb.lol · ODbL 1.0</div>';
+}
+/* Re-resolve the ticker and an open AIR card whenever the effective state is painted (1 s tick + every pull). */
+function airSurfaces(F){
+  const tk=document.getElementById('ticker');
+  if(tk&&/^AIR(?: · | )(LIVE|STALE|OFFLINE)/.test(tk.textContent)){const ent=airEntities.find(a=>a.key===tk.__airKey);const t=airTickerText(F)+(ent?' · '+ent.call:'');if(t&&tk.textContent!==t)tk.textContent=t;}
+  const tip=document.getElementById('tip'),title=tip&&tip.style.display==='block'&&tip.querySelector('.t[data-air-key]');
+  if(title){
+    const key=title.getAttribute('data-air-key'),ent=airEntities.find(a=>a.key===key);
+    if(!ent||!(F.st==='LIVE'||F.st==='STALE')){tip.style.display='none';tip.innerHTML='';}
+    else{const h=airCardHtml(ent,F);if(tip.__airHtml!==h){tip.innerHTML=h;tip.__airHtml=h;}}
+  }
 }
 async function loadAir(){
-  const endpoints=['/api/air','/.netlify/functions/air'];
-  let ok=false;
-  for(const ep of endpoints){
-    try{
-      const res=await fetch(ep,{cache:'no-store',headers:{'Accept':'application/json'}});
-      if(!res.ok)continue;
-      const j=await res.json();
-      if(!j||j.ok===false||!Array.isArray(j.aircraft))continue;
-      renderAirLive(j.aircraft);
-      ok=true;
-      antmanSay('AIR punched LIVE through the Netlify allowlist. OpenSky trimmed. No lies.');
-      break;
-    }catch(e){/* try next */}
-  }
-  if(!ok){
-    if(!airEntities.length||airLive)seedAirProto();
-    else{fresh.air.mode='proto';paintBadgeAge();}
-    setTicker('AIR · PROTO · /api/air unavailable (keyless local ok)');
-  }
+  if(airInflight)return;
+  airInflight=true;
+  let ctl=null,tm=null,wait=0;
+  try{
+    if(typeof AbortController!=='undefined'){ctl=new AbortController();tm=setTimeout(()=>ctl.abort(),AIR_TIMEOUT);}
+    const res=await fetch('/api/air',{cache:'no-store',headers:{'Accept':'application/json'},signal:ctl?ctl.signal:undefined});
+    const raH=res.headers.get('retry-after');const raS=/^\s*\d+\s*$/.test(raH||'')?+raH:0;
+    let j=null;try{j=await res.json();}catch(_){}
+    const raB=j&&typeof j.retryAfter==='number'&&Number.isFinite(j.retryAfter)?j.retryAfter:0;
+    wait=Math.min(AIR_MAX_WAIT_MS,Math.max(raS,raB)*1000);
+    if(res.status===404&&!(j&&j.reason))throw new Error('/api/air not deployed here');
+    const v=airValidate(res,j,Date.now());
+    airSrcAt=v.srcAt;
+    renderAirLive(v.rows,{partial:!!j.partial,regionsOk:+j.regionsOk||0,regionsTotal:+j.regionsTotal||0,source:String(j.source||'')});
+    airErr='';airFailN=0;airNextTry=Date.now()+Math.max(wait,22000);
+    if(!loadAir._said){loadAir._said=1;antmanSay('AIR is LIVE again: community ADS-B through our own /api/air. Real transponders, no sim.');}
+  }catch(e){
+    reportFeedFailure('AIR',e);
+    airErr=(e&&e.name==='AbortError')?'timeout after '+AIR_TIMEOUT/1000+'s':String((e&&e.message)||e).slice(0,140);
+    airFailN++;airNextTry=Date.now()+Math.max(wait,AIR_BACKOFF[Math.min(airFailN-1,AIR_BACKOFF.length-1)]);
+    markFresh('air',false);
+    if(!airLive){clearAirMeshes();fresh.air.mode='off';}
+    airClearStale();
+    paintBadgeAge();
+    {const t=airTickerText(airFreshness(Date.now()));if(t)setTicker(t);}
+  }finally{if(tm)clearTimeout(tm);airInflight=false;}
 }
-seedAirProto();
+function airMaybeLoad(){
+  const now=Date.now();
+  airClearStale();
+  if(!layers.air||document.hidden||airInflight||now<airNextTry)return;
+  return loadAir();
+}
+/* v0.4.4.1 QA hook (read-only state + forced refresh), same pattern as the other layers */
+window.__nexusAir={state:()=>({live:airLive,n:airEntities.length,nLive:airEntities.filter(x=>x.live).length,nProto:airEntities.filter(x=>x.proto).length,
+  err:airErr,failN:airFailN,nextInMs:airNextTry?airNextTry-Date.now():0,okAt:fresh.air.okAt,mode:fresh.air.mode,meta:airMeta,on:!!layers.air,
+  badge:(document.getElementById('bAir')||{}).textContent,title:(document.getElementById('bAir')||{}).title,srcAt:airSrcAt,eff:airFreshness().st,
+  ticker:(document.getElementById('ticker')||{}).textContent,card:(()=>{const t=document.getElementById('tip');return t&&t.style.display==='block'&&t.querySelector('.t[data-air-key]')?t.textContent:'';})()}),
+  load:()=>loadAir(),shift:ms=>{if(fresh.air.okAt)fresh.air.okAt-=ms;if(airSrcAt)airSrcAt-=ms;airClearStale();paintBadgeAge();}};
+fresh.air.mode='off';
+airSeedRoutes();
 
 /* ==== LAUNCH v0.4.1 — Launch Library 2 (The Space Devs) upcoming-launch schedule (keyless, CORS *) ====
    Honest labels: this is a published SCHEDULE, not telemetry. Badge SCHED (cyan) while the schedule copy is < 6 h old,
@@ -3383,11 +3465,12 @@ function pickEntity(clientX,clientY,pre){
     tip.style.left=Math.min(innerWidth-250,clientX+12)+'px';
     tip.style.top=Math.min(innerHeight-80,clientY+12)+'px';
     if(ent.live){
-      tip.innerHTML='<div class="t">AIR · LIVE</div><div>'+esc(ent.call)+'</div><div class="v">'+(ent.alt!=null?Math.round(ent.alt)+' m':'—')+' · hdg '+(ent.hdg!=null?Math.round(ent.hdg):'—')+'</div>';
-      setTicker('AIR LIVE · '+ent.call);
+      const F=airFreshness(Date.now());
+      tip.innerHTML=airCardHtml(ent,F);tip.__airHtml=tip.innerHTML;
+      setTicker((airTickerText(F)||('AIR · '+F.st))+' · '+ent.call);
+      {const tk=document.getElementById('ticker');if(tk&&/^AIR/.test(tk.textContent))tk.__airKey=ent.key;}
     }else{
-      tip.innerHTML='<div class="t">AIR · PROTO</div><div>'+esc(ent.call)+'</div><div style="color:#ffcc00">SIMULATED · NOT LIVE ADS-B</div>';
-      setTicker('PROTO AIR · '+ent.call+' · waiting /api/air');
+      tip.style.display='none';tip.innerHTML='';
     }
     return;
   }
@@ -3555,7 +3638,7 @@ function frame(now){
   if(bootDone&&now-lastIssPoll>8000){lastIssPoll=now;loadIss();}
   if(bootDone&&now-lastWxPoll>10*60*1000){lastWxPoll=now;loadWx();}
   if(bootDone&&now-lastHazPoll>10*60*1000){if(lastHazPoll)loadHaz();lastHazPoll=now;}
-  if(bootDone&&now-lastAirPoll>22000){lastAirPoll=now;loadAir();}
+  if(bootDone)airMaybeLoad(); /* v0.4.7: backoff / Retry-After / hidden-tab / layer-off guards */
   if(bootDone&&now-lastShareWrite>2500){lastShareWrite=now;writeDeepLink(false);}
 }
 /* ==== FIRE v0.4.4 — NASA FIRMS MODIS C6.1 active-fire thermal hotspots (via /api/fire) ====
