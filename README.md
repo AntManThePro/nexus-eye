@@ -1,4 +1,4 @@
-# NEXUS EYE v0.4.5
+# NEXUS EYE v0.4.7
 
 Field-ops planet console by DoubleA (@AntManThePro). A photoreal globe with live public intel — quakes, weather alerts, launches, satellites, aurora, fires, and public CCTV snapshots. Original NEXUS build, from scratch. Not perfect, just real.
 
@@ -9,7 +9,7 @@ Field-ops planet console by DoubleA (@AntManThePro). A photoreal globe with live
 1. Open the live site — the globe loads, feeds start pulling.
 2. Drag to spin, pinch or scroll to zoom. Tap a marker for its card.
 3. Use the rail on the left to switch layers: QUAKE, ALERTS, LAUNCH, SATS, CCTV, and the rest.
-4. Tap a CCTV camera, then SNAPSHOT to see the live frame. Badges tell you straight up if a feed is LIVE, STALE, or PROTO — never fake live.
+4. Tap a CCTV camera, then SNAPSHOT to see the live frame. Badges tell you straight up if a feed is LIVE, STALE, or OFFLINE — never fake live.
 
 ## Layers
 
@@ -19,7 +19,8 @@ Field-ops planet console by DoubleA (@AntManThePro). A photoreal globe with live
 - LAUNCH · LL2 — upcoming orbital launches from The Space Devs Launch Library 2 (published schedule, not telemetry).
 - SATS · SGP4 — 198 satellites from CelesTrak GP elements, positions computed in the browser with SGP4 (satellite.js 5.0.0, self-hosted in `lib/`, MIT).
 - ISS · LIVE · WX · LIVE
-- AIR · LIVE on CDN when `/api/air` (OpenSky allowlist Function) returns real data; honest PROTO fallback otherwise
+- AIR · LIVE when `/api/air` returns a proved, fresh set from community ADS-B (adsb.lol, ODbL 1.0), Texas first of six fixed regions. A failed refresh keeps last-good positions as STALE for up to 5 minutes, then OFFLINE. Nothing is simulated. Contains information from adsb.lol, made available under the ODbL 1.0.
+- FIRE · NASA FIRMS MODIS C6.1 24h thermal hotspots via `/api/fire` (off unless the rail or a deep-link turns it on). LIVE after a successful pull; STALE keeps last-good points; OFFLINE draws nothing. Thermal detections, not ground truth.
 - ORBIT · KEPLER
 - CCTV · PUBLIC (+ last-good / FRAME OFFLINE) · TxDOT cams via `/api/cam` (allowlisted snapshot Function) + `cctv-pack.json`
 
@@ -36,6 +37,8 @@ Three.js r128 (CDN) · satellite.js 5.0.0 (self-hosted, `lib/`) · vanilla JS ·
 
 ## Release
 
+v0.4.7 — TX LIVE: `/api/air` uses a Texas-first community ADS-B proxy (adsb.lol, ODbL 1.0) instead of OpenSky (which blocked this host's cloud IPs and 503'd). AIR is LIVE / STALE / OFFLINE only — the old PROTO simulated planes are gone. Adds `netlify/functions/fire.js` so the existing FIRE layer's `/api/fire` call has a function to hit. Built on v0.4.6 (drift fix, icons, egg, CITY tabs, PREV/nearest-NEXT).
+v0.4.6 — Stop idle globe drift; firmer drag friction. Icons, README how-to, footer egg.
 v0.4.5 — SUN/AURORA/FIRE plus city tabs, PREV/nearest-NEXT, CCTV LIVE VERIFIED + CCTV CITY panels.
 v0.4.1-launch — LAUNCH layer (LL2 schedule), pad card, paced hourly refresh/backoff/429 handling, STALE after 6h.
 v0.4.0-sats — SATS layer (CelesTrak GP + SGP4), satellite card, paced refresh/backoff, tap priority rule, 11 px badges.
