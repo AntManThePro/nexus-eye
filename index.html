@@ -4,8 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
 <meta name="theme-color" content="#07070a"/>
-<meta name="description" content="NEXUS EYE v0.4.8 — photoreal field-ops planet console by DoubleA (@AntManThePro)"/>
-<title>NEXUS EYE · v0.4.8</title>
+<meta name="description" content="NEXUS EYE v0.4.9 — photoreal field-ops planet console by DoubleA (@AntManThePro)"/>
+<title>NEXUS EYE · v0.4.9</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32"/>
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180"/>
@@ -398,7 +398,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     <circle cx="48" cy="20" r="2" fill="#ffcc00"/>
   </svg>
   <div class="boot-title">NEXUS EYE</div>
-  <div class="boot-sub">SPATIAL INTEL · v0.4.8 · FIELD OPS</div>
+  <div class="boot-sub">SPATIAL INTEL · v0.4.9 · FIELD OPS</div>
   <div class="boot-log" id="bootLog"></div>
   <div class="boot-bar"><i id="bootBar"></i></div>
   <button class="boot-skip pe" id="bootSkip" type="button">SKIP BOOT ▸</button>
@@ -413,7 +413,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="#00ff87" stroke-width="1.5"/><circle cx="32" cy="32" r="18" fill="none" stroke="#60efff" stroke-width="1" opacity=".7"/><ellipse cx="32" cy="32" rx="28" ry="10" fill="none" stroke="#ff0080" stroke-width="1" opacity=".8"/><circle cx="32" cy="32" r="6" fill="#00ff87"/><circle cx="32" cy="32" r="2.5" fill="#07070a"/><circle cx="48" cy="20" r="2" fill="#ffcc00"/></svg>
       <div>
         <h1>NEXUS EYE</h1>
-        <div class="ver">v0.4.8 · OPERATOR // DOUBLEA · ANTMAN ASSIST</div>
+        <div class="ver">v0.4.9 · OPERATOR // DOUBLEA · ANTMAN ASSIST</div>
       </div>
     </div>
     <div class="badges">
@@ -484,7 +484,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <div class="stat"><span>FIRE</span><span id="fireOpsV">OFF · NASA FIRMS MODIS C6.1 thermal hotspots (24h) · thermal detections · not ground truth</span></div>
       <div class="stat"><span>VOLC</span><span id="volcOpsV">OFF · USGS volcano alert levels + aviation color codes · official USGS alert levels · US-monitored volcanoes · not a forecast</span></div>
       <div class="stat"><span>ALERTS</span><span id="alertsOpsV">… · NOAA / NWS active alerts · TX first</span></div>
-      <div class="stat"><span>CCTV</span><span>8,338-cam official public catalog · LIVE count = source-time verified only · TX TxDOT / TranStar / Austin · US NYC / Caltrans / ODOT · INTL</span></div>
+      <div class="stat"><span>CCTV</span><span>8,334-cam official public catalog · LIVE count = source-time verified only · TX TxDOT / TranStar / Austin · US NYC / Caltrans / ODOT · INTL</span></div>
       <div class="stat"><span>ORBIT</span><span>KEPLER · scout craft</span></div>
       <div class="stat"><span>AIR</span><span>LIVE via /api/air · else OFFLINE</span></div>
       <div class="stat"><span>SHARE</span><span>?lat=&amp;lon=&amp;alt=&amp;layers= · ?layer=alerts · ?alerts=tx</span></div>
@@ -581,13 +581,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
           <li>LIVE feeds + STALE ages · honest OFFLINE when a feed is down</li>
           <li>AIR · LIVE via allowlisted server function (community ADS-B, Texas first, else OFFLINE)</li>
           <li>Share deep-links · ?lat=&amp;lon=&amp;alt=&amp;layers=</li>
-          <li>CCTV · 8,338-cam official public catalog · Texas first · per-cam LIVE/STALE/OFFLINE, LIVE only when source time is verified</li>
+          <li>CCTV · 8,334-cam official public catalog · Texas first · per-cam LIVE/STALE/OFFLINE, LIVE only when source time is verified</li>
           <li>HAZ · NASA EONET natural-hazard layer + storm tracks</li>
           <li>ALERTS · NOAA / NWS active warnings · severity polygons · Texas first · honest LIVE/STALE/OFFLINE</li>
           <li>Netlify-ready · /api/air function · keyless local HTML</li>
           <li>Direct action · verify everything · no fluff</li>
         </ul>
-        <div class="contact">NEXUS EYE v0.4.8 · ORIGINAL</div>
+        <div class="contact">NEXUS EYE v0.4.9 · ORIGINAL</div>
       </div>
       <p style="margin-top:12px;opacity:.7;font-size:10px">Tip: open HIRE, zoom Earth, tap a CCTV marker, screenshot the HUD.</p>
     </div>
@@ -597,7 +597,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     <div class="panel-h">CCTV · LIVE VERIFIED <button type="button" data-close="cctvLive">✕</button></div>
     <div class="panel-b">
       <p style="opacity:.85">Only cameras verified LIVE in this session, organized TX first, then US, then INTL, by owner, then name. Tap one to open it.</p>
-      <p style="opacity:.7">Honest limit: Eye samples a subset every few minutes (1 per TxDOT district + 2 per provable source), it does NOT check all 8,338 cameras at once. So this list starts small and grows as checks finish — it is not "every live camera in Texas."</p>
+      <p style="opacity:.7">Honest limit: Eye samples a subset every few minutes (1 per TxDOT district + 2 per provable source), it does NOT check all 8,334 cameras at once. So this list starts small and grows as checks finish — it is not "every live camera in Texas."</p>
       <div style="margin:8px 0"><button type="button" id="cctvLiveRefresh">VERIFY SAMPLE NOW</button> <span id="cctvLiveCount">…</span></div>
       <div id="cctvLiveList"></div>
     </div>
@@ -680,7 +680,7 @@ let satsList=[],satsReady=false,satsErr='',satsInflight=false,satsPulledAt=0,sat
 let satsFailN=0,satsNextTry=0,satsLastTry=0,satsTryLog=[],satsNetReq=0,satsNotUpdatedAt=0,satsOnlineAt=0,satsLibFrom='',satsMem={},satsCardOn=false,satsTrackAt=0,satsTrackPer=0,satsTrackN=0; /* R2 S1-S3 */
 /* v0.3.9 ALERTS state — declared early: paintBadgeAge() runs during init */
 let alertsReady=false;
-let alertsAll=[],alertsFilter='ALL',alertsInflight=false,alertsLastTry=0,alertsErr='',alertsUpdated=null,alertsSel=null,alertsView='list',alertsAntman=false;
+let alertsSkipped=0,alertsAll=[],alertsFilter='ALL',alertsInflight=false,alertsLastTry=0,alertsErr='',alertsUpdated=null,alertsSel=null,alertsView='list',alertsAntman=false;
 let alertsLines=null,alertsFill=null,alertsHiLine=null,alertsHiFill=null,alertsVerts=0;
 const alertsDock=document.getElementById('alertsDock'),alertsBody=document.getElementById('alertsBody');
 
@@ -704,8 +704,8 @@ function ageStr(ms){
 function markFresh(key,ok,count){
   const f=fresh[key];if(!f)return;
   if(count!=null&&count!=='')f.count=String(count);
-  if(ok){f.okAt=Date.now();if(key==='air')f.mode='live';}
-  else{f.failAt=Date.now();if(key==='air'&&f.mode!=='live')f.mode='proto';}
+  if(ok){f.okAt=Date.now();f.failAt=0;if(key==='air')f.mode='live';}
+  else{f.failAt=Math.max(Date.now(),f.okAt+1);}
 }
 /* v0.3.7 N2: HAZ rail sublabel + OPS row follow the HAZ badge state */
 function hazLabels(st){
@@ -937,7 +937,7 @@ const bootEl=document.getElementById('boot');
 const bootLog=document.getElementById('bootLog');
 const bootBar=document.getElementById('bootBar');
 const lines=[
-  'NEXUS EYE KERNEL · v0.4.8',
+  'NEXUS EYE KERNEL · v0.4.9',
   'FEED · NOAA SWPC OVATION AURORA + Kp · STANDBY (rail AURORA or ?layers=…,aur)',
   'FEED · NASA FIRMS MODIS FIRE · STANDBY (rail FIRE or ?layers=…,fire)',
   'FEED · USGS VOLCANO WATCH · STANDBY (rail VOLC or ?layers=…,volc)',
@@ -2239,11 +2239,11 @@ async function loadWx(){
    Runtime: each camera's badge is earned per refresh — LIVE (fresh frame within cadence) · STALE · OFFLINE. */
 const CCTV_SRC={"tABL":{"owner":"TxDOT ITS · Abilene District","kind":"txdot","d":"ABL","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tAMA":{"owner":"TxDOT ITS · Amarillo District","kind":"txdot","d":"AMA","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tATL":{"owner":"TxDOT ITS · Atlanta District","kind":"txdot","d":"ATL","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tAUS":{"owner":"TxDOT ITS · Austin District","kind":"txdot","d":"AUS","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tBMT":{"owner":"TxDOT ITS · Beaumont District","kind":"txdot","d":"BMT","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tBRY":{"owner":"TxDOT ITS · Bryan District","kind":"txdot","d":"BRY","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tBWD":{"owner":"TxDOT ITS · Brownwood District","kind":"txdot","d":"BWD","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tCHS":{"owner":"TxDOT ITS · Childress District","kind":"txdot","d":"CHS","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tCRP":{"owner":"TxDOT ITS · Corpus Christi District","kind":"txdot","d":"CRP","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tDAL":{"owner":"TxDOT ITS · Dallas District","kind":"txdot","d":"DAL","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tELP":{"owner":"TxDOT ITS · El Paso District","kind":"txdot","d":"ELP","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tFTW":{"owner":"TxDOT ITS · Fort Worth District","kind":"txdot","d":"FTW","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tHOU":{"owner":"TxDOT ITS · Houston District","kind":"txdot","d":"HOU","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tLRD":{"owner":"TxDOT ITS · Laredo District","kind":"txdot","d":"LRD","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tLBB":{"owner":"TxDOT ITS · Lubbock District","kind":"txdot","d":"LBB","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tLFK":{"owner":"TxDOT ITS · Lufkin District","kind":"txdot","d":"LFK","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tODA":{"owner":"TxDOT ITS · Odessa District","kind":"txdot","d":"ODA","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tPAR":{"owner":"TxDOT ITS · Paris District","kind":"txdot","d":"PAR","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tPHR":{"owner":"TxDOT ITS · Pharr District","kind":"txdot","d":"PHR","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tSJT":{"owner":"TxDOT ITS · San Angelo District","kind":"txdot","d":"SJT","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tSAT":{"owner":"TxDOT ITS · San Antonio District (TransGuide)","kind":"txdot","d":"SAT","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tTYL":{"owner":"TxDOT ITS · Tyler District","kind":"txdot","d":"TYL","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tWAC":{"owner":"TxDOT ITS · Waco District","kind":"txdot","d":"WAC","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tWFS":{"owner":"TxDOT ITS · Wichita Falls District","kind":"txdot","d":"WFS","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"tYKM":{"owner":"TxDOT ITS · Yoakum District","kind":"txdot","d":"YKM","cad":60,"region":"TX","home":"https://its.txdot.gov/"},"hou":{"owner":"Houston TranStar","kind":"img","pre":"https://www.houstontranstar.org/snapshots/cctv/","suf":".jpg","cad":60,"region":"TX","home":"https://traffic.houstontranstar.org/"},"atx":{"owner":"City of Austin Transportation & Public Works","kind":"img","pre":"https://cctv.austinmobility.io/image/","suf":".jpg","cad":180,"region":"TX","home":"https://data.austintexas.gov/"},"nyc":{"owner":"NYC DOT · NYCTMC","kind":"img","pre":"https://webcams.nyctmc.org/api/cameras/","suf":"/image","cad":30,"region":"US","home":"https://webcams.nyctmc.org/"},"ca":{"owner":"Caltrans CWWP2","kind":"img","pre":"https://cwwp2.dot.ca.gov/data/","suf":"","cad":300,"region":"US","home":"https://cwwp2.dot.ca.gov/"},"or":{"owner":"Oregon DOT · TripCheck","kind":"img","pre":"https://tripcheck.com/RoadCams/cams/","suf":"","cad":300,"region":"US","home":"https://tripcheck.com/"},"tfl":{"owner":"Transport for London JamCams · Powered by TfL Open Data","kind":"img","pre":"https://s3-eu-west-1.amazonaws.com/jamcams.tfl.gov.uk/","suf":".jpg","cad":300,"region":"INTL","home":"https://tfl.gov.uk/"},"fi":{"owner":"Fintraffic / digitraffic.fi · CC BY 4.0","kind":"img","pre":"https://weathercam.digitraffic.fi/","suf":".jpg","cad":600,"region":"INTL","home":"https://www.digitraffic.fi/"},"hk":{"owner":"Hong Kong Transport Department · DATA.GOV.HK","kind":"img","pre":"https://tdcctv.data.one.gov.hk/","suf":".JPG","cad":120,"region":"INTL","home":"https://data.gov.hk/"},"nz":{"owner":"NZ Transport Agency Waka Kotahi","kind":"img","pre":"https://www.trafficnz.info/camera/","suf":".jpg","cad":60,"region":"INTL","home":"https://www.nzta.govt.nz/"},"ott":{"owner":"City of Ottawa Traffic","kind":"img","pre":"https://traffic.ottawa.ca/map/camera?id=","suf":"","cad":60,"region":"INTL","home":"https://traffic.ottawa.ca/"},"mto":{"owner":"Ontario MTO via City of Ottawa","kind":"img","pre":"https://traffic.ottawa.ca/map/camera?id=","suf":"","cad":60,"region":"INTL","home":"https://traffic.ottawa.ca/"}};
 const CCTV_CITY=["Austin, TX","Houston, TX","Abilene, TX","Amarillo, TX","Atlanta, TX","Beaumont, TX","Bryan, TX","Brownwood, TX","Childress, TX","Corpus Christi, TX","Dallas, TX","El Paso, TX","Fort Worth, TX","Lubbock, TX","Lufkin, TX","Laredo, TX","Odessa, TX","Paris, TX","Pharr, TX","San Antonio, TX","San Angelo, TX","Tyler, TX","Waco, TX","Wichita Falls, TX","Yoakum, TX","Eureka, CA","Clear Lake, CA","Crescent City, CA","Clearlake, CA","Ukiah, CA","Fort Bragg, CA","Lower Lake, CA","Upper Lake, CA","Blue Lake, CA","Willits, CA","Arcata, CA","Smith River, CA","Redwood Valley, CA","Lakeport, CA","Point Arena, CA","Lake Port, CA","Leggett, CA","Hopland, CA","Gasquet, CA","Lord Ellis, CA","Fortuna, CA","Middletown, CA","Hiouchi, CA","Piercy, CA","Scotia, CA","East Lucerne, CA","Clearlake Oaks, CA","North Lakeport, CA","Hornbrook, CA","Cottonwood, CA","Susanville, CA","Montague, CA","Dunsmuir, CA","Yreka, CA","Dorris, CA","Mount Shasta, CA","Lakehead, CA","Burney, CA","Red Bluff, CA","Perez Agriculture Inspection Facility, CA","Redding, CA","Mineral, CA","Anderson, CA","Chester, CA","Quincy, CA","Doyle, CA","Mt Shasta, CA","Hallelujah Junction, CA","Shasta Lake, CA","Castella, CA","Weed, CA","Old Station, CA","Alturas, CA","Lewiston, CA","Janesville, CA","Weaverville, CA","McCloud, CA","Sacramento, CA","South Lake Tahoe, CA","Truckee, CA","West Sacramento, CA","Soda Springs, CA","Rancho Cordova, CA","Galt, CA","Chico, CA","Oroville, CA","Tahoe City, CA","Elk Grove, CA","Marysville, CA","Lincoln, CA","SR99 at Florin Rd, CA","Davis, CA","Folsom, CA","Placerville, CA","Pollock Pines, CA","Roseville, CA","Rocklin, CA","Yuba City, CA","Twin Bridges, CA","Durham, CA","El Dorado Hills, CA","Meyers, CA","North Highlands, CA","Northstar, CA","El Cerrito, CA","El Sobrante, CA","Vacaville, CA","Berkeley, CA","Oakland, CA","Emeryville, CA","San Ramon, CA","Richmond, CA","Cupertino, CA","Hayward, CA","Castro Valley, CA","Petaluma, CA","Rohnert Park, CA","Fremont, CA","San Francisco, CA","Fairfield, CA","Palo Alto, CA","Menlo Park, CA","Mountain View, CA","Martinez, CA","San Quentin, CA","San Jose, CA","Antioch, CA","San Martin, CA","Brisbane, CA","Crockett, CA","Morgan Hill, CA","Newark, CA","Napa, CA","Livermore, CA","San Pablo, CA","Santa Clara, CA","Danville, CA","San Mateo, CA","Concord, CA","Sunnyvale, CA","Rodeo, CA","San Leandro, CA","Novato, CA","Los Gatos, CA","Burlingame, CA","Santa Rosa, CA","Sunol, CA","Benicia, CA","Vallejo, CA","Pleasanton, CA","Milpitas, CA","San Juan Bautista, CA","Salinas, CA","San Luis Obispo, CA","Santa Barbara, CA","Watsonville, CA","Goleta, CA","Arroyo Grande, CA","Santa Cruz, CA","Atascadero, CA","Paso Robles, CA","Buellton, CA","Carpinteria, CA","Monterey, CA","Capitola, CA","Aptos, CA","Santa Maria, CA","Carmel, CA","Nipomo, CA","Pismo Beach, CA","Santa Ynez, CA","Summerland, CA","Lompoc, CA","Moss Landing, CA","Prunedale, CA","Hollister, CA","Castroville, CA","Seaside, CA","Cayucos, CA","San Simeon, CA","Aromas, CA","Hanford, CA","Prather, CA","Fresno, CA","Visalia, CA","Bakersfield, CA","Tulare, CA","Clovis, CA","Lebec, CA","Kingsburg, CA","Fowler, CA","Firebaugh, CA","Madera, CA","Coalinga, CA","Porterville, CA","Cantua Creek, CA","Avenal, CA","Mc Farland, CA","Kerman, CA","Chowchilla, CA","Selma, CA","Sanger, CA","Lost Hills, CA","Goshen, CA","Delano, CA","Oakhurst, CA","Buttonwillow, CA","Pasadena, CA","Los Angeles, CA","Inglewood, CA","Long Beach, CA","Moorpark, CA","LAX, CA","La Verne, CA","Torrance, CA","Compton, CA","Harbor City, CA","UCLA Medical Center, CA","Old Pasadena, CA","Santa Fe Springs, CA","Elysian Park, CA","Claremont, CA","North Hollywood, CA","San Dimas, CA","La Mirada, CA","Gardena, CA","Carson, CA","Azusa, CA","Whittier, CA","Culver City, CA","Pepperdine University, CA","Downtown LA, CA","Las Flores Canyon, CA","Granada Hills, CA","South Arroyo, CA","Sherman Oaks, CA","Broadway-Manchester, CA","Atwater Village, CA","Duarte, CA","Norwalk, CA","Ventura, CA","Manhattan Beach, CA","Culver city, CA","Lennox, CA","Thousand Oaks, CA","Monrovia, CA","Downey, CA","Glendora, CA","South Figueroa Corridor, CA","West Carson, CA","Hermosa Beach, CA","Vermont Vista, CA","Valencia, CA","Fashion District, CA","Malibu Pier, CA","Panorama City, CA","Burbank, CA","Rowland Heights, CA","South El Monte, CA","Encino, CA","Lawndale, CA","Covina, CA","Bellflower, CA","Pacific Palisades, CA","South Gate, CA","USC Health, CA","Alhambra, CA","Malibu Lagoon, CA","Exposition Park, CA","Phelan, CA","Corona, CA","Thousand Palms, CA","San Bernardino, CA","Sun City, CA","Banning, CA","Murrieta, CA","Ontario, CA","Colton, CA","Redlands, CA","Fontana, CA","Beaumont, CA","Chino, CA","Montclair, CA","Riverside, CA","Menifee, CA","Mira Loma, CA","Upland, CA","Whitewater, CA","Lake Elsinore, CA","Temecula, CA","Perris, CA","Wildomar, CA","Rancho Cucamonga, CA","Blythe, CA","Hesperia, CA","Rialto, CA","Not Reported, CA","Victorville, CA","Eastvale, CA","Chino Hills, CA","Calimesa, CA","Barstow, CA","Desert Hot Springs, CA","Inyokern, CA","Lee Vining, CA","Mojave, CA","Coleville, CA","Mammoth Lakes, CA","June Lake, CA","Lone Pine, CA","Keene, CA","Olancha, CA","Benton, CA","Lake Crowley Exit Ramp, CA","Tehachapi, CA","Bridgeport, CA","Merced, CA","Modesto, CA","Lathrop, CA","Cornerstone, CA","Livingston, CA","Clements, CA","Turlock, CA","Ceres, CA","Lodi, CA","Tracy, CA","Stockton, CA","Gustine, CA","Manteca, CA","Stanislaus, CA","Isleton, CA","Soulsbyville, CA","Le Grand, CA","Groveland, CA","Atwater, CA","Westley, CA","Keyes, CA","Midpines, CA","Salida, CA","Mariposa, CA","Banta, CA","Ripon, CA","Walnut Grove, CA","Pine Grove, CA","San Diego, CA","Del Mar, CA","Carlsbad, CA","Solana Beach, CA","Encinitas, CA","Coronado, CA","Oceanside, CA","National City, CA","Santee, CA","Fallbrook, CA","Escondido, CA","Calexico, CA","Lakeside, CA","Spring Valley, CA","San Ysidro, CA","Chula Vista, CA","El Centro, CA","Poway, CA","Cardiff By The Sea, CA","Lemon Grove, CA","Anaheim, CA","Buena Park, CA","Irvine, CA","Newport Beach, CA","Orange, CA","Santa Ana, CA","San Clemente, CA","Laguna Beach, CA","Tustin, CA","Westminster, CA","Laguna Niguel, CA","Brea, CA","Foothill Ranch, CA","Lake Forest, CA","Newport Coast, CA","Costa Mesa, CA","Mission Viejo, CA","Fullerton, CA","Seal Beach, CA","Capistrano Beach, CA","Placentia, CA","San Juan Capistrano, CA","Trabuco Canyon, CA","La Habra, CA","San Fernando, CA","March Air Reserve Base, CA","Gilroy, CA","Garden Grove, CA","Downtown Glendale, CA","Glendale, CA","Orinda, CA","Bloomington, CA","Palms, CA","Pinole, CA","Walnut Creek, CA","Kelseyville, CA","Alamo, CA","Tahoe Vista, CA","Belmont, CA","Wilmington, CA","Cherry Valley, CA","Edison, CA","Fulton, CA","Santa Margarita, CA","Piedra Gorda Canyon, CA","Topanga Beach, CA","San Pedro, CA","Hawthorne, CA","Mid City, CA","Scotts Valley, CA","Brentwood, CA","Cameron Park Dr, CA","Williams, CA","Butte City, CA","Orland, CA","Auburn, CA","Grass Valley, CA","Kyburz, CA","Queens, NY","Bronx, NY","Brooklyn, NY","Manhattan, NY","Staten Island, NY","Oregon","Finland","Hong Kong","Ottawa, CA","New Zealand · SH1","New Zealand · ","New Zealand · SH76","New Zealand · SH79","New Zealand · SH16","New Zealand · SH20","New Zealand · SH7","New Zealand · SH6","New Zealand · SH63","New Zealand · SH2","New Zealand · SH6A","New Zealand · SH8","New Zealand · SH29","New Zealand · SH59","New Zealand · SH20B","New Zealand · SH18","New Zealand · SH73","New Zealand · SH74","New Zealand · Sh1","New Zealand · SH75","London, UK"];
-/* glassfix N8: CCTV_PACK (8,338 rows) now lives in cctv-pack.json, fetched lazily by cctvLoadPack() */
+/* glassfix N8: CCTV_PACK (8,334 rows since the v0.4.9 honesty cut of 4 dead TxDOT cams) now lives in cctv-pack.json, fetched lazily by cctvLoadPack() */
 const CCTV_REGION_LABEL={TX:'TEXAS',US:'REST OF US',INTL:'INTERNATIONAL'};
 const CCTV_REGION_COL={TX:COL.y,US:COL.c,INTL:COL.g};
 const CCTV_AIM={ALL:[31.0,-98.6,3.8],TX:[31.0,-98.6,2.35],US:[38.5,-97,3.1],INTL:[48,10,3.4]}; /* glassfix: ALL = whole-globe view, Texas-centred */
-/* glassfix N8: the 8,338-row pack is no longer inline — cctv-pack.json (same folder) is fetched lazily, only once the
+/* glassfix N8: the 8,334-row pack is no longer inline — cctv-pack.json (same folder) is fetched lazily, only once the
    CCTV layer is on. Until it lands the badge says VERIFYING; if it can't load the badge says OFFLINE. Nothing faked. */
 const CCTV_CAMS=[],CCTV_COUNTS={TX:0,US:0,INTL:0};
 let cctvReady=false,cctvPackErr=null,cctvPackP=null,cctvFilterPending=false;
@@ -2311,18 +2311,27 @@ function cctvUrl(cam){
 /* LIVE = last refresh succeeded, inside 2× source cadence (+30s), freshness PROVEN by a source timestamp
    (TxDOT X-Cam-Timestamp / Last-Modified) no older than cadence + 15 min, and the bytes changed since the previous fetch.
    Failure semantics (STALE after a failed refresh, OFFLINE if never reached) are unchanged. */
+/* v0.4.9: /api/cam now names WHY a TxDOT frame failed (X-Cam-Error) — shown instead of a generic "unreachable" */
+const CCTV_WHY={'camera-not-at-source':'TxDOT no longer publishes this camera','no-image-at-source':'TxDOT has no image from this camera right now (device offline at the source)',
+  'timeout':'TxDOT did not answer in time','upstream-rate-limited':'TxDOT is rate-limiting · will retry later','rate-limited':'too many camera requests · will retry later',
+  'camera-not-allowlisted':'camera not in the allowlist','upstream':'TxDOT server error','unreachable':'source unreachable','not-json':'TxDOT sent an unexpected reply'};
+function cctvWhy(st){const w=st&&st.why;return w?(CCTV_WHY[w]||String(w).slice(0,40)):'source unreachable';}
+/* v0.4.9: TxDOT and most DOT stills refresh every ~1.5–5 min, so the same bytes on one re-check is normal. Same bytes are
+   "NO NEW FRAME" only when the source re-stamped an identical image (frozen camera) or nothing changed for longer than
+   3× the cam's cadence (min 10 min). The source-time STALE check above still applies first. */
+function cctvFrozenMs(cam){return Math.max(cam.cad*3000,10*60000);}
 function cctvStatus(cam,now){
   now=now||Date.now();const st=cctvState[cam.id];
   if(!st||(!st.okAt&&!st.failAt))return {s:'UNVERIFIED',age:0};
-  if(!st.okAt)return {s:'OFFLINE',age:0};
+  if(!st.okAt)return {s:'OFFLINE',age:0,why:cctvWhy(st)};
   const age=now-st.okAt;
   if(st.failAt>st.okAt){const fa=st.srcTs?Math.max(age,now-st.srcTs):age; /* R4: age of the last good frame — source time when known, else time since it was fetched */
-    return {s:'STALE',age:fa,why:'refresh failed · last good frame '+(st.srcTs?'source time '+ageStr(now-st.srcTs)+' old':'fetched '+ageStr(age)+' ago')+' · frame kept, not refreshed'};}
+    return {s:'STALE',age:fa,why:'refresh failed ('+cctvWhy(st)+') · last good frame '+(st.srcTs?'source time '+ageStr(now-st.srcTs)+' old':'fetched '+ageStr(age)+' ago')+' · frame kept, not refreshed'};}
   if(age>cam.cad*2000+30000)return {s:'STALE',age,why:'no new frame in '+ageStr(age)};
   if(st.srcTs&&now-st.srcTs>cam.cad*1000+CCTV_TS_MARGIN)return {s:'STALE',age:now-st.srcTs,why:'source frame '+ageStr(now-st.srcTs)+' old'};
   if(st.future)return {s:'FRAME OK',age,why:'image loaded '+ageStr(age)+' ago · source time is in the future · freshness not verified'};
   if(!st.verified)return {s:'FRAME OK',age,why:'image loaded '+ageStr(age)+' ago · freshness not verified (source publishes no timestamp the browser can read)'};
-  if(st.same)return {s:'NO NEW FRAME',age,why:'refresh returned the same bytes as the previous frame'};
+  if(st.same&&(st.restamped||now-(st.newAt||st.okAt)>cctvFrozenMs(cam)))return {s:'NO NEW FRAME',age,why:st.restamped?'the source re-stamped an identical image (camera frozen)':'no new image from the source for '+ageStr(now-(st.newAt||st.okAt))};
   return {s:'LIVE',age};
 }
 /* glassfix #4/N4: LIVE count = source-verified fresh frames among the CURRENT 3-min sample window (+ the open cam).
@@ -2371,12 +2380,12 @@ function cctvFetchFrame(cam,timeout){
   if(cam.kind==='txdot'){
     return cctvTimedFetch(cctvUrl(cam),timeout).then(r=>{
       const ct=r.headers.get('content-type')||'';
-      if(!r.ok||ct.indexOf('image/')!==0)throw new Error('http '+r.status);
+      if(!r.ok||ct.indexOf('image/')!==0){const e=new Error('http '+r.status);e.why=r.headers.get('x-cam-error')||('http '+r.status);throw e;}
       const ts=parseTxTs(r.headers.get('x-cam-timestamp'),cam.d);
       const stale=r.headers.get('x-cam-cache')==='stale';
       return r.arrayBuffer().then(buf=>{const b=new Blob([buf],{type:ct});
-        return {ok:true,url:URL.createObjectURL(b),srcTs:ts,proxyStale:stale,hash:cctvHash(buf),verified:!!ts};});
-    }).catch(()=>({ok:false}));
+        return {ok:true,url:URL.createObjectURL(b),srcTs:ts,proxyStale:stale,why:stale?(r.headers.get('x-cam-error')||''):'',hash:cctvHash(buf),verified:!!ts};});
+    }).catch(e=>({ok:false,why:(e&&e.why)||(e&&e.name==='AbortError'?'timeout':'unreachable')}));
   }
   if(CCTV_PROVABLE[cam.src]){
     /* CORS sources: read Last-Modified + bytes. If the CORS fetch itself fails we fall back to a plain <img> (unverified). */
@@ -2419,12 +2428,14 @@ function cctvRecord(cam,r){
   if(good){
     if(st.frame&&st.frame.indexOf('blob:')===0&&st.frame!==r.url){try{URL.revokeObjectURL(st.frame);}catch(_){}}
     st.same=!!(r.hash&&st.hash&&r.hash===st.hash);
-    if(!st.same)st.newAt=Date.now();
+    /* v0.4.4.1: identical bytes under a NEW source time = frozen camera; identical bytes under the same source time = same snapshot */
+    st.restamped=st.same&&(st.restamped||!!(r.srcTs&&st.srcTs&&r.srcTs!==st.srcTs));
+    if(!st.same){st.newAt=Date.now();st.restamped=false;}st.why='';
     /* R3 N-b: a source time more than 5 min in the future is not proof of freshness — frame kept, NOT verified */
     st.future=!!(r.srcTs&&r.srcTs>Date.now()+CCTV_FUTURE_MS);
     st.hash=r.hash||'';st.verified=!!r.verified&&!st.future;
     st.okAt=Date.now();st.srcTs=st.future?0:(r.srcTs||0);st.frame=r.url;
-  }else{st.failAt=Date.now();if(r.ok&&r.url&&r.url.indexOf('blob:')===0){try{URL.revokeObjectURL(r.url);}catch(_){}}}
+  }else{st.failAt=Date.now();st.why=r.why||'';if(r.ok&&r.url&&r.url.indexOf('blob:')===0){try{URL.revokeObjectURL(r.url);}catch(_){}}}
   cctvPaintGlobal();
   return st;
 }
@@ -2807,7 +2818,7 @@ function cctvLiveRender(){
   if(!cctvReady){if(cnt)cnt.textContent='PACK NOT LOADED YET';el.innerHTML='<p>Turn CCTV on and wait for the pack to load.</p>';return;}
   const live=cctvLiveList();
   if(cnt)cnt.textContent=live.length+' LIVE-VERIFIED';
-  if(!live.length){el.innerHTML='<p>No cameras verified LIVE yet this session. Tap VERIFY SAMPLE NOW, or open a camera, then tap it again after a few seconds — verified ones will appear here. This is a sampled list, not all 8,338 cameras checked.</p>';return;}
+  if(!live.length){el.innerHTML='<p>No cameras verified LIVE yet this session. Tap VERIFY SAMPLE NOW, or open a camera, then tap it again after a few seconds — verified ones will appear here. This is a sampled list, not all 8,334 cameras checked.</p>';return;}
   let out='',last='';
   for(const c of live){
     const h=c.region+' · '+c.owner;
@@ -2925,19 +2936,34 @@ function alertPolys(geom){
 function ringHas(r,x,y){let ins=false;for(let i=0,j=r.length-1;i<r.length;j=i++){const xi=r[i][0],yi=r[i][1],xj=r[j][0],yj=r[j][1];if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))ins=!ins;}return ins;}
 function polyHas(poly,x,y){if(!ringHas(poly[0],x,y))return false;for(let k=1;k<poly.length;k++)if(ringHas(poly[k],x,y))return false;return true;}
 function ringArea(r){let s=0;for(let i=0,j=r.length-1;i<r.length;j=i++)s+=(r[j][0]-r[i][0])*(r[j][1]+r[i][1]);return Math.abs(s/2);}
+function alertCoordOk(c){return Array.isArray(c)&&c.length>=2&&typeof c[0]==='number'&&typeof c[1]==='number'&&Number.isFinite(c[0])&&Number.isFinite(c[1])&&Math.abs(c[0])<=180&&Math.abs(c[1])<=90;}
 function alertParse(f,i){
-  if(!f||typeof f!=='object')return null;
-  const p=f.properties||{};
-  const polys=[];
-  (Array.isArray(f.geometry&&f.geometry.coordinates)||f.geometry&&f.geometry.type==='GeometryCollection'?alertPolys(f.geometry):[]).forEach(poly=>{
-    if(!Array.isArray(poly))return;
-    const rings=poly.map(ring=>Array.isArray(ring)?ring.filter(c=>Array.isArray(c)&&Number.isFinite(+c[0])&&Number.isFinite(+c[1])&&Math.abs(+c[1])<=90).map(c=>[+c[0],+c[1]]):[])
-      .map(r=>{if(r.length>1&&r[0][0]===r[r.length-1][0]&&r[0][1]===r[r.length-1][1])r.pop();return r;}).filter(r=>r.length>=3);
-    if(!rings.length)return;
+  /* r2 B3: a row must be a real alert — object with properties, an official id and an event name. Nothing is invented. */
+  if(!f||typeof f!=='object'||!f.properties||typeof f.properties!=='object')return null;
+  const p=f.properties;
+  const rid=typeof p.id==='string'&&p.id.trim()?p.id:(typeof f.id==='string'&&f.id.trim()?f.id:'');
+  if(!rid||typeof p.event!=='string'||!p.event.trim())return null;
+  const polys=[];let badGeom=false;
+  const gm=f.geometry;
+  if(gm!=null){ /* null geometry = legitimate zone-only alert; anything else must be well-formed */
+    const known=gm&&typeof gm==='object'&&(gm.type==='GeometryCollection'?Array.isArray(gm.geometries):(gm.type==='Polygon'||gm.type==='MultiPolygon')&&Array.isArray(gm.coordinates));
+    if(!known)badGeom=true;
+    (known?alertPolys(gm):[]).forEach(poly=>{
+      if(!Array.isArray(poly)||!poly.length){badGeom=true;return;}
+      /* any invalid coordinate invalidates its ring; an invalid outer ring drops the whole polygon (never a made-up shape) */
+      const rings=[];
+      for(let k=0;k<poly.length;k++){const ring=poly[k];
+        if(!Array.isArray(ring)||!ring.every(alertCoordOk)){badGeom=true;if(k===0)return;continue;}
+        const r=ring.map(c=>[c[0],c[1]]);
+        if(r.length>1&&r[0][0]===r[r.length-1][0]&&r[0][1]===r[r.length-1][1])r.pop();
+        if(r.length<3){badGeom=true;if(k===0)return;continue;}
+        rings.push(r);}
+      if(!rings.length)return;
     let mn=Infinity,mx=-Infinity;rings[0].forEach(c=>{mn=Math.min(mn,c[0]);mx=Math.max(mx,c[0]);});
     if(mx-mn>180)rings.forEach(r=>r.forEach(c=>{if(c[0]<0)c[0]+=360;})); /* antimeridian (AK / Pacific) */
     polys.push(rings);
-  });
+    });
+  }
   let bb=null,inside=null,area=0;
   polys.forEach(poly=>{const r=poly[0];area+=ringArea(r);
     r.forEach(c=>{if(!bb)bb=[c[0],c[1],c[0],c[1]];bb[0]=Math.min(bb[0],c[0]);bb[1]=Math.min(bb[1],c[1]);bb[2]=Math.max(bb[2],c[0]);bb[3]=Math.max(bb[3],c[1]);});});
@@ -2950,7 +2976,7 @@ function alertParse(f,i){
     if(!inside)inside=[big[0][0][0],big[0][0][1]];
   }
   const g=p.geocode||{};
-  return {id:String(p.id||f.id||('alert-'+i)),event:p.event||'Alert',headline:p.headline||'',severity:p.severity||'Unknown',urgency:p.urgency||'Unknown',
+  return {id:String(rid),event:p.event,badGeom,headline:p.headline||'',severity:p.severity||'Unknown',urgency:p.urgency||'Unknown',
     certainty:p.certainty||'',areaDesc:p.areaDesc||'',effective:p.effective||p.onset||p.sent||'',expires:p.expires||'',ends:p.ends||'',
     sender:p.senderName||p.sender||'NWS',msgType:p.messageType||'',ugc:(g.UGC||[]).slice(0,40),tx:alertIsTx(p),polys,bb,area,
     c:inside?{lon:inside[0]>180?inside[0]-360:inside[0],lat:inside[1]}:null,cRaw:inside};
@@ -3046,12 +3072,13 @@ function alertsTapHit(cx,cy,touch){
 function alertsFeedAge(now){const u=Date.parse(alertsUpdated);return Number.isFinite(u)?Math.max(0,(now||Date.now())-u):null;}
 /* R2: a feed `updated` more than 5 min in the future cannot prove freshness (clock or upstream error) → STALE, never LIVE */
 function alertsFeedFuture(now){const u=Date.parse(alertsUpdated);return Number.isFinite(u)&&u-(now||Date.now())>5*60*1000?u-(now||Date.now()):0;}
+const ALERTS_FEED_STALE_MS=60*60*1000; /* NWS 'updated' older than 60 min (or missing / in the future) → feed STALE */
 function alertsLiveState(){
   const f=fresh.alerts,now=Date.now();
   if(!f.okAt)return f.failAt?{st:'OFFLINE',cls:'off'}:{st:'…',cls:'off'};
   const pull=now-f.okAt,feedAge=alertsFeedAge(now),failing=f.failAt>f.okAt;
-  const fut=alertsFeedFuture(now),feedStale=feedAge==null||feedAge>STALE_MS.alerts||fut>0;
-  const age=Math.max(pull,feedAge==null?0:feedAge);
+  const fut=alertsFeedFuture(now),feedStale=feedAge==null||feedAge>ALERTS_FEED_STALE_MS||fut>0;
+  const age=feedStale&&feedAge!=null?Math.max(pull,feedAge):pull;
   const stale=pull>STALE_MS.alerts||failing||feedStale;
   return stale?{st:'STALE',cls:'stale',age,pull,feedAge,feedStale,failing,fut}:{st:'LIVE',cls:'live',age:pull,pull,feedAge,feedStale:false,failing:false};
 }
@@ -3160,7 +3187,14 @@ async function loadAlerts(force){
     if(!res.ok)throw new Error('HTTP '+res.status);
     const j=await res.json();
     if(!j||!Array.isArray(j.features))throw new Error('bad shape');
-    {const parsed=j.features.map(alertParse).filter(Boolean),now=Date.now();alertsAll=alertSort(parsed.filter(a=>alertInEffect(a,now)));alertsEndedDropped=parsed.length-alertsAll.length;}
+    {const parsed=j.features.map(alertParse).filter(Boolean),now=Date.now();
+     /* r2 B3: bad = not a real alert row, or geometry present but invalid. A pull with no good rows, or with more than
+        10% bad rows, is rejected as malformed (last-good kept → STALE). A few bad geometries are drawn as zone-only. */
+     const good=parsed.filter(a=>!a.badGeom).length,bad=j.features.length-good;
+     if(j.features.length&&(good===0||bad>Math.max(1,j.features.length*0.1)))throw new Error('malformed NWS reply ('+bad+'/'+j.features.length+' bad rows)');
+     parsed.forEach(a=>{if(a.badGeom){a.polys=[];a.bb=null;a.area=0;a.c=null;a.cRaw=null;}});
+     alertsSkipped=bad;
+     alertsAll=alertSort(parsed.filter(a=>alertInEffect(a,now)));alertsEndedDropped=parsed.length-alertsAll.length;}
     alertsUpdated=j.updated||null;alertsErr='';
     if(alertsSel){const n=alertsAll.find(a=>a.id===alertsSel.id);if(n)alertsSel=n;else{alertsSel=null;alertsView='list';alertsHighlight();}} /* R2: ended/removed on refresh → card closes */
     markFresh('alerts',true,alertsAll.length);
@@ -3183,7 +3217,7 @@ addEventListener('keydown',e=>{if((e.key==='Escape'||e.key==='Esc')&&alertsDockO
   if(alertsView==='card'){alertsSel=null;alertsHighlight();alertsView='list';alertsRender();}else alertsDockClose();}});
 /* read-only QA hook (Browlser glass) */
 window.__nexusAlerts={
-  state:()=>{const c=alertsCounts();return {count:c.n,polys:c.poly,tx:c.tx,txPoly:c.txPoly,visible:alertsVisible().length,okAt:fresh.alerts.okAt,failAt:fresh.alerts.failAt,err:alertsErr,updated:alertsUpdated,
+  state:()=>{const c=alertsCounts();return {count:c.n,polys:c.poly,tx:c.tx,txPoly:c.txPoly,visible:alertsVisible().length,okAt:fresh.alerts.okAt,failAt:fresh.alerts.failAt,err:alertsErr,updated:alertsUpdated,skipped:alertsSkipped,
     filter:alertsFilter,sel:alertsSel&&alertsSel.id,view:alertsView,dockOpen:alertsDockOpenState(),badge:(document.getElementById('bAlerts')||{}).textContent,badgeCls:(document.getElementById('bAlerts')||{}).className,
     verts:alertsVerts,lineVerts:alertsLines?alertsLines.geometry.attributes.position.count:0,fillVerts:alertsFill?alertsFill.geometry.attributes.position.count:0,
     objects:gAlerts.children.length,groupVisible:gAlerts.visible,layer:!!layers.alerts,inflight:alertsInflight,lastTry:alertsLastTry,first:alertsVisible().slice(0,5).map(a=>({id:a.id,event:a.event,tx:a.tx,sev:a.severity}))};},
@@ -3484,7 +3518,7 @@ function pickEntity(clientX,clientY,pre){
     antmanSay(pick(ANTMAN.click));
     return;
   }
-  const qHits=raycaster.intersectObjects(gQuake.children.filter(o=>o.userData&&o.userData.type==='quake'),false);
+  const qHits=pickRayObjects(gQuake.children.filter(o=>o.userData&&o.userData.type==='quake'),false);
   if(qHits.length){
     const u=qHits[0].object.userData;
     tip.style.display='block';
@@ -3496,7 +3530,7 @@ function pickEntity(clientX,clientY,pre){
     antmanSay(pick(ANTMAN.click));
     return;
   }
-  const hHits=raycaster.intersectObjects(hazData.map(h=>h.core),false);
+  const hHits=pickRayObjects(hazData.map(h=>h.core),false);
   if(layers.haz&&hHits.length){
     const u=hHits[0].object.userData;
     tip.style.display='block';
@@ -3510,7 +3544,7 @@ function pickEntity(clientX,clientY,pre){
     antmanSay(pick(ANTMAN.click));
     return;
   }
-  const wHits=raycaster.intersectObjects(wxData.map(w=>w.mesh),false);
+  const wHits=pickRayObjects(wxData.map(w=>w.mesh),false);
   if(wHits.length){
     const u=wHits[0].object.userData;
     tip.style.display='block';
@@ -3521,7 +3555,7 @@ function pickEntity(clientX,clientY,pre){
     return;
   }
   if(issMesh.visible){
-    const iHits=raycaster.intersectObject(issMesh,true);
+    const iHits=pickRayObjects([issMesh],true);
     if(iHits.length&&issData){
       tip.style.display='block';
       tip.style.left=Math.min(innerWidth-240,clientX+12)+'px';
@@ -3530,7 +3564,7 @@ function pickEntity(clientX,clientY,pre){
       return;
     }
   }
-  const airHits=raycaster.intersectObjects(airEntities.map(a=>a.mesh),false);
+  const airHits=pickRayObjects(airEntities.map(a=>a.mesh),false);
   if(airHits.length){
     const ent=airEntities.find(a=>a.mesh===airHits[0].object);
     tip.style.display='block';
@@ -3552,12 +3586,22 @@ function pickEntity(clientX,clientY,pre){
    hit object's centre so a big mesh cannot outrank a polygon from far off its centre. Sats are scored separately. */
 const pickW=new THREE.Vector3();
 function pickCentreD(o,cx,cy){o.getWorldPosition(pickW);pickW.project(camera);return Math.hypot((pickW.x+1)/2*innerWidth-cx,(1-pickW.y)/2*innerHeight-cy);}
+/* R3: hidden geometry (including hidden ancestors/materials) cannot receive a tap. */
+function pickMeshVisible(o){
+  if(!o)return false;
+  for(let node=o;node;node=node.parent)if(node.visible===false)return false;
+  const materials=o.material?(Array.isArray(o.material)?o.material:[o.material]):null;
+  return !materials||materials.some(m=>m&&m.visible!==false&&(!m.transparent||m.opacity>0));
+}
+function pickRayObjects(objects,recursive){
+  return raycaster.intersectObjects(objects.filter(pickMeshVisible),recursive).filter(hit=>pickMeshVisible(hit.object));
+}
 function pickOtherInfo(cx,cy){
-  let hs=raycaster.intersectObjects(gQuake.children.filter(o=>o.userData&&o.userData.type==='quake'),false);if(hs.length)return {kind:'quake',d:pickCentreD(hs[0].object,cx,cy)};
-  if(layers.haz){hs=raycaster.intersectObjects(hazData.map(h=>h.core),false);if(hs.length)return {kind:'haz',d:pickCentreD(hs[0].object,cx,cy)};}
-  hs=raycaster.intersectObjects(wxData.map(w=>w.mesh),false);if(hs.length)return {kind:'wx',d:pickCentreD(hs[0].object,cx,cy)};
-  if(issMesh.visible&&issData&&raycaster.intersectObject(issMesh,true).length)return {kind:'iss',d:pickCentreD(issMesh,cx,cy)};
-  hs=raycaster.intersectObjects(airEntities.map(a=>a.mesh),false);if(hs.length)return {kind:'air',d:pickCentreD(hs[0].object,cx,cy)};
+  let hs=pickRayObjects(gQuake.children.filter(o=>o.userData&&o.userData.type==='quake'),false);if(hs.length)return {kind:'quake',d:pickCentreD(hs[0].object,cx,cy)};
+  if(layers.haz){hs=pickRayObjects(hazData.map(h=>h.core),false);if(hs.length)return {kind:'haz',d:pickCentreD(hs[0].object,cx,cy)};}
+  hs=pickRayObjects(wxData.map(w=>w.mesh),false);if(hs.length)return {kind:'wx',d:pickCentreD(hs[0].object,cx,cy)};
+  if(issMesh.visible&&issData&&pickRayObjects([issMesh],true).length)return {kind:'iss',d:pickCentreD(issMesh,cx,cy)};
+  hs=pickRayObjects(airEntities.map(a=>a.mesh),false);if(hs.length)return {kind:'air',d:pickCentreD(hs[0].object,cx,cy)};
   return null;
 }
 function pickOtherHit(){return !!pickOtherInfo(0,0);}
@@ -4102,7 +4146,7 @@ window.__nexusVolc={
     okAt:fresh.volc.okAt,failAt:fresh.volc.failAt,err:volcS.err,reqN:volcS.reqN,failN:volcS.failN,skipN:volcS.skipN,upStale:volcS.upStale,
     nextAt:volcS.nextAt,waitMs:volcS.waitMs,rl:volcS.rl,pullAt:volcS.pullAt,drawn:!!volcS.pts,
     top:volcS.elevated.slice(0,5).map(v=>({name:v.name,level:v.level,color:v.color,rank:v.rank}))};},
-  load:volcLoad,panel:volcPanelToggle,pick:volcScreenPick,build:volcBuild,rayVisible:null, /* pickMeshVisible arrives with the v0.4.9 hidden-layer tap filter */
+  load:volcLoad,panel:volcPanelToggle,pick:volcScreenPick,build:volcBuild,rayVisible:pickMeshVisible,
   qaInject:j=>{volcBuild(j);fresh.volc.okAt=Date.now();paintBadgeAge();},
   project:(i)=>{const v=volcS.elevated[i||0];if(!v||!v.drawn)return null;root.updateMatrixWorld(true);volcWorld.copy(latLonToVec3(v.lat,v.lon,1.014)).applyMatrix4(root.matrixWorld);
     const vis=volcVisible(volcWorld);volcNdc.copy(volcWorld).project(camera);return {x:(volcNdc.x+1)/2*innerWidth,y:(1-volcNdc.y)/2*innerHeight,vis,name:v.name};},
