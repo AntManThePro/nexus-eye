@@ -26,12 +26,16 @@ const QUAKE_KM = 60, QUAKE_DAYS = 7;
 
 /* River gauges, upstream → downstream. lid = NWS NWPS id; usgs = USGS site (backup / extra). flood = NWPS categories
    copied 2026-11-28 — used ONLY when NWPS is unreachable, and labelled as such. */
+/* Do not treat Searcy County zones (ARZ113/213/313) as White County — Searcy the city is in White County (ARC145 / ARZ033). */
 const GAUGES = [
-  { key: "dewey", name: "Little Red River near Dewey", note: "just upstream of Searcy · USGS only · no NWS flood stage", lid: null, usgs: "07076517" },
-  { key: "judsonia", name: "Little Red River at Judsonia", note: "just downstream of Searcy", lid: "JUDA4", usgs: "07076634",
+  { key: "judsonia", name: "Little Red River at Judsonia", note: "closest live NWS gauge to Searcy · just downstream", lid: "JUDA4", usgs: "07076634",
     flood: { action: 29, minor: 30, moderate: 33, major: 36 } },
+  { key: "searcy", name: "Little Red River near Searcy", note: "USGS 07076620 has no current data (record ends 1996; last instantaneous value 1987). Judsonia is the live gauge for this reach.", lid: null, usgs: "07076620", retired: true },
+  { key: "dewey", name: "Little Red River near Dewey", note: "just upstream of Searcy · USGS only · no NWS flood stage published", lid: null, usgs: "07076517" },
   { key: "georgetown", name: "White River at Georgetown", note: "White River, south-east White County", lid: "GEOA4", usgs: "07076750",
     flood: { action: 20.5, minor: 21, moderate: 24, major: 28 } },
+  { key: "augusta", name: "White River near Augusta", note: "White River just east of White County (Woodruff County)", lid: "AUGA4", usgs: "07074850",
+    flood: { action: 25.5, minor: 26, moderate: 34, major: 36 } },
 ];
 const SRC_NAMES = ["nws", "gauges", "usgs", "lake", "quake", "fire", "air", "spc"];
 const TTL = { nws: 2 * 60e3, gauges: 10 * 60e3, usgs: 10 * 60e3, lake: 15 * 60e3, quake: 5 * 60e3, fire: 12 * 60e3, air: 30 * 60e3, spc: 15 * 60e3 };
@@ -44,6 +48,7 @@ const SPC_RANK = { TSTM: 1, MRGL: 2, SLGT: 3, ENH: 4, MDT: 5, HIGH: 6 };
 const SPC_NAME = { TSTM: "General thunderstorms", MRGL: "Marginal risk", SLGT: "Slight risk", ENH: "Enhanced risk", MDT: "Moderate risk", HIGH: "High risk" };
 
 const NWS_URL = "https://api.weather.gov/alerts/active?status=actual&zone=" + [COUNTY.nwsCounty, ...COUNTY.nwsZones].join(",");
+const NWS_UP_URL = "https://api.weather.gov/alerts/active?status=actual&zone=ARC023,ARZ024"; /* Cleburne County — Greers Ferry Dam / Little Red headwaters */
 const NWPS = "https://api.water.noaa.gov/nwps/v1/gauges/";
 const USGS_URL = "https://api.waterdata.usgs.gov/ogcapi/v0/collections/latest-continuous/items?f=json&parameter_code=00065,00060&monitoring_location_id=" + GAUGES.map((g) => "USGS-" + g.usgs).join(",");
 const CWMS = "https://cwms-data.usace.army.mil/cwms-data/";
@@ -51,8 +56,10 @@ const LAKE_TS = {
   elev: "GreersFerry_Dam-Headwater.Elev.Inst.1Hour.0.Decodes-rev",
   pctCons: "GreersFerry_Dam-Headwater.%-Conservation Pool.Inst.1Hour.0.CCP-Comp",
   pctFlood: "GreersFerry_Dam-Headwater.%-Flood Pool.Inst.1Hour.0.CCP-Comp",
-  release: "GreersFerry_Dam-Tailwater.Flow.Inst.1Hour.0.CCP-Comp",
+  release: "GreersFerry_Dam.Flow-Res Out.Ave.1Hour.1Hour.Regi-Comp", /* official USACE outflow */
+  tailwater: "GreersFerry_Dam-Tailwater.Flow.Inst.1Hour.0.CCP-Comp",
 };
+const LAKE_REF_FALLBACK = { topConservation: 462.04, topFlood: 487, topDam: 503, bottomNormal: 435, datum: "NGVD29", source: "USACE published pool limits" };
 const QUAKE_BASE = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&limit=50";
 const FIRMS = "https://firms.modaps.eosdis.nasa.gov/data/active_fire/modis-c6.1/csv/MODIS_C6_1_Global_24h.csv";
 const AIR_URL = "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=" + CENTER.lat + "&longitude=" + CENTER.lon + "&current=us_aqi,pm2_5,pm10,ozone&timezone=UTC";
@@ -114,11 +121,26 @@ export function shapeAlert(f) {
 /* ---- sources: each returns { data, obsTime? } or throws ---- */
 const SOURCES = {
   async nws(now) {
-    const d = await getJson(NWS_URL, "application/geo+json", 12000);
-    if (!d || !Array.isArray(d.features)) throw new Error("unreadable response");
-    const all = d.features.map(shapeAlert).filter((a) => !a.expires || Date.parse(a.expires) > now)
-      .sort((a, b) => (b.flood - a.flood) || (SEV[b.severity] || 0) - (SEV[a.severity] || 0) || String(b.sent).localeCompare(String(a.sent)));
-    return { data: { flood: all.filter((a) => a.flood), other: all.filter((a) => !a.flood), feedUpdated: d.updated || null }, obsTime: Date.parse(d.updated || "") };
+    const inEffect = (a) => { const t = Date.parse(a.ends || a.expires || ""); return !Number.isFinite(t) || t > now; };
+    const [white, up] = await Promise.all([
+      getJson(NWS_URL, "application/geo+json", 12000),
+      getJson(NWS_UP_URL, "application/geo+json", 12000).catch(() => null),
+    ]);
+    if (!white || !Array.isArray(white.features)) throw new Error("unreadable response");
+    const seen = new Set(), all = [];
+    for (const f of white.features) {
+      const a = shapeAlert(f);
+      if (!a.id || seen.has(a.id) || !inEffect(a)) continue;
+      a.upstream = false; seen.add(a.id); all.push(a);
+    }
+    /* Cleburne / Greers Ferry: only flood and hydrologic products, tagged upstream, never mixed in as White County alerts */
+    for (const f of (up && up.features) || []) {
+      const a = shapeAlert(f);
+      if (!a.id || seen.has(a.id) || !inEffect(a) || !a.flood) continue;
+      a.upstream = true; seen.add(a.id); all.push(a);
+    }
+    all.sort((a, b) => (b.flood - a.flood) || ((a.upstream ? 0 : 1) - (b.upstream ? 0 : 1)) || (SEV[b.severity] || 0) - (SEV[a.severity] || 0) || String(b.sent).localeCompare(String(a.sent)));
+    return { data: { flood: all.filter((a) => a.flood), other: all.filter((a) => !a.flood), feedUpdated: white.updated || null }, obsTime: Date.parse(white.updated || "") };
   },
   async gauges(now) {
     const out = [];
@@ -142,7 +164,7 @@ const SOURCES = {
     const t = out.map((g) => Date.parse(g.obsTime)).filter(Number.isFinite);
     return { data: { gauges: out }, obsTime: t.length ? Math.min(...t) : NaN };
   },
-  async usgs() {
+  async usgs(now) {
     const d = await getJson(USGS_URL, "application/geo+json,application/json", 8000);
     if (!d || !Array.isArray(d.features)) throw new Error("unreadable response");
     const by = {};
@@ -155,41 +177,57 @@ const SOURCES = {
       if (p.parameter_code === "00065") { by[site].stage = v; by[site].stageTime = iso(t); }
       if (p.parameter_code === "00060") { by[site].flow_cfs = v; by[site].flowTime = iso(t); }
     }
-    const sites = GAUGES.map((g) => { const r = by[g.usgs] || {}; return { key: g.key, site: g.usgs, name: g.name, note: g.note, ...r,
-      /* USGS publishes no flood stage: these are the NWS categories copied 2026-11-28, used when NWPS is down */
-      flood: g.flood || null, floodSource: g.flood ? "nwps-copy-2026-11-28" : null, category: g.flood ? floodCategory(r.stage == null ? null : r.stage, g.flood) : "unknown",
-      page: "https://waterdata.usgs.gov/monitoring-location/" + g.usgs + "/" }; });
-    const t = sites.map((s) => Date.parse(s.stageTime || s.flowTime)).filter(Number.isFinite);
+    const LIVE_MS = 7 * 864e5;
+    const sites = GAUGES.filter((g) => g.usgs).map((g) => {
+      const r = by[g.usgs] || {};
+      const stageT = Date.parse(r.stageTime || ""), flowT = Date.parse(r.flowTime || "");
+      const latest = Math.max(Number.isFinite(stageT) ? stageT : 0, Number.isFinite(flowT) ? flowT : 0);
+      const live = latest > 0 && now - latest < LIVE_MS;
+      if (!live) {
+        return { key: g.key, site: g.usgs, name: g.name, note: g.note, retired: !!g.retired, noCurrent: true,
+          lastHistoric: latest ? iso(latest) : null, flood: g.flood || null, category: "unknown",
+          page: "https://waterdata.usgs.gov/monitoring-location/" + g.usgs + "/" };
+      }
+      return { key: g.key, site: g.usgs, name: g.name, note: g.note, retired: false, noCurrent: false, ...r,
+        /* USGS publishes no flood stage: these are the NWS categories copied 2026-11-28, used when NWPS is down */
+        flood: g.flood || null, floodSource: g.flood ? "nwps-copy-2026-11-28" : null, category: g.flood ? floodCategory(r.stage == null ? null : r.stage, g.flood) : "unknown",
+        page: "https://waterdata.usgs.gov/monitoring-location/" + g.usgs + "/" };
+    });
+    const t = sites.filter((s) => !s.noCurrent).map((s) => Date.parse(s.stageTime || s.flowTime)).filter(Number.isFinite);
     if (!t.length) throw new Error("no current readings");
-    return { data: { sites }, obsTime: Math.min(...t) };
+    return { data: { sites }, obsTime: Math.max(...t) };
   },
   async lake(now) {
     const begin = new Date(now - 36 * 3600e3).toISOString();
-    const series = async (name) => {
-      const d = await getJson(CWMS + "timeseries?office=SWL&name=" + encodeURIComponent(name) + "&begin=" + begin, "application/json;version=2", 12000);
+    const series = async (name, units) => {
+      const d = await getJson(CWMS + "timeseries?office=SWL&name=" + encodeURIComponent(name) + "&begin=" + begin + (units ? "&units=" + encodeURIComponent(units) : ""), "application/json;version=2", 12000);
       const v = (d.values || []).filter((r) => Array.isArray(r) && Number.isFinite(r[0]) && fin(r[1]) != null && r[0] <= now);
       if (!v.length) return null;
       const last = v[v.length - 1], prev24 = v.find((r) => r[0] >= last[0] - 24 * 3600e3);
-      return { value: last[1], t: iso(last[0]), units: d.units || null, change24h: prev24 && prev24 !== last ? +(last[1] - prev24[1]).toFixed(2) : null };
+      return { value: last[1], t: iso(last[0]), units: d.units || units || null, change24h: prev24 && prev24 !== last ? +(last[1] - prev24[1]).toFixed(2) : null };
     };
-    const [elev, pctCons, pctFlood, release, levels] = await Promise.all([series(LAKE_TS.elev), series(LAKE_TS.pctCons).catch(() => null),
-      series(LAKE_TS.pctFlood).catch(() => null), series(LAKE_TS.release).catch(() => null),
+    const [elev, pctCons, pctFlood, release, tailwater, levels] = await Promise.all([series(LAKE_TS.elev, "ft"), series(LAKE_TS.pctCons).catch(() => null),
+      series(LAKE_TS.pctFlood).catch(() => null), series(LAKE_TS.release, "cfs").catch(() => null), series(LAKE_TS.tailwater, "cfs").catch(() => null),
       getJson(CWMS + "levels?office=SWL&unit=EN&level-id-mask=" + encodeURIComponent("GreersFerry_Dam.Elev-Pool*"), "application/json;version=2", 12000).catch(() => null)]);
     if (!elev) throw new Error("no current lake elevation");
-    const ref = {};
+    const ref = { datum: "NGVD29" };
     for (const l of (levels && levels.levels) || []) {
       const k = l["specified-level-id"]; const v = fin(l["constant-value"]) != null ? l["constant-value"] : l["seasonal-values"] && l["seasonal-values"][0] ? fin(l["seasonal-values"][0].value) : null;
       if (v == null) continue;
       if (k === "Top of Conservation") ref.topConservation = +v.toFixed(2);
       if (k === "Top of Flood") ref.topFlood = +v.toFixed(2);
       if (k === "Top of Dam") ref.topDam = +v.toFixed(2);
+      if (k === "Bottom of Normal") ref.bottomNormal = +v.toFixed(2);
     }
+    if (ref.topConservation == null || ref.topFlood == null) Object.assign(ref, LAKE_REF_FALLBACK, ref);
     const r2 = (x) => (x == null ? null : +x.toFixed(2));
     return { data: { name: "Greers Ferry Lake (Greers Ferry Dam, Heber Springs)", elev_ft: r2(elev.value), elevTime: elev.t, change24h_ft: elev.change24h,
-      aboveConservation_ft: ref.topConservation != null ? r2(elev.value - ref.topConservation) : null, ref,
+      aboveConservation_ft: ref.topConservation != null ? r2(elev.value - ref.topConservation) : null,
+      belowFlood_ft: ref.topFlood != null ? r2(ref.topFlood - elev.value) : null, ref,
       pctConservation: pctCons ? r2(pctCons.value) : null, pctFloodPoolUsed: pctFlood ? r2(pctFlood.value) : null,
       release_cfs: release ? Math.round(release.value) : null, releaseTime: release ? release.t : null,
-      page: "https://www.swl-wc.usace.army.mil/" }, obsTime: Date.parse(elev.t) };
+      tailwater_cfs: tailwater ? Math.round(tailwater.value) : null,
+      page: "https://water.usace.army.mil/overview/swl/locations/greersferry_dam" }, obsTime: Date.parse(elev.t) };
   },
   async quake(now) {
     const url = QUAKE_BASE + "&latitude=" + CENTER.lat + "&longitude=" + CENTER.lon + "&maxradiuskm=" + QUAKE_KM + "&starttime=" + new Date(now - QUAKE_DAYS * 864e5).toISOString().slice(0, 19);
@@ -267,7 +305,7 @@ async function runSource(name, now) {
 }
 
 const SOURCE_META = {
-  nws: ["NOAA / National Weather Service · active alerts (ARC145 + ARZ033)", "https://www.weather.gov/lzk/"],
+  nws: ["NOAA / National Weather Service · active alerts (ARC145 + ARZ033; Cleburne hydro upstream)", "https://www.weather.gov/lzk/"],
   gauges: ["NOAA NWS National Water Prediction Service · river gauges", "https://water.noaa.gov/"],
   usgs: ["USGS Water Data API · latest continuous values", "https://waterdata.usgs.gov/"],
   lake: ["USACE Little Rock District · water control data", "https://www.swl-wc.usace.army.mil/"],

@@ -342,6 +342,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
 #pWc a{color:var(--c);display:inline-flex;align-items:center;min-height:28px}
 #pWc details summary{cursor:pointer;font-size:10px;color:var(--c)}
 #pWc .wcroad a{font-size:12px;letter-spacing:.04em}
+#pWc .aar{display:inline-block;padding:0 4px;border:1px solid var(--c);color:var(--c);font-size:10px;letter-spacing:.08em;vertical-align:1px}
 #tip a.bl{pointer-events:auto;color:var(--c);display:inline-flex;align-items:center;min-height:32px}
 #tip.bscroll{touch-action:pan-y;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 #tip .bsk{pointer-events:auto;display:block;flex:none;padding:3px 0 9px;margin:-3px 0 -9px;touch-action:pan-y;cursor:crosshair;outline:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
@@ -543,7 +544,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
       <div class="stat"><span>ORBIT</span><span>KEPLER · scout craft</span></div>
       <div class="stat"><span>AIR</span><span>LIVE via /api/air · else OFFLINE</span></div>
       <div class="stat"><span>WHITE CO</span><span>LIVE per source via /api/wcalert</span></div>
-      <div class="stat"><span>SHARE</span><span>?lat=&amp;lon=&amp;alt=&amp;layers= · ?layer=alerts · ?alerts=tx</span></div>
+      <div class="stat"><span>SHARE</span><span>?lat=&amp;lon=&amp;alt=&amp;layers= · ?layer=alerts · ?alerts=tx · ?alerts=ar</span></div>
       <div class="stat"><span>FRESH</span><span>LIVE / STALE / OFFLINE ages</span></div>
       <h3>BADGES · FULL TEXT</h3>
       <p id="opsBadgesFull">…</p>
@@ -671,6 +672,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
           <li>CCTV · 8,334-cam official public catalog · Texas first · per-cam LIVE/STALE/OFFLINE, LIVE only when source time is verified</li>
           <li>HAZ · NASA EONET natural-hazard layer + storm tracks</li>
           <li>ALERTS · NOAA / NWS active warnings · severity polygons · Texas first · honest LIVE/STALE/OFFLINE</li>
+          <li>WHITE CO · White County, AR (Searcy) · Little Red River and Greers Ferry Lake first · NWS county/zone alerts · honest LIVE/STALE/OFFLINE</li>
           <li>Netlify-ready · /api/air function · keyless local HTML</li>
           <li>Direct action · verify everything · no fluff</li>
         </ul>
@@ -711,7 +713,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:va
     <div id="alertsBody"></div>
   </div>
 
-  <div class="hint" id="hint">DRAG ORBIT · PINCH ZOOM · TAP CCTV / HAZ / NWS ALERT / SAT / LAUNCH PAD · TX = TEXAS CAMS · NWS TX = TEXAS ALERTS · SHARE DEEP-LINK</div>
+  <div class="hint" id="hint">DRAG ORBIT · PINCH ZOOM · TAP CCTV / HAZ / NWS ALERT / SAT / LAUNCH PAD · TX = TEXAS CAMS · NWS TX = TEXAS ALERTS · WHITE CO = WHITE COUNTY AR · RIVER/LAKE FIRST · SHARE DEEP-LINK</div>
 
   <div class="bottom">
     <div class="ticker pe" id="ticker">BOOT COMPLETE · AWAITING SIGNAL…</div>
@@ -991,12 +993,15 @@ function parseDeepLink(){
     if(ly)applyLayersCSV(ly);
     const cf=(p.get('cctv')||'').toUpperCase();
     if(cf&&typeof cctvApplyFilter==='function')cctvApplyFilter(cf,lat!=null&&lon!=null);
-    /* v0.3.9: ?layer=alerts → ALERTS on + list open (aim TX unless lat/lon given) · ?alerts=tx (or ?area=TX) → Texas filter */
+    /* v0.3.9: ?layer=alerts → ALERTS on + list open (aim TX unless lat/lon given) · ?alerts=tx (or ?area=TX) → Texas filter
+       v0.4.13: ?alerts=ar / ?alerts=white / ?wc=1 → WHITE CO panel, aim Searcy unless lat/lon given */
     const one=(p.get('layer')||'').trim().toLowerCase();
     const af=(p.get('alerts')||p.get('area')||'').trim().toUpperCase();
+    const arWant=af==='AR'||af==='WHITE'||af==='WHITECOUNTY'||af==='ARC145'||(p.get('wc')||'')==='1';
     if(one==='alerts'||af==='TX'){if(!layers.alerts)applyLayersCSV(layerList()+',alerts');}
     if(af==='TX')alertsApplyFilter('TX',true);
     if(one==='alerts'){if(lat==null||lon==null)aimAt(CCTV_AIM.TX[0],CCTV_AIM.TX[1],alt!=null&&Number.isFinite(+alt)?+alt:2.6,true);alertsOpenList();}
+    if(arWant){if(lat==null||lon==null)aimAt(WC_AIM[0],WC_AIM[1],alt!=null&&Number.isFinite(+alt)?+alt:WC_AIM[2],true);if(typeof wcPanelToggle==='function')wcPanelToggle(true);}
     const bf=(p.get('buoy')||'').trim().toUpperCase();if(bf==='GULF'||bf==='TX')buoySetFilter(bf); /* v0.4.10 */
   }catch(e){}
 }
@@ -1010,7 +1015,8 @@ function writeDeepLink(force){
   q.set('alt',camDist.toFixed(2));
   q.set('layers',layerList());
   if(typeof cctvFilter!=='undefined'&&cctvFilter!=='ALL')q.set('cctv',cctvFilter.toLowerCase());
-  if(typeof alertsFilter!=='undefined'&&alertsFilter==='TX')q.set('alerts','tx');
+  if(typeof wcPanelOpen==='function'&&wcPanelOpen())q.set('alerts','ar');
+  else if(typeof alertsFilter!=='undefined'&&alertsFilter==='TX')q.set('alerts','tx');
   if(layers.buoy&&buoyS.filter!=='ALL')q.set('buoy',buoyS.filter.toLowerCase());
   const next=location.pathname+location.hash.split('?')[0]+'?'+q.toString();
   const cur=location.pathname+location.search;
@@ -1037,6 +1043,7 @@ const lines=[
   'FEED · USGS VOLCANO WATCH · STANDBY (rail VOLC or ?layers=…,volc)',
   'FEED · NOAA NDBC BUOYS · STANDBY (rail BUOY or ?layers=…,buoy)',
   'FEED · NOAA / NWS ALERTS api.weather.gov · LIVE ARM · TX FIRST',
+  'FEED · WHITE COUNTY AR · LITTLE RED + GREERS FERRY FIRST · /api/wcalert',
   'PALETTE LOCK · #00ff87 #60efff #ff0080 #ffcc00',
   'MESH · BLUE MARBLE + NIGHT + CLOUDS + ATMOS',
   'FEED · USGS QUAKE · LIVE ARM',
@@ -2340,6 +2347,7 @@ const CCTV_CITY=["Austin, TX","Houston, TX","Abilene, TX","Amarillo, TX","Atlant
 const CCTV_REGION_LABEL={TX:'TEXAS',US:'REST OF US',INTL:'INTERNATIONAL'};
 const CCTV_REGION_COL={TX:COL.y,US:COL.c,INTL:COL.g};
 const CCTV_AIM={ALL:[31.0,-98.6,3.8],TX:[31.0,-98.6,2.35],US:[38.5,-97,3.1],INTL:[48,10,3.4]}; /* glassfix: ALL = whole-globe view, Texas-centred */
+const WC_AIM=[35.2506,-91.7363,2.15]; /* v0.4.13 Searcy, White County, AR — not Searcy County */
 /* glassfix N8: the 8,334-row pack is no longer inline — cctv-pack.json (same folder) is fetched lazily, only once the
    CCTV layer is on. Until it lands the badge says VERIFYING; if it can't load the badge says OFFLINE. Nothing faked. */
 const CCTV_CAMS=[],CCTV_COUNTS={TX:0,US:0,INTL:0};
@@ -5051,7 +5059,7 @@ function wcFt(v){return v==null?'—':(+v).toFixed(2).replace(/\.?0+$/,'')+' ft'
 function wcCatCls(c){return c==='major'||c==='moderate'?'wc-major':c==='minor'?'wc-minor':c==='action'?'wc-action':'wc-ok';}
 function wcAlertHtml(a){
   const sev=a.severity==='Extreme'||a.severity==='Severe'?'wc-major':a.severity==='Moderate'?'wc-minor':'wc-action';
-  return '<div class="wca '+sev+'"><b>'+hazEsc(a.event)+'</b> · '+hazEsc(a.severity)+' · '+hazEsc(a.urgency)+
+  return '<div class="wca '+sev+'"><b>'+hazEsc(a.event)+'</b>'+(a.upstream?' <span class="aar">UPSTREAM · CLEBURNE / GREERS FERRY</span>':'')+' · '+hazEsc(a.severity)+' · '+hazEsc(a.urgency)+
     '<div>'+hazEsc(a.headline||'')+'</div>'+
     '<div class="wcm">From '+hazEsc(wcCT(a.onset))+' until '+hazEsc(wcCT(a.ends))+' · '+hazEsc(a.sender||'NWS')+'</div>'+
     (a.instruction?'<div class="wcm">'+hazEsc(a.instruction)+'</div>':'')+
@@ -5060,6 +5068,7 @@ function wcAlertHtml(a){
 function wcGaugeHtml(g,viaUsgs){
   const f=g.flood||{},fs=f.minor;
   let h='<div class="wcrow"><div><span class="vn">'+hazEsc(g.name)+'</span> <span class="wcm">· '+hazEsc(g.note||'')+'</span></div>';
+  if(g.noCurrent||g.retired){h+='<div class="wcbig">NO CURRENT DATA</div><div class="wcm">'+(g.retired?'This USGS site is not a live gauge. Last published instantaneous value: '+hazEsc(wcCT(g.lastHistoric))+' · the live NWS gauge for this reach is Judsonia (JUDA4).':'No current USGS reading (last '+(g.lastHistoric?hazEsc(wcCT(g.lastHistoric)):'unknown')+').')+'</div>'+(g.page?'<div><a href="'+hazEsc(g.page)+'" target="_blank" rel="noopener">USGS site page</a></div>':'')+'</div>';return h;}
   if(g.stage==null){h+='<div class="wcm">No current stage reading.</div></div>';return h;}
   h+='<div class="wcbig '+wcCatCls(g.category)+'">'+wcFt(g.stage)+(fs!=null?' <span class="wcvs">vs flood stage '+wcFt(fs)+'</span>':'')+'</div>';
   h+='<div>'+(fs!=null?(g.stage<fs?(+(fs-g.stage).toFixed(2))+' ft below flood stage':'<b class="wc-major">'+(+(g.stage-fs).toFixed(2))+' ft ABOVE flood stage</b>')+' · ':'')+'<b class="'+wcCatCls(g.category)+'">'+hazEsc(WC_CAT_TXT[g.category]||g.category)+'</b>'+
@@ -5081,29 +5090,31 @@ function wcRender(){
   const B=document.getElementById('wcBody');if(!B)return;
   const S=(wcData&&wcData.sources)||{},d=k=>S[k]&&S[k].ok?S[k].data:null;
   const nws=d('nws'),gw=d('gauges'),us=d('usgs'),lake=d('lake'),qk=d('quake'),fi=d('fire'),air=d('air'),spc=d('spc');
-  let h='<div class="wcm" id="wcPulled">…</div>';
-  h+=wcStHtml('nws','FLOOD ALERTS · NWS');
-  if(!nws)h+='<div class="wcm">No NWS data — check <a href="https://www.weather.gov/lzk/" target="_blank" rel="noopener">weather.gov/lzk</a>.</div>';
-  else h+=nws.flood.length?nws.flood.map(wcAlertHtml).join(''):'<div class="wc-ok">No flood watch, flood warning, flash flood warning or hydrologic outlook in effect for White County.</div>';
-  h+=wcStHtml('gauges','RIVERS · NWS WATER PREDICTION');
   const usBy={};((us&&us.sites)||[]).forEach(s=>{usBy[s.key]=s;});
+  let h='<div class="wcm" id="wcPulled">…</div>';
+  h+=wcStHtml('gauges','RIVERS · LITTLE RED + WHITE · NWS NWPS');
   if(gw)gw.gauges.forEach(g=>{h+=wcGaugeHtml(g,false);});
-  else if(usBy.judsonia||usBy.georgetown){h+='<div class="wcm">NWS gauges unavailable — showing USGS readings with the NWS flood stages copied 2026-11-28.</div>';['judsonia','georgetown'].forEach(k=>{if(usBy[k])h+=wcGaugeHtml(usBy[k],true);});}
+  else if(usBy.judsonia||usBy.georgetown||usBy.augusta){h+='<div class="wcm">NWS gauges unavailable — showing USGS readings with the NWS flood stages copied 2026-11-28, labelled as a copy.</div>';['judsonia','georgetown','augusta'].forEach(k=>{if(usBy[k])h+=wcGaugeHtml(usBy[k],true);});}
   else h+='<div class="wcm">No river readings right now — check <a href="https://water.noaa.gov/gauges/juda4" target="_blank" rel="noopener">water.noaa.gov</a>.</div>';
-  h+=wcStHtml('usgs','LITTLE RED ABOVE SEARCY · USGS');
-  if(usBy.dewey)h+=wcGaugeHtml(usBy.dewey,true);else h+='<div class="wcm">USGS unavailable.</div>';
-  h+='<div class="wcm">There is no live gauge at Searcy itself (the USGS Searcy gauge is retired). Dewey is just upstream, Judsonia just downstream.</div>';
-  h+=wcStHtml('lake','GREERS FERRY LAKE · USACE');
+  h+=wcStHtml('usgs','LITTLE RED AT SEARCY + DEWEY · USGS');
+  if(usBy.searcy)h+=wcGaugeHtml(usBy.searcy,true);
+  if(usBy.dewey)h+=wcGaugeHtml(usBy.dewey,true);
+  if(!usBy.searcy&&!usBy.dewey)h+='<div class="wcm">USGS unavailable.</div>';
+  h+=wcStHtml('lake','GREERS FERRY LAKE / DAM · USACE LITTLE ROCK');
   if(!lake)h+='<div class="wcm">USACE lake data unavailable.</div>';
   else{const r=lake.ref||{};
-    h+='<div class="wcrow"><div class="wcbig '+(lake.pctFloodPoolUsed>0?'wc-minor':'wc-ok')+'">'+(lake.elev_ft!=null?lake.elev_ft.toFixed(2)+' ft':'—')+(r.topConservation!=null?' <span class="wcvs">vs normal full pool '+r.topConservation.toFixed(2)+' ft</span>':'')+'</div>'+
-      '<div>'+(lake.aboveConservation_ft!=null?(lake.aboveConservation_ft<0?Math.abs(lake.aboveConservation_ft).toFixed(2)+' ft below normal full pool':'<b class="wc-minor">'+lake.aboveConservation_ft.toFixed(2)+' ft into the flood pool</b>'):'')+
+    h+='<div class="wcrow"><div class="wcbig '+(lake.pctFloodPoolUsed>0?'wc-minor':'wc-ok')+'">'+(lake.elev_ft!=null?lake.elev_ft.toFixed(2)+' ft':'—')+(r.datum?' <span class="wcvs">'+hazEsc(r.datum)+'</span>':'')+(r.topConservation!=null?' <span class="wcvs">vs top of conservation '+r.topConservation.toFixed(2)+' ft</span>':'')+'</div>'+
+      '<div>'+(lake.aboveConservation_ft!=null?(lake.aboveConservation_ft<0?Math.abs(lake.aboveConservation_ft).toFixed(2)+' ft below top of conservation':'<b class="wc-minor">'+lake.aboveConservation_ft.toFixed(2)+' ft into the flood pool</b>'):'')+
+      (lake.belowFlood_ft!=null?' · '+lake.belowFlood_ft.toFixed(2)+' ft below top of flood ('+(r.topFlood!=null?r.topFlood.toFixed(0)+' ft':'')+')':'')+
       (lake.change24h_ft!=null?' · 24 h change '+(lake.change24h_ft>0?'+':'')+lake.change24h_ft.toFixed(2)+' ft':'')+'</div>'+
-      '<div>Flood pool used: '+(lake.pctFloodPoolUsed!=null?lake.pctFloodPoolUsed+'%':'—')+(r.topFlood!=null?' (top of flood pool '+r.topFlood.toFixed(0)+' ft)':'')+'</div>'+
-      '<div>Dam release into the Little Red: '+(lake.release_cfs!=null?lake.release_cfs.toLocaleString('en-US')+' cfs':'—')+'</div>'+
-      '<div class="wcm">Reading '+hazEsc(wcCT(lake.elevTime))+' · releases flow downstream past Searcy</div>'+
-      '<div><a href="'+hazEsc(lake.page)+'" target="_blank" rel="noopener">USACE Little Rock District water control</a></div></div>';}
-  h+=wcStHtml('nws','ALL OTHER NWS ALERTS');
+      '<div>Conservation pool: '+(lake.pctConservation!=null?lake.pctConservation+'%':'—')+' · Flood pool used: '+(lake.pctFloodPoolUsed!=null?lake.pctFloodPoolUsed+'%':'—')+'</div>'+
+      '<div>Dam release (official outflow) into the Little Red: '+(lake.release_cfs!=null?lake.release_cfs.toLocaleString('en-US')+' cfs':'—')+(lake.tailwater_cfs!=null?' · tailwater flow '+lake.tailwater_cfs.toLocaleString('en-US')+' cfs':'')+'</div>'+
+      '<div class="wcm">Reading '+hazEsc(wcCT(lake.elevTime))+(lake.releaseTime?' · outflow '+hazEsc(wcCT(lake.releaseTime)):'')+' · releases flow downstream past Searcy</div>'+
+      '<div><a href="'+hazEsc(lake.page)+'" target="_blank" rel="noopener">USACE Little Rock District — Greers Ferry Dam</a></div></div>';}
+  h+=wcStHtml('nws','FLOOD / HYDRO ALERTS · NWS');
+  if(!nws)h+='<div class="wcm">No NWS data — check <a href="https://www.weather.gov/lzk/" target="_blank" rel="noopener">weather.gov/lzk</a>.</div>';
+  else h+=nws.flood.length?nws.flood.map(wcAlertHtml).join(''):'<div class="wc-ok">No flood watch, flood warning, flash flood warning, river flood warning or hydrologic outlook in effect for White County (or upstream Cleburne / Greers Ferry).</div>';
+  h+=wcStHtml('nws','ALL OTHER NWS ALERTS · WHITE COUNTY');
   if(nws)h+=nws.other.length?nws.other.map(wcAlertHtml).join(''):'<div class="wc-ok">No other NWS watches, warnings or advisories for White County (tornado, severe, winter, heat, fire weather and the rest all included).</div>';
   h+=wcStHtml('spc','STORM OUTLOOK · SPC DAY 1');
   if(spc)h+='<div class="wcrow"><b class="'+(spc.category&&spc.category!=='TSTM'?'wc-minor':'wc-ok')+'">'+hazEsc(spc.label)+'</b> over Searcy <div class="wcm">valid '+hazEsc(wcCT(spc.valid))+' to '+hazEsc(wcCT(spc.expire))+' · outlook, not a warning · tornado and severe thunderstorm WATCHES appear in the NWS alerts above</div><a href="'+hazEsc(spc.page)+'" target="_blank" rel="noopener">SPC outlook</a></div>';
@@ -5159,10 +5170,14 @@ function wcPanelToggle(force){
   if(!open){P.classList.remove('open');return;}
   P.classList.add('open');wcOpened();
 }
-function wcOpened(){wcRender();if(!wcInflight&&Date.now()-wcLastTry>=30*1000)wcLoad('open');}
+function wcOpened(){wcRender();if(typeof aimAt==='function')aimAt(WC_AIM[0],WC_AIM[1],WC_AIM[2],false);if(!wcInflight&&Date.now()-wcLastTry>=30*1000)wcLoad('open');writeDeepLink(true);}
 (function(){const b=document.getElementById('bWc');if(!b)return;
   b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();wcPanelToggle();});
   b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();wcPanelToggle();}});})();
+window.__nexusWc={
+  state:()=>({okAt:wcOkAt,failAt:wcFailAt,err:wcErr,open:wcPanelOpen(),data:wcData,badge:(document.getElementById('bWc')||{}).textContent,badgeCls:(document.getElementById('bWc')||{}).className}),
+  load:()=>wcLoad('qa'),open:()=>wcPanelToggle(true),close:()=>wcPanelToggle(false),render:()=>wcRender()
+};
 setInterval(()=>{
   const now=Date.now();wcBadge(now);if(wcPanelOpen())wcStPaint(now);
   if(!bootDone||wcInflight||cctvTabHidden())return;

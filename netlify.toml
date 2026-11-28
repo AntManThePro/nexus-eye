@@ -87,6 +87,12 @@
   to = "/.netlify/functions/buoyhist"
   status = 200
 
+# v0.4.13: /api/wcalert — White County, AR all-source safety card (NWS + NWPS + USGS + USACE + quake/fire)
+[[redirects]]
+  from = "/api/wcalert"
+  to = "/.netlify/functions/wcalert"
+  status = 200
+
 [[redirects]]
   from = "/eye"
   to = "/index.html"
