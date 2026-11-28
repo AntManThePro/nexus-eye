@@ -1,4 +1,4 @@
-# NEXUS EYE v0.4.11
+# NEXUS EYE v0.4.12
 
 Field-ops planet console by DoubleA (@AntManThePro). A photoreal globe with live public intel — quakes, weather alerts, launches, satellites, aurora, fires, volcanoes, marine buoys, and public CCTV snapshots. Original NEXUS build, from scratch. Not perfect, just real.
 
@@ -24,6 +24,7 @@ Field-ops planet console by DoubleA (@AntManThePro). A photoreal globe with live
 - VOLC · USGS volcano alert levels and aviation color codes via `/api/volc` (off unless the rail or a deep-link turns it on). LIVE after a successful pull; STALE keeps last-good markers; OFFLINE draws nothing. Smithsonian GVP Holocene dots are dim static context, never labelled LIVE. Official alert levels, not a forecast.
 - BUOY · NOAA NDBC latest observations via `/api/buoy` (off unless the rail or a deep-link turns it on). Wind, waves, temperatures, pressure. LIVE needs a pull no more than 50 min old and a median station observation no more than 3 h old; dimmed dots are stations whose own observation is older than 3 h. Missing values stay missing. Not a forecast. Optional `?buoy=tx` or `?buoy=gulf` filter.
 - TREND · opening a BUOY card loads that station's last 48 hours of measured history from NDBC realtime2 via `/api/buoyhist?id=`. Sparklines for waves, wind, pressure, and water temp when the station publishes them. Loaded only when a card opens; errors back off and never invent values.
+- SCRUB · on a TREND sparkline, hover or arrow keys read a single measured point (click/tap pins it; Escape or the ✕ clears). The first 8 px of a touch decide the axis: sideways scrubs, vertical scrolls the card. The readout, ring and line always come from readings already drawn on the card, never a newer undrawn pull. Nothing between readings is interpolated. While a scrub is held, the TREND header age keeps counting and the header flips LIVE→STALE the moment the data is stale; the readout, ring and line stay put until release.
 - ORBIT · KEPLER
 - CCTV · PUBLIC 8,334-cam catalog (4 dead TxDOT cameras removed) · `/api/cam` names failures and holds a last-good frame as STALE. "NO NEW FRAME" only if the source re-stamped identical bytes (frozen) or nothing changed for 3× cadence (min 10 min). ALERTS · NWS is LIVE only when our pull is < 10 min old AND the NWS `updated` time is present, not in the future, and not older than 60 min; otherwise STALE (or OFFLINE if we have never pulled).
 
@@ -40,6 +41,7 @@ Three.js r128 (CDN) · satellite.js 5.0.0 (self-hosted, `lib/`) · vanilla JS ·
 
 ## Release
 
+v0.4.12 — SCRUB: read any single measured point on a TREND sparkline (hover/click/tap/keys). Ports the staged v0.4.9.1 scrub cut. Follow-up: while a scrub is held, the TREND header age keeps counting and the header flips LIVE→STALE as soon as the data is stale; the readout, ring and line stay put (does not wait for release). See docs/qa/v0.4.9.1-antsman-findings.md — the provisional STALE-during-hold blocker is addressed in code, pending Lil Ant's live verification; Antsman never reached a verdict on the staged cut. Stacked on v0.4.11.
 v0.4.11 — TREND: 48-hour measured NDBC history sparklines on a BUOY card, via `/api/buoyhist`. Stacked on v0.4.10.
 v0.4.10 — BUOY: NOAA NDBC latest marine observations via `/api/buoy`. Off unless the rail or `?layers=…,buoy` turns it on. Stacked on v0.4.9.
 v0.4.9 — CCTV/NWS honesty: catalog 8,338 → 8,334 (4 dead TxDOT cams removed); `/api/cam` 9s budget, named failures, last-good STALE; "NO NEW FRAME" only if frozen or 3× cadence (min 10 min); NWS LIVE uses a 60-min source-updated check in addition to the 10-min pull; hidden-layer tap filter. Stacked on v0.4.8.
