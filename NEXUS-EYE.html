@@ -4391,6 +4391,7 @@ function buoyCardHtml(s,st,now){now=now||Date.now();st=buoyStationStatus(s,now);
    Freshness is the shared effective freshness: age comes from the server pull time (pulledAt), never from client receipt; a STALE
    buoy layer or a failed refresh marks the trend STALE; a pull older than 50 min is STALE; newest reading older than 3 h is OLD OBS.
    An open card refetches on a timer; errors back off (epoch-based, Retry-After honored) and a reopen never bypasses the hold. */
+let buoyHistLastDrawn=null;
 var buoyHist={},BUOY_HIST_REFRESH=20*60e3,BUOY_HIST_MIN_GAP=5*60e3,BUOY_HIST_NONE_MS=60*60e3,BUOY_HIST_GAP_MS=90*60e3,BUOY_HIST_WIN=48*3600e3;
 var BUOY_HIST_BACKOFF=[2*60e3,5*60e3,10*60e3,15*60e3,30*60e3],BUOY_HIST_RA_MAX=6*3600,BUOY_HIST_SKEW=120e3;
 /* v0.4.8.2: waits are rounded UP (5h 59m never reads 5h) */
